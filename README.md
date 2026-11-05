@@ -1,6 +1,6 @@
 # GoGreen
 
-**Qual é o melhor jeito de chegar lá hoje?**
+**Qual é o melhor jeito de chegar lá hoje??**
 
 O GoGreen é um site para quem se locomove por Araçatuba-SP. Ele compara ir a pé, de bike, de ônibus e de carro em tempo, custo e CO₂, e recomenda uma opção levando em conta o que os próprios moradores relatam no caminho.
 
