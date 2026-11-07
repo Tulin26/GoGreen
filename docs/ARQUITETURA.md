@@ -20,7 +20,7 @@ Cada camada só conhece as de baixo. Os testes em `tests/unit/arquitetura.test.j
 | --- | --- | --- | --- |
 | Inicialização | `src/app/` | Moldura da tela, navegação e lista de telas | tudo |
 | Funções do produto | `src/features/` | Telas e regras, uma pasta por função | `dados`, `servicos`, `shared`, `config` e as funções previstas |
-| Banco de dados | `src/dados/` | Supabase ou modo demonstração, com a mesma interface | `config` |
+| Banco de dados | `src/dados/` | servidor (api/ + Neon) ou modo demonstração, com a mesma interface | `config` |
 | Serviços externos | `src/servicos/` | Endereços, caminhos, preços e consumo | `shared`, `config` |
 | Peças comuns | `src/shared/` | Mapa, avisos, diálogos, ícones, formatação e estado da sessão | `config` |
 | Parâmetros | `src/config/` | Valores do cálculo, linhas de ônibus e lugares | nada |
@@ -32,7 +32,8 @@ Fora de `src/`:
 | --- | --- |
 | `api/` | Função da Vercel que lê o preço dos combustíveis na ANP |
 | `scripts/` | Gera a lista de consumo a partir dos PDFs do Inmetro, durante o build |
-| `supabase/migrations/` | Tabelas, regras de segurança e funções, em ordem |
+| `banco/` | Base do Neon e `migracoes/`: tabelas, regras de segurança e funções, em ordem |
+| `api/` | Funções da Vercel: `auth.js` (conta e sessão) e `db.js` (operações no banco); o código fica em `api/_lib/` |
 | `tests/` | `unit` (regras e arquitetura), `database` (segurança) e `e2e` (telas) |
 | `docs/` | Esta página, especificação e mockup da interface |
 
@@ -93,14 +94,15 @@ carros/     Carros de cada pessoa
   precos.js            frase que diz de quando é o preço
   formulario.js        adicionar carro pelo perfil
 
-caronas/    Oferecer, pedir e responder
-  caronas.view.js      lista e ações
-  dialogos.js          aviso e formulário de oferta
-  chat.js              conversa entre passageiro e motorista, e lista de conversas
-  regras.js            datas, vagas e link do WhatsApp
-  templates.js         HTML dos cartões
+caronas/    Aba Pedidos: rota diária e pedidos de carona
+  caronas.view.js      tela
+  rota-diaria.js       cadastrar a rota diária (motorista ou passageiro)
+  solicitacoes.js      pedidos recebidos (desvio, aceitar, recusar) e meus pedidos
+  chat.js              conversa de cada pedido
+  dialogos.js          termos antes de aceitar
+  regras.js            link do WhatsApp
 
-perfil/     Conta e lista de carros
+perfil/     Conta, veículos, privacidade e apagar a conta (apagar-conta.js)
 conta/      Login e cadastro
 ```
 
@@ -108,13 +110,13 @@ conta/      Login e cadastro
 
 ```
 src/dados/
-  index.js        escolhe Supabase ou demonstração
+  index.js        escolhe servidor ou demonstração
   demo/           conta, onibus, carros, caronas, trajetos e chat, no navegador
-  supabase/       os mesmos assuntos, no banco
+  remoto/        os mesmos assuntos, falando com api/db e api/auth
 
 src/servicos/
   enderecos.js    busca de lugares (Google Places)
-  caminhos.js     caminhos (Google Routes), com estimativa se o serviço cair
+  caminhos.js     caminhos pelas ruas do OpenStreetMap (OSRM), com estimativa em linha reta se o serviço cair
   combustiveis.js preço da ANP, com último valor salvo se falhar
   consumo.js      lista de consumo gerada no build
   pontos-onibus.js pontos de ônibus do OpenStreetMap, baixados no build
@@ -129,21 +131,21 @@ Enquanto o banco está vazio, Caronas mostra os exemplos de `src/config/exemplos
 
 ## Regras que os testes vigiam
 
-1. **Telas não falam com o banco direto.** Elas chamam `store`, de `src/dados/index.js`. Sem as variáveis do Supabase, o `store` usa o modo demonstração.
-2. **Demonstração e Supabase têm as mesmas funções.** `tests/unit/contrato-dados.test.js` compara as duas.
+1. **Telas não falam com o banco direto.** Elas chamam `store`, de `src/dados/index.js`. Sem `VITE_USAR_BANCO=1`, o `store` usa o modo demonstração.
+2. **Demonstração e servidor têm as mesmas funções.** `tests/unit/contrato-dados.test.js` compara as duas.
 3. **Chamada de rede fica em `servicos` ou `dados`.** Assim, trocar um serviço externo não mexe nas telas.
 4. **`shared` não conhece as funções nem o banco.**
 5. **Regra de negócio não mexe na tela.** `recomendacao.js`, `horarios.js`, `economia.js` e `resumo.js` rodam sem navegador.
 6. **Tela é só para `app`.** Nenhuma função importa o `.view.js` de outra.
 7. **Nenhum arquivo de código passa de 220 linhas.** Só `config` fica de fora, porque guarda dados.
 
-A segurança fica no banco, nas regras do Supabase, porque o navegador é público. `tests/database/politicas.test.js` testa essas regras.
+A segurança fica no servidor e no banco, porque o navegador é público: o login usa senha em scrypt e cookie HttpOnly assinado; cada chamada roda numa transação com o papel `authenticated` ou `anon`, então as regras de linha (RLS) das migrações valem. `tests/database/politicas.test.js` testa as regras e `tests/database/servidor.test.js` testa o servidor inteiro.
 
 ## Serviços externos
 
 | Serviço | Uso | Se cair |
 | --- | --- | --- |
-| Supabase | Contas, carros, caronas, trajetos, chat e posições dos ônibus | Telas mostram erro; rotas seguem sem as caronas |
+| Neon (Postgres) | Contas, carros, caronas, trajetos, chat e posições dos ônibus | Telas mostram erro; rotas seguem sem as caronas |
 | Google Maps Platform | Mapa, busca de lugares e rotas (a pé, bike e carro) | O mapa mostra aviso; as rotas viram estimativa em linha reta, marcada na tela |
 | OpenStreetMap (Overpass) | Pontos de ônibus, baixados no build (scripts/baixar-pontos.mjs) | Mantém o último arquivo; o ônibus cai para a estimativa por distância |
 | Inmetro (PBE Veicular) | Consumo dos carros, lido dos PDFs no build | A pessoa informa o consumo à mão |
@@ -161,6 +163,6 @@ A segurança fica no banco, nas regras do Supabase, porque o navegador é públi
 | Atualizar horários | `src/config/linhas-onibus.js` |
 | Adicionar um lugar popular | `src/config/lugares.js` |
 | Trocar um serviço externo | `src/servicos/` |
-| Mudar uma consulta ao banco | `src/dados/supabase/` e `src/dados/demo/`, no arquivo do assunto |
+| Mudar uma consulta ao banco | `src/dados/remoto/`, `api/_lib/operacoes.js` e `src/dados/demo/`, no arquivo do assunto |
 | Criar uma tela | Pasta em `src/features/` e uma linha em `src/app/rotas-do-app.js` |
 | Mudar uma cor | `src/styles/tokens.css` |

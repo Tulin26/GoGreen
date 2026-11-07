@@ -12,12 +12,14 @@
     "test:e2e": "node tests/e2e/rotas-unica-tela.cjs && node tests/e2e/onibus-estimativa.cjs",
     "build:app": "vite build",
     "lint": "eslint .",
-    "test:tudo": "npm run lint && npm test && npm run test:e2e"
+    "test:tudo": "npm run lint && npm test && npm run test:e2e",
+    "db:migrar": "node --env-file=.env.local scripts/migrar.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "@noorddev/vlak": "0.5.0",
-    "@supabase/supabase-js": "^2.118.0",
-    "fflate": "^0.8.3"
+    "fflate": "^0.8.3",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.15",

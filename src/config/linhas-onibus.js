@@ -1,6 +1,5 @@
-                                                                                       
-                                                                                  
-                                                                                                   
+
+
 export const TIMETABLE_SOURCE = { name: 'onibus.online', updated: '20/09/2026', base: 'https://onibus.online/sp/aracatuba/' };
 
 export const LINES = [

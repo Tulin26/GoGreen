@@ -1,6 +1,5 @@
-                                                                                              
-                                                                                                     
-                                                                                                              
+
+
 export const PLACES = [
   { title: 'Fatec Araçatuba', subtitle: 'Av. Prestes Maia, 1764, Jardim Ipanema', point: [-21.1816274, -50.4496867], terms: ['fatec', 'faculdade de tecnologia', 'prestes maia 1764'] },
   { title: 'Terminal Urbano', subtitle: 'Nelson Reis Alves, Av. dos Araçás', point: [-21.2031690, -50.4385078], terms: ['terminal urbano', 'terminal de onibus', 'terminal'] },

@@ -1,6 +1,13 @@
+# Dependências e arquivos gerados
 node_modules
 dist
+public/dados
+
+# Segredos: nunca vão para o Git. O modelo sem valores é o .env.example
 .env
 .env.local
+.env.*.local
+!.env.example
+
+# Configuração local da Vercel
 .vercel
-public/dados
