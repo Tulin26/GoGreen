@@ -12,7 +12,7 @@ export const trajetosDemo = {
     if (route.oferece_carona && vehicle?.tipo === 'moto' && route.vagas > 1) throw new Error('A carona de moto permite uma vaga.');
     const saved = { ...route, id: `trajeto-${Date.now()}-${++seq}`, vagas: route.vagas ?? null, ride_id: null, papel: route.oferece_carona ? 'motorista' : 'passageiro' };
     state.dailyRoutes = [...(state.dailyRoutes ?? []), saved];
-    if (saved.papel === 'motorista') addExampleIncoming(saved);                                                        
+    if (saved.papel === 'motorista') addExampleIncoming(saved);
     save();
     return saved.id;
   },
@@ -22,6 +22,6 @@ export const trajetosDemo = {
     state.carpool = (state.carpool ?? []).filter((r) => r.driver_route.id !== id && r.passenger_route.id !== id);
     save();
   },
-                                                                                                
+
   async matchDailyRides({ dias }) { return EXAMPLE_DAILY_RIDES.filter((r) => r.dias.some((d) => dias.includes(d))).map((r) => ({ ...r, veiculo: r.veiculo ?? 'Carro de exemplo', papel: 'motorista' })); },
 };

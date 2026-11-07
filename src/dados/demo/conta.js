@@ -22,5 +22,6 @@ export const contaDemo = {
     state.user = { ...state.user, apelido, usuario, telefone, transportes };
     save(); authListener(state.user);
   },
+  async deleteAccount() { resetState(); authListener(null); },
   async reset() { resetState(); authListener(null); },
 };

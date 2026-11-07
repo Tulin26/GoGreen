@@ -16,7 +16,7 @@ test('trajeto salvo aparece na lista e pode ser apagado', async () => {
 test('trajeto que oferece carona vira rota de motorista e exige carro e vagas', async () => {
   await demoStore.reset();
   await demoStore.signUp({ apelido: 'Teste' });
-  await assert.rejects(demoStore.saveDailyRoute(route({ oferece_carona: true })), /carro/i);
+  await assert.rejects(demoStore.saveDailyRoute(route({ oferece_carona: true })), /ve[ií]culo/i);
   await demoStore.addCar({ marca: 'A', modelo: 'B', ano: 2020, placa: 'ABC1234', combustivel: 'gasolina', km_l_gasolina: 10 });
   const [car] = await demoStore.listCars();
   const id = await demoStore.saveDailyRoute(route({ oferece_carona: true, car_id: car.id, vagas: 2 }));

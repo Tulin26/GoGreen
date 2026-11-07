@@ -1,20 +1,20 @@
-                                                                                                        
+
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { demoStore } from '../../src/dados/demo/index.js';
-import { createSupabaseStore } from '../../src/dados/supabase/index.js';
+import { createRemoteStore } from '../../src/dados/remoto/index.js';
 
 const names = (store) => Object.keys(store).filter((k) => typeof store[k] === 'function').sort();
-const real = createSupabaseStore('https://exemplo.supabase.co', 'chave-de-teste');
+const real = createRemoteStore();
 
-test('demonstração e Supabase têm as mesmas funções', () => {
-                                                  
+test('demonstração e o servidor têm as mesmas funções', () => {
+
   assert.deepEqual(names(demoStore).filter((n) => n !== 'reset'), names(real));
 });
 
 test('cada modo se identifica', () => {
   assert.equal(demoStore.mode, 'demo');
-  assert.equal(real.mode, 'supabase');
+  assert.equal(real.mode, 'remoto');
 });
 
 test('na demonstração, recomeçar limpa conta e carros', async () => {

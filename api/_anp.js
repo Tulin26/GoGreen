@@ -1,4 +1,4 @@
-                                                                              
+
 import { strFromU8, unzipSync } from 'fflate';
 
 export const LIST_URL = 'https://www.gov.br/anp/pt-br/assuntos/precos-e-defesa-da-concorrencia/precos/levantamento-de-precos-de-combustiveis-ultimas-semanas-pesquisadas';
@@ -8,7 +8,6 @@ export function latestFileUrl(html) {
   return m ? m[0] : null;
 }
 
-                                                                                 
 export function periodFromUrl(url) {
   const m = url.match(/(\d{4})[-_](\d{2})[-_](\d{2})[-_](\d{4})[-_](\d{2})[-_](\d{2})\.xlsx/i);
   return m ? { inicio: `${m[1]}-${m[2]}-${m[3]}`, fim: `${m[4]}-${m[5]}-${m[6]}` } : null;
@@ -42,7 +41,6 @@ function sheetRows(xml, strings) {
 
 const PRODUCT = { 'GASOLINA COMUM': 'gasolina', 'ETANOL HIDRATADO': 'etanol', 'OLEO DIESEL S10': 'diesel' };
 
-                                                               
 export function parseWorkbook(bytes, { municipio = 'ARACATUBA', estado = 'SAO PAULO' } = {}) {
   const files = unzipSync(bytes);
   const text = (name) => strFromU8(files[name]);

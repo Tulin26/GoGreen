@@ -20,7 +20,7 @@ test('a rota salva tem papel: passageiro por padrão, motorista quando oferece c
 });
 
 test('motorista sem carro ou sem vagas é recusado', async () => {
-  await assert.rejects(demoStore.saveDailyRoute(route({ oferece_carona: true })), /carro/i);
+  await assert.rejects(demoStore.saveDailyRoute(route({ oferece_carona: true })), /ve[ií]culo/i);
 });
 
 test('passageiro pede carona a um motorista de exemplo e o pedido aparece como pendente', async () => {

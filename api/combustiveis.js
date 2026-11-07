@@ -1,5 +1,5 @@
-                                                                                
-                                                                                                            
+
+
 import { LIST_URL, latestFileUrl, parseWorkbook, periodFromUrl } from './_anp.js';
 
 export default async function handler(req, res) {

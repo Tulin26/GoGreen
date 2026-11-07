@@ -1,8 +1,6 @@
 import { EXAMPLE_DAILY_RIDES } from '../../config/exemplos.js';
 import { save, state } from './estado.js';
 
-                                                                                                                       
-                                                                                                                                     
 const ACCEPT_AFTER_MS = 8000;
 const REPLIES = {
   passageiro: ['Oi! Pode ser sim. Costumo dividir a gasolina: R$ 5 por trecho. Fechado?', 'Combinado. Te espero no ponto de encontro cinco minutos antes.', 'Beleza! (resposta automática da demonstração)'],
@@ -15,7 +13,6 @@ const offset = (p, northM, eastM) => [p[0] + northM / 111320, p[1] + eastM / (11
 const asRoute = (r) => ({ id: r.id, origem: r.origem, destino: r.destino, from: r.from, to: r.to, hora: r.ida_hora ?? r.hora, volta: r.volta_hora ?? null, dias: r.dias });
 const needLogin = (what) => { if (!state.user) throw new Error(`Entre na sua conta para ${what}.`); };
 
-                                                                                                                           
 export function addExampleIncoming(driverRoute) {
   state.carpool = [...(state.carpool ?? []), {
     id: nextId('pedido-ex'), papel: 'motorista', status: 'pendente', mensagem: 'Oi! Posso ir com você?', created_at: new Date(Date.now()).toISOString(),
@@ -25,7 +22,6 @@ export function addExampleIncoming(driverRoute) {
   }];
 }
 
-                                                                                                     
 function view(req) {
   if (req.papel === 'passageiro' && req.status === 'pendente' && req.isExample && Date.now() - new Date(req.created_at).getTime() >= ACCEPT_AFTER_MS) req.status = 'aceita';
   const accepted = req.status === 'aceita';
