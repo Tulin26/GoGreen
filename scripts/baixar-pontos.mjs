@@ -1,5 +1,5 @@
-                                                                                                                 
-                                                                             
+
+
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { parseOverpass } from '../src/servicos/pontos-onibus.js';
 

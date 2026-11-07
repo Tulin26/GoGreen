@@ -1,5 +1,5 @@
-                                                                                                           
-                                                                                                                 
+
+
 import test, { before } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -10,23 +10,6 @@ const BETO = '22222222-2222-2222-2222-222222222222';
 const ADMIN = '33333333-3333-3333-3333-333333333333';
 let db;
 
-const SUPABASE_STUB = `
-  create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
-  grant anon, authenticated, service_role to postgres;
-  create schema auth; create schema storage;
-  grant usage on schema public, auth, storage to anon, authenticated;
-  create table auth.users (id uuid primary key, raw_user_meta_data jsonb, email text);
-  create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.uid', true), '')::uuid $$;
-  grant execute on function auth.uid() to anon, authenticated;
-  create table storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
-  create table storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text, name text);
-  alter table storage.objects enable row level security;
-  grant select, insert, delete on storage.objects to anon, authenticated;
-  create function storage.foldername(name text) returns text[] language sql immutable as $$ select (string_to_array(name, '/'))[1:array_length(string_to_array(name, '/'),1)-1] $$;
-  grant execute on function storage.foldername(text) to anon, authenticated;
-`;
-
-                                                                        
 async function as(uid, sql, params) {
   await db.exec(`set role ${uid ? 'authenticated' : 'anon'}; select set_config('request.uid', '${uid ?? ''}', false);`);
   try {
@@ -39,9 +22,9 @@ const insertReport = (uid, extra = '') => as(uid, `insert into public.reports (c
 
 before(async () => {
   db = new PGlite();
-  await db.exec(SUPABASE_STUB);
-  for (const file of ['001_init.sql', '002_carros_e_caronas.sql', '003_usuario.sql', '004_transportes_e_eletricos.sql', '005_trajetos.sql', '006_chat_carona.sql', '007_foco_carona.sql']) {
-    await db.exec(readFileSync(new URL(`../../supabase/migrations/${file}`, import.meta.url), 'utf8'));
+  await db.exec(readFileSync(new URL('../../banco/000_base.sql', import.meta.url), 'utf8'));
+  for (const file of ['001_init.sql', '002_carros_e_caronas.sql', '003_usuario.sql', '004_transportes_e_eletricos.sql', '005_trajetos.sql', '006_chat_carona.sql', '007_foco_carona.sql', '008_motos_caronas.sql', '009_apagar_veiculo_e_rotas.sql', '010_apagar_conta.sql', '011_mais_motoristas.sql', '012_tipo_no_cadastro.sql', '013_caronas_para_visitantes.sql', '014_limite_de_motoristas.sql']) {
+    await db.exec(readFileSync(new URL(`../../banco/migracoes/${file}`, import.meta.url), 'utf8'));
   }
   await db.exec(`insert into auth.users values
     ('${ANA}', '{"apelido":"Ana","telefone":"(18) 99999-0001"}'), ('${BETO}', '{"apelido":"Beto","telefone":"18999990002"}'), ('${ADMIN}', '{"apelido":"Equipe"}');
@@ -194,7 +177,7 @@ test('carro é só de quem cadastrou', async () => {
   await assert.rejects(as(null, 'select id from public.user_cars'));
   assert.equal((await as(BETO, `delete from public.user_cars where id = '${id}' returning id`)).length, 0);
   assert.equal((await as(BETO, `update public.user_cars set placa = 'XXX0000' where id = '${id}' returning id`)).length, 0);
-                                                            
+
   await assert.rejects(as(BETO, `insert into public.user_cars (user_id, marca, modelo, ano, placa, combustivel, km_l_gasolina) values ('${ANA}', 'A', 'B', 2020, 'AAA1111', 'gasolina', 10)`));
 });
 
@@ -202,14 +185,14 @@ test('carro exige placa válida, consumo do combustível e placa única', async 
   await assert.rejects(addCar(ANA, 'abc'));
   await assert.rejects(addCar(ANA, 'ABC1D23'));
   await assert.rejects(as(ANA, `insert into public.user_cars (marca, modelo, ano, placa, combustivel, km_l_gasolina) values ('A', 'B', 2020, 'AAA1111', 'flex', 10)`));
-  await addCar(BETO, 'ABC1D23');                                              
+  await addCar(BETO, 'ABC1D23');
 });
 
 test('limite de 10 carros', async () => {
   const uid = '66666666-6666-6666-6666-666666666666';
   await db.exec(`insert into auth.users values ('${uid}', '{}')`);
   for (let i = 0; i < 10; i++) await addCar(uid, `AAA100${i}`);
-  await assert.rejects(addCar(uid, 'AAA2000'), /Limite de 10 carros/);
+  await assert.rejects(addCar(uid, 'AAA2000'), /Limite de 10 ve[ií]culos/);
 });
 
 const inHours = (h) => new Date(Date.now() + h * 3600000).toISOString();
@@ -226,7 +209,7 @@ test('tabelas de carona ficam fechadas e anônimo não vê nada', async () => {
 
 test('oferecer exige carro próprio, telefone e horário futuro', async () => {
   const beto = await myCar(BETO);
-  await assert.rejects(as(ANA, 'select public.offer_ride($1, $2, $3, $4, $5, $6)', [beto, 'A1', 'B1', inHours(5), 1, '']), /seus carros/);
+  await assert.rejects(as(ANA, 'select public.offer_ride($1, $2, $3, $4, $5, $6)', [beto, 'A1', 'B1', inHours(5), 1, '']), /seus (carros|ve[ií]culos)/);
   await assert.rejects(as(ANA, 'select public.offer_ride($1, $2, $3, $4, $5, $6)', [await myCar(ANA), 'A1', 'B1', inHours(-5), 1, '']), /futuro/);
   const uid = '77777777-7777-7777-7777-777777777777';
   await db.exec(`insert into auth.users values ('${uid}', '{}')`);
@@ -256,7 +239,7 @@ test('telefone e placa só aparecem depois de aceitar a vaga', async () => {
   assert.equal(seen.placa, 'ABC1D23');
   assert.equal(seen.vagas_livres, 0);
   assert.equal((await as(ANA, 'select * from public.my_ride_requests()')).find((q) => q.id === request).telefone, '18999990002');
-                                                         
+
   assert.equal((await listed(ADMIN, ride)).telefone, null);
   assert.equal((await as(BETO, 'select * from public.my_ride_requests()')).length, 0);
 });
@@ -310,13 +293,13 @@ test('usuário: cadastro, login e repetição', async () => {
   const u2 = 'aaaaaaaa-0000-4000-8000-000000000002';
   await db.exec(`insert into auth.users (id, raw_user_meta_data, email) values ('${u1}', '{"usuario":" Maria.S "}', 'maria@teste.com')`);
   assert.equal((await as(u1, 'select usuario from public.profiles'))[0].usuario, 'maria.s');
-                                                                       
+
   await db.exec(`insert into auth.users (id, raw_user_meta_data, email) values ('${u2}', '{"usuario":"maria.s"}', 'outra@teste.com')`);
   assert.equal((await as(u2, 'select usuario from public.profiles'))[0].usuario, null);
   await assert.rejects(as(u2, `update public.profiles set usuario = 'maria.s' where id = '${u2}'`));
   await assert.rejects(as(u2, `update public.profiles set usuario = 'NÃO VALE' where id = '${u2}'`));
   await as(u2, `update public.profiles set usuario = 'outra' where id = '${u2}'`);
-                                                                                  
+
   assert.equal((await as(null, `select public.email_do_usuario('MARIA.S') as e`))[0].e, 'maria@teste.com');
   assert.equal((await as(null, `select public.email_do_usuario('ninguem') as e`))[0].e, null);
   assert.equal((await as(null, `select public.usuario_disponivel('maria.s') as d`))[0].d, false);
@@ -359,7 +342,6 @@ test('foto só entra na pasta da própria pessoa', async () => {
   await assert.rejects(as(null, `insert into storage.objects (bucket_id, name) values ('report-photos', 'x/a.jpg')`));
 });
 
-                             
 const saveRoute = (uid, { dias = '{1,2,3,4,5}', oferece = false, car = null, vagas = null, ida = '07:00' } = {}) => as(uid,
   'select public.save_daily_route($1, $2, $3, $4, $5, $6, $7, $8, $9::smallint[], $10, $11, $12) as id',
   ['Terminal Urbano', 'Fatec Araçatuba', -21.203, -50.4385, -21.1816, -50.4497, ida, null, dias, oferece, car, vagas]);
@@ -379,7 +361,7 @@ test('trajetos: sem dias ou com horário torto é recusado', async () => {
 
 test('trajetos: oferecer carona exige carro próprio e telefone, e a rota vira de motorista (sem carona avulsa)', async () => {
   await assert.rejects(saveRoute(ANA, { oferece: true, car: null, vagas: 2 }));
-  await assert.rejects(saveRoute(ANA, { oferece: true, car: await myCar(BETO), vagas: 2 }), /seus carros/);
+  await assert.rejects(saveRoute(ANA, { oferece: true, car: await myCar(BETO), vagas: 2 }), /seus ve[ií]culos/);
   const [{ id }] = await saveRoute(ANA, { oferece: true, car: await myCar(ANA), vagas: 2 });
   const [mine] = await as(ANA, 'select papel, ride_id, vagas from public.my_daily_routes() where id = $1', [id]);
   assert.equal(mine.papel, 'motorista');
@@ -404,7 +386,6 @@ test('trajetos: outra pessoa não apaga o trajeto alheio', async () => {
   assert.equal((await as(ANA, 'select id from public.my_daily_routes() where id = $1', [id])).length, 0);
 });
 
-                           
 const say = (uid, ride, passenger, body) => as(uid, 'select public.send_ride_message($1, $2, $3) as id', [ride, passenger, body]);
 const thread = (uid, ride, passenger) => as(uid, 'select * from public.list_ride_messages($1, $2)', [ride, passenger]);
 
@@ -444,7 +425,6 @@ test('chat: lista de conversas mostra o outro lado e não traz telefone', async 
   assert.ok(!('telefone' in asDriver));
 });
 
-                                                                
 const CARLA = '88888888-8888-8888-8888-888888888888';
 const driverRoute = async (uid, vagas = 2) => (await saveRoute(uid, { oferece: true, car: await myCar(uid), vagas }))[0].id;
 const passengerRoute = async (uid) => (await saveRoute(uid))[0].id;
@@ -478,9 +458,9 @@ test('solicitação: pedido repetido, de rota alheia ou para si mesmo é recusad
   const p = await passengerRoute(BETO);
   await ask2(BETO, d, p);
   await assert.rejects(ask2(BETO, d, p), /já pediu/i);
-  await assert.rejects(ask2(ANA, d, await passengerRoute(BETO)), /sua rota|suas rotas/i);                                     
+  await assert.rejects(ask2(ANA, d, await passengerRoute(BETO)), /sua rota|suas rotas/i);
   await assert.rejects(ask2(ANA, d, await passengerRoute(ANA)), /sua própria|si mesm/i);
-  await assert.rejects(ask2(BETO, p, p), /motorista/i);                                       
+  await assert.rejects(ask2(BETO, p, p), /motorista/i);
 });
 
 test('solicitação: só o motorista responde, só o passageiro cancela, e vagas esgotadas travam o aceite', async () => {
@@ -535,4 +515,16 @@ test('chat da solicitação: depois de recusada ou cancelada não aceita mensage
   const [{ id }] = await ask2(BETO, d, await passengerRoute(BETO));
   await as(ANA, 'select public.respond_carpool_request($1, false)', [id]);
   await assert.rejects(as(BETO, 'select public.send_request_message($1, $2)', [id, 'oi?']), /encerrad|recusad/i);
+});
+
+test('apagar conta: remove perfil, veículos e rotas em cascata, só da própria pessoa', async () => {
+  const CLEO = 'abcdef12-0000-4000-8000-0000000000c1';
+  await db.exec(`insert into auth.users values ('${CLEO}', '{"apelido":"Cleo"}');
+    insert into public.user_cars (user_id, marca, modelo, ano, placa, combustivel, km_l_gasolina) values ('${CLEO}', 'FIAT', 'UNO', 2020, 'CLE1A23', 'gasolina', 12);`);
+  await assert.rejects(as(null, 'select public.delete_my_account()'));
+  await as(CLEO, 'select public.delete_my_account()');
+  const left = (q) => db.query(q).then((r) => r.rows[0].n);
+  assert.equal(await left(`select count(*)::int n from public.profiles where id = '${CLEO}'`), 0);
+  assert.equal(await left(`select count(*)::int n from public.user_cars where user_id = '${CLEO}'`), 0);
+  assert.equal(await left(`select count(*)::int n from public.profiles where id = '${ANA}'`), 1);
 });

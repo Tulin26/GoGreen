@@ -1,12 +1,8 @@
-                                                                                  
-                                                                                                 
+
 
 const R = (marca, modelo, versao, motor) => ({ marca, modelo, versao, motor });
 const TABELA_2017_2019 = { ranges: R([75, 125], [125, 165], [165, 245], [245, 275]), combustivel: 380, co2Etanol: 513, co2Gasolina: 540, etCidade: 566, etEstrada: 590, gasCidade: 614, gasEstrada: 639 };
 
-                                                                                                           
-                                                                                       
-                                                                                                 
 export const LAYOUTS = {
   2026: { marca: 215, modelo: 245, versao: 279, motor: 302, propulsao: 315, combustivel: 380, co2Etanol: 440, co2Gasolina: 456, etCidade: 475, etEstrada: 485, gasCidade: 509, gasEstrada: 519, mj: 592 },
   2025: { marca: 91, modelo: 134, versao: 176, motor: 211, propulsao: 236, combustivel: 335, co2Etanol: 455, co2Gasolina: 474, etCidade: 512, etEstrada: 529, gasCidade: 545, gasEstrada: 562, mj: 632 },
@@ -34,7 +30,6 @@ const toNumber = (s) => {
   return Number.isFinite(n) && n > 0 ? n : null;
 };
 
-                                                                                  
 export function combined(city, road) {
   if (!city || !road) return null;
   return Math.round((1 / (0.55 / city + 0.45 / road)) * 10) / 10;
@@ -51,29 +46,22 @@ function pick(tokens, x) {
   return best;
 }
 
-                                                                      
 function column(tokens, layout, name) {
   if (!layout.ranges) return pick(tokens, layout[name]);
   const [from, to] = layout.ranges[name];
   return tokens.filter(([x]) => x >= from && x < to).map((t) => t[1]).join(' ').trim() || null;
 }
 
-                                                                   
 const BRAND_ALIASES = { VW: 'VOLKSWAGEN', 'V W': 'VOLKSWAGEN', 'GREAT WALL': 'GWM', CAOACHANGAN: 'CAOA CHANGAN', 'MERCEDES BENZ': 'MERCEDES-BENZ' };
 const cleanBrand = (s) => {
   const up = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
   return BRAND_ALIASES[up] ?? up;
 };
-                                                                                        
+
 const cleanModel = (s) => s.replace(/\s*\*+\s*$/, '').replace(/\s*\(.*\)\s*$/, '').trim().toUpperCase();
 const cleanText = (s) => { const t = (s ?? '').trim(); return t === '-' || t === '\\' ? '' : t; };
 const sane = (km, max) => km === null || (km >= 3 && km <= max);
 
-   
-                                                                                                  
-                                                                                                                                        
-                                                                   
-   
 export function parseRow(tokens, cycle) {
   const c = LAYOUTS[cycle];
   const fuel = pick(tokens, c.combustivel);
@@ -91,7 +79,6 @@ export function parseRow(tokens, cycle) {
     return [...base, versao, '', 'V', cycle, null, null, null, null, Math.round((mj / 3.6) * 1000) / 1000];
   }
 
-                                                                                                                      
   if (/plug/i.test(propulsao) && cycle <= 2022) return null;
 
   const et = combined(toNumber(pick(tokens, c.etCidade)), toNumber(pick(tokens, c.etEstrada)));
@@ -101,15 +88,11 @@ export function parseRow(tokens, cycle) {
     const v = pick(tokens, x);
     return v === '0' ? 0 : toNumber(v);
   };
-                                                                                                          
+
   const nome = /plug/i.test(propulsao) ? `${versao} (plug-in)`.trim() : versao;
   return [...base, nome, cleanText(column(tokens, c, 'motor')), fuel, cycle, et, gas, et ? co2(c.co2Etanol) : null, gas ? co2(c.co2Gasolina) : null];
 }
 
-   
-                                            
-                                                                                                              
-   
 export function groupRows(items, { rotated = false, rowGap = 1 } = {}) {
   const tokens = items
     .filter((it) => it.str?.trim())

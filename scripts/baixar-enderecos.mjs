@@ -1,5 +1,5 @@
-                                                                                                                 
-                                                                                                                             
+
+
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { strFromU8, unzipSync } from 'fflate';
 import { parseCnefe } from '../src/servicos/enderecos-locais.js';
