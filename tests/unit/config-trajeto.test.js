@@ -14,13 +14,14 @@ test('parâmetros do trajeto', () => {
 });
 
 test('pontos de bicicleta de aluguel são exemplos dentro da cidade', () => {
-  assert.equal(EXAMPLE_BIKE_STATIONS.length, 5);
+  assert.ok(EXAMPLE_BIKE_STATIONS.length >= 40);
+  assert.equal(new Set(EXAMPLE_BIKE_STATIONS.map((s) => s.id)).size, EXAMPLE_BIKE_STATIONS.length);
   for (const s of EXAMPLE_BIKE_STATIONS) { assert.equal(s.isExample, true); assert.ok(inCity(s.coords)); }
 });
 
 test('motoristas de exemplo do trajeto são exemplos dentro da cidade', () => {
-  assert.equal(EXAMPLE_DAILY_RIDES.length, 33);
-  assert.equal(new Set(EXAMPLE_DAILY_RIDES.map((r) => r.id)).size, 33);
+  assert.equal(EXAMPLE_DAILY_RIDES.length, 400);
+  assert.equal(new Set(EXAMPLE_DAILY_RIDES.map((r) => r.id)).size, 400);
   for (const r of EXAMPLE_DAILY_RIDES) {
     assert.equal(r.isExample, true);
     assert.ok(inCity(r.from) && inCity(r.to));

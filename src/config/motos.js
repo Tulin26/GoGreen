@@ -1,4 +1,4 @@
-                                                                                             
+
 export const MOTO_MODELS = {
   Honda: [
     'Biz 125', 'CB 300F Twister', 'CG 160 Cargo', 'CG 160 Fan', 'CG 160 Start', 'CG 160 Titan',

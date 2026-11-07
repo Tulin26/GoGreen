@@ -1,9 +1,4 @@
-                            
-                                                             
-                                                                                
-                                                                           
-                                             
-                                                                                              
+
 
 @font-face {
   font-family: "Overpass";
@@ -15,23 +10,22 @@
 }
 
 :root {
-                                                                                       
+
   --fonte: "Overpass", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --peso-normal: 450;
   --peso-medio: 600;
   --peso-forte: 800;
 
-  --fs-mini: 0.8125rem;                                     
-  --fs-peq: 0.9375rem;             
-  --fs-corpo: 1.0625rem;                                                      
-  --fs-sub: 1.25rem;               
-  --fs-titulo: 1.625rem;           
-  --fs-grande: 2.25rem;            
-  --fs-placar: 3.5rem;                                  
+  --fs-mini: 0.8125rem;
+  --fs-peq: 0.9375rem;
+  --fs-corpo: 1.0625rem;
+  --fs-sub: 1.25rem;
+  --fs-titulo: 1.625rem;
+  --fs-grande: 2.25rem;
+  --fs-placar: 3.5rem;
   --lh-corpo: 1.42;
   --lh-titulo: 1.12;
 
-              
   --esp-1: 4px;
   --esp-2: 8px;
   --esp-3: 12px;
@@ -41,27 +35,22 @@
   --esp-7: 48px;
   --gutter: 16px;
 
-                                                                  
-  --raio-placa: 12px;                                 
-  --raio-campo: 6px;                        
-  --raio-selo: 4px;                            
-  --raio-folha: 18px;                       
+  --raio-placa: 12px;
+  --raio-campo: 6px;
+  --raio-selo: 4px;
+  --raio-folha: 18px;
 
-                                                               
   --sombra-folha: 0 -6px 20px rgb(21 25 27 / 0.22);
   --sombra-toast: 0 6px 18px rgb(21 25 27 / 0.32);
 
-             
   --alvo-min: 44px;
   --alvo-confortavel: 52px;
 
-                                                                     
   --placa-amarela: #FFC81E;
   --placa-laranja: #FF7A00;
   --sobre-placa-clara: #15191B;
   --sobre-placa-escura: #FFFFFF;
 
-                                                                  
   --asfalto: #23282B;
   --asfalto-texto: #FFFFFF;
   --asfalto-texto-2: #D9DDDA;
@@ -71,7 +60,6 @@
   --duracao: 160ms;
 }
 
-                                                               
 :root,
 [data-theme="light"] {
   color-scheme: light;
@@ -79,44 +67,39 @@
   --cor-superficie: #FFFFFF;
   --cor-superficie-2: #E4E6E1;
   --cor-texto: #15191B;
-  --cor-texto-2: #3E474B;                                                              
+  --cor-texto-2: #3E474B;
   --cor-borda-forte: #15191B;
-  --cor-borda: #70797D;                                                  
-  --cor-divisor: #C6CAC5;                                              
+  --cor-borda: #70797D;
+  --cor-divisor: #C6CAC5;
   --cor-acao: #00603C;
   --cor-acao-forte: #004A2E;
   --cor-sobre-acao: #FFFFFF;
   --cor-link: #00603C;
   --cor-foco: #15191B;
   --cor-foco-halo: #FFC81E;
-  --cor-dado: #3E474B;                               
+  --cor-dado: #3E474B;
 
   --placa-verde: #00603C;
   --placa-azul: #0B4A9E;
   --placa-vermelha: #C3161C;
 
-                                                            
-                                                                                                    
   --modo-carro: #5A6368;
   --modo-onibus: #0B4A9E;
   --modo-bike: #B3261E;
   --modo-ape: #15191B;
   --sobre-modo: #FFFFFF;
 
-                                                                                 
   --sev-leve: #0B4A9E;
   --sev-atencao: #FFC81E;
   --sev-grave: #C3161C;
   --sev-grave-texto: #A31015;
   --sev-resolvido: #00603C;
 
-              
   --estado-erro: #A31015;
   --estado-ok: #00603C;
   --selo-vivo-fundo: #00603C;
   --selo-vivo-texto: #FFFFFF;
 
-                                                                       
   --mapa-fundo: #E9EBE6;
   --mapa-quadra: #DDE0DA;
   --mapa-rua: #FFFFFF;
@@ -127,7 +110,6 @@
   --toast-texto: #FFFFFF;
 }
 
-                                                                                 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
@@ -220,7 +202,6 @@
   --sombra-toast: 0 6px 18px rgb(0 0 0 / 0.6);
 }
 
-                                                                           
 @media (min-width: 1200px) {
   html { font-size: 112.5%; }
 }

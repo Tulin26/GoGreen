@@ -7,8 +7,6 @@ export const FUELS = {
 
 export const CAR_FUELS = { flex: 'Flex', gasolina: 'Gasolina', etanol: 'Etanol', diesel: 'Diesel', eletrico: 'Elétrico' };
 
-                                                               
-                                                                   
 export const FALLBACK_PRICES = {
   fonte: 'ANP',
   periodo: { inicio: '2026-10-25', fim: '2026-10-31' },
@@ -16,10 +14,6 @@ export const FALLBACK_PRICES = {
   salvo: true,
 };
 
-                                                                             
-                                                                                                         
-                                                                    
 export const FOSSIL_G_PER_LITER = { gasolina: 1330, etanol: 0, diesel: 2600 };
 
-                                                                                                                    
 export const ELECTRICITY_PER_KWH = 1.0;

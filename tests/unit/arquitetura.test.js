@@ -1,4 +1,4 @@
-                                                                                                                 
+
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -11,7 +11,6 @@ const read = (f) => readFileSync(f, 'utf8');
 const importsOf = (file) => [...read(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)'(\.[^']+)'/gm)]
   .map((m) => normalize(join(dirname(file), m[1])));
 
-                                                                                 
 function layerOf(path) {
   const [, first, second] = path.split(sep);
   return first === 'features' ? `features/${second}` : first;
@@ -21,7 +20,6 @@ const EDGES = FILES.flatMap((file) => importsOf(file).map((target) => ({ file, t
 const crossing = (from) => EDGES.filter((e) => from(e.from) && e.from !== e.to);
 const show = (list) => list.map((e) => `${e.file} -> ${e.target}`).join('\n');
 
-                                                                                                        
 const FEATURES = {
   carros: [],
   conta: ['carros'],
