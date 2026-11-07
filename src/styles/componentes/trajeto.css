@@ -1,0 +1,24 @@
+.trajeto__quando { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-3); margin-block: var(--esp-3); }
+.trajeto__quando .rs-field-label { grid-row: 1; }
+.trajeto__dias { display: flex; flex-wrap: wrap; gap: var(--esp-2); border: 0; padding: 0; margin: 0 0 var(--esp-3); }
+.trajeto__dias legend { width: 100%; margin-bottom: 8px; }
+.trajeto__cartao { padding: var(--esp-3); border-radius: 12px; box-shadow: inset 0 0 0 2px var(--cor-borda-forte); background: var(--cor-superficie); list-style: none; }
+.trajeto__cartao h3 { margin: 0 0 var(--esp-2); font-size: 1.05rem; }
+.trajeto__destaque { margin: 0 0 var(--esp-2); font-weight: 600; }
+.trajeto__resumo { margin-block: var(--esp-3); }
+@media (max-width: 480px) { .trajeto__quando { grid-template-columns: 1fr; } .trajeto__quando .rs-field-label { grid-row: auto; } }
+.trajeto__horario { margin: 0 0 var(--esp-2); }
+.passos-mapa { padding: var(--esp-3); }
+.passos-mapa[hidden] { display: none; }
+@media (min-width: 1100px) { .passos-mapa { display: none; } }
+.tela--dividida[data-mobile-view="lista"] .passos-mapa { display: none; }
+.cartao-rota { cursor: pointer; transition: box-shadow .15s; }
+.cartao-rota:hover { box-shadow: 0 0 0 2px var(--cor-borda-forte); }
+.cartao-rota--ativa { box-shadow: 0 0 0 3px #0B4A9E; }
+@media (prefers-reduced-motion: reduce) { .cartao-rota { transition: none; } }
+.guia { position: fixed; left: 12px; right: 12px; bottom: 84px; z-index: 1200; display: flex; gap: var(--esp-3); align-items: center; justify-content: space-between; padding: var(--esp-3); border-radius: 12px; background: var(--cor-superficie); box-shadow: 0 0 0 3px #0B4A9E, 0 6px 20px rgba(0,0,0,.35); }
+.guia[hidden] { display: none; }
+.guia__aviso { display: block; font-weight: 600; margin-top: var(--esp-1, 4px); }
+@media (min-width: 1100px) { .guia { left: auto; right: 24px; bottom: 24px; max-width: 460px; } }
+.guia--sim { bottom: 164px; box-shadow: 0 0 0 3px #B85C00, 0 6px 20px rgba(0,0,0,.35); }
+@media (min-width: 1100px) { .guia--sim { bottom: 110px; } }

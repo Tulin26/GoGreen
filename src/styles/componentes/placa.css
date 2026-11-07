@@ -1,0 +1,52 @@
+                                                                                                                  
+.placa {
+  position: relative;
+  padding: var(--esp-4) 18px 18px;
+  border-radius: var(--raio-placa);
+  color: var(--sobre-placa-escura);
+  background: var(--placa-verde);
+}
+.placa::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  pointer-events: none;
+}
+.placa > * { position: relative; }
+.placa--verde { background: var(--placa-verde); }
+.placa--azul { background: var(--placa-azul); }
+.placa :focus-visible { outline-color: #FFFFFF; box-shadow: 0 0 0 6px #15191B; }
+
+                                                                                    
+                                                  
+.conjunto-placa { display: flex; flex-direction: column; }
+.placa-adicional {
+  position: relative;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: var(--esp-3);
+  margin-top: 6px;
+  padding: 12px 14px 12px 12px;
+  background: var(--placa-amarela);
+  color: var(--sobre-placa-clara);
+  border: 2px solid var(--sobre-placa-clara);
+  border-radius: 8px;
+  font-size: var(--fs-peq);
+  line-height: 1.32;
+}
+                                                              
+.placa-adicional::before,
+.placa-adicional::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  width: 10px;
+  height: 6px;
+  background: #70797D;
+}
+.placa-adicional::before { left: 22%; }
+.placa-adicional::after { right: 22%; }
+.placa-adicional .icone { width: 26px; height: 26px; }
+.placa-adicional strong { display: block; font-size: var(--fs-corpo); font-weight: var(--peso-forte); line-height: 1.2; margin-bottom: 2px; }

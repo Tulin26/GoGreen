@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoGreen: mockup</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./components.css">
+<style>
+  /* Só do mockup: nada daqui vai para o app */
+  html { font-size: 100% !important; }
+  .mock { padding: 32px 24px 64px; max-width: 1320px; margin-inline: auto; display: flex; flex-direction: column; gap: 40px; }
+  .mock__cabeca h1 { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+  .mock__cabeca p { max-width: 62ch; margin-top: 8px; color: var(--cor-texto-2); }
+  .mock h2.grupo { font-size: 1.375rem; font-weight: 800; margin-bottom: 16px; }
+  .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 390px)); gap: 28px; justify-content: start; align-items: start; }
+  .quadro { display: flex; flex-direction: column; min-width: 0; gap: 8px; }
+  .quadro > figcaption { font-weight: 700; line-height: 1.2; }
+  .quadro > .app { flex: 1; height: auto; min-height: 780px; display: flex; flex-direction: column; border: 2px solid var(--cor-borda-forte); border-radius: 10px; overflow: hidden; }
+  .quadro > .app > .app__interno { flex: 1; height: auto; }
+  .quadro .app__corpo { overflow: visible; }
+  .quadro .folha { max-height: none; }
+  .quadro--largo > .app { flex: none; display: block; min-height: 0; height: 720px; }
+  .quadro--largo > .app > .app__interno { height: 100%; }
+  .quadro--largo .app__corpo { overflow: hidden; }
+  .quadro--medio > .app { height: 640px; }
+  .quadro--baixo > .app { min-height: 640px; }
+  .mapa-falso { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+  .mapa-falso__nota { position: absolute; left: 6px; top: 6px; max-width: 62%; padding: 2px 6px; background: var(--cor-superficie); font-size: 0.75rem; line-height: 1.25; }
+  .local .mapa-falso__nota { display: none; }
+  .pos { position: absolute; transform: translate(-50%, -50%); display: block; }
+  .pino > .icone { z-index: 1; }
+  .estados { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+  .estados figure { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .estados figcaption { font-size: var(--fs-peq); font-weight: 700; }
+  .toast-demo { position: static; }
+  @media (max-width: 480px) {
+    .mock { padding: 16px 0 32px; }
+    .mock__cabeca, .mock h2.grupo, .quadro > figcaption, .estados { margin-inline: 16px; }
+    .grade { grid-template-columns: minmax(0, 1fr); }
+    .quadro > .app { border-inline: 0; border-radius: 0; min-height: 700px; }
+    .mock__so-desktop { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="mock">
+  <header class="mock__cabeca">
+    <h1>GoGreen: telas principais</h1>
+    <p>Mockup estático para a implementação. Lugares, linhas, horários, custos e números são de demonstração. O mapa é um desenho; no app ele é Leaflet + OpenStreetMap.</p>
+  </header>
+
+  <section><div class="grade">
+    <figure class="quadro "><figcaption>Rotas com resultado e alertas</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+<section class="painel-lateral tela__conteudo" aria-label="Comparar rotas">
+  
+<form class="busca" onsubmit="return false">
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span>
+  <div class="busca__campo"><label class="busca__rotulo" for="o1">De onde</label><input class="busca__input" id="o1" value="Fatec Araçatuba" placeholder="Rua, bairro ou lugar"></div>
+  <button class="busca__trocar" type="button" aria-label="Trocar origem e destino"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 20V5M8 5 4 9M8 5l4 4"/><path d="M16 4v15M16 19l-4-4M16 19l4-4"/></svg></button>
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>
+  <div class="busca__campo busca__campo--destino"><label class="busca__rotulo" for="d1">Para onde</label><input class="busca__input" id="d1" value="Praça Rui Barbosa" placeholder="Rua, bairro ou lugar"></div>
+  <span class="busca__linha"></span>
+</form>
+  
+<div class="opcoes opcoes--grade" role="group" aria-label="Sobre você">
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho bike</label>
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho carro</label>
+  <label class="opcao opcao--inteira"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Rota acessível: evita calçada ruim e falta de rampa</label>
+</div>
+  <div class="resultado-cabeca"><h2 class="secao-titulo">Fatec Araçatuba até Praça Rui Barbosa</h2><p class="texto-2 texto-peq">Hoje às 19:20, à noite. 1,0 km.</p></div>
+  
+<div class="conjunto-placa">
+  <article class="placa placa--verde cartao-rota" aria-label="Recomendação: ônibus">
+    <p class="cartao-rota__chamada">Melhor jeito hoje</p>
+    <div class="cartao-rota__cabeca">
+      <span class="modo modo--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+      <div class="pilha pilha--justa">
+        <h3 class="cartao-rota__nome">Ônibus</h3>
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">próximo em 4 min</span></p>
+      </div>
+    </div>
+    <dl class="metricas">
+      <div class="metrica"><dt>tempo com espera</dt><dd>14 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 5,00</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>40 g</dd></div>
+    </dl>
+    <div class="alertas"><a class="chip-alerta chip-alerta--leve" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 5.5h19L19.5 9h-15z"/><path d="M6 9v12M18 9v12"/><path d="M6 16h12"/></svg>Ponto sem cobertura</a></div>
+    <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+  </article>
+  <p class="placa-adicional"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg><span><strong>Os relatos mudaram a recomendação</strong>A pé seria a primeira opção, mas hoje tem 2 alertas no caminho: calçada quebrada e trecho sem iluminação. O ônibus evita os dois.</span></p>
+</div>
+  <div class="lista-rotas">
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--ape"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="13" cy="4.5" r="1.8"/><path d="M12.5 8.5 10.5 14l3.5 2.5 1 5"/><path d="M10.5 14 8.5 21.5"/><path d="M12.5 8.5l3 2.8 3 .7"/><path d="M12.5 8.5 8.5 10l-1.5 3.5"/></svg></span><div><h3 class="cartao-rota__nome">A pé</h3><p class="cartao-rota__nota">Seria a primeira opção sem os alertas</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>12 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Calçada quebrada</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--bike"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17 9 9.5h6.2L18.5 17"/><path d="M9 9.5 12 17l3.2-7.5"/><path d="M7.5 6.5H11M9 9.5 8.8 6.5"/><path d="M13.8 6h2.7l-1.3 3.5"/></svg></span><div><h3 class="cartao-rota__nome">Bike</h3><p class="cartao-rota__nota">Marque “Tenho bike” para entrar na recomendação</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>6 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--grave" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg>Buraco grande</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--carro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 11l1.5-4.3A2.5 2.5 0 0 1 8.9 5h6.2a2.5 2.5 0 0 1 2.4 1.7L19 11"/><path d="M4 11h16a1 1 0 0 1 1 1v5H3v-5a1 1 0 0 1 1-1z"/><path d="M6 17v2.5M18 17v2.5"/><path d="M7 14h.01M17 14h.01"/></svg></span><div><h3 class="cartao-rota__nome">Carro</h3><p class="cartao-rota__nota">Sem alertas no caminho</p></div></div>
+  <dl class="metricas"><div class="metrica metrica--melhor"><dt>mais rápido</dt><dd>5 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 1,20</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>150 g</dd></div></dl>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article></div>
+  <div class="pilha pilha--justa"><p class="texto-2 texto-peq">Custo e CO<sub>2</sub> são estimativas com valores de exemplo.</p><a class="botao botao--texto botao--voltar" href="#">Como calculamos</a></div>
+</section><div class="mapa mapa--so-largo">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M205 505H300V330H480V205H525" fill="none" stroke="var(--modo-ape)" stroke-width="6" stroke-dasharray="1 14" stroke-linecap="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:25.6%;top:84%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span></span><span class="pos" style="left:65.6%;top:24%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span></span><span class="pos" style="left:36.4%;top:55%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg></span></span><span class="pos" style="left:60.6%;top:34%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5a6.5 6.5 0 0 0-4 11.6c.8.7 1.2 1.5 1.2 2.4h5.6c0-.9.4-1.7 1.2-2.4A6.5 6.5 0 0 0 12 2.5z"/><path d="M9.5 20h5M10.5 22.5h3"/></svg></span></span></div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro "><figcaption>Ônibus ao vivo</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Previsão do ônibus">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      
+<div class="placa placa--azul">
+  <div class="linha-onibus">
+    <span class="modo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+    <div class="linha-onibus__texto"><h2 class="linha-onibus__nome">Linha D1 Fatec–Centro</h2><p class="linha-onibus__ponto">Ponto: Fatec, portão principal</p></div>
+    <a class="botao botao--texto" href="#">Trocar</a>
+  </div>
+</div>
+      <div class="previsao">
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">Atualizado há 20 s por 2 passageiros</span></p>
+        <p class="previsao__valor">4 <span class="previsao__unidade">min</span></p>
+        <p class="previsao__texto">para chegar ao seu ponto. Faltam 2 pontos.</p>
+      </div>
+      
+<ol class="trajeto" aria-label="Faltam 2 pontos até o seu">
+  <li><span class="trajeto__ponto"></span>Terminal</li>
+  <li><span class="trajeto__onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>Ônibus</li>
+  <li><span class="trajeto__ponto"></span>Praça</li>
+  <li class="e-seu"><span class="trajeto__seu"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>Seu ponto</li>
+</ol>
+      <div class="pilha pilha--media">
+        <a class="botao botao--primario botao--bloco" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>Estou neste ônibus</a>
+        <p class="campo__ajuda">Avisa quem está no ponto. Sua localização vai sem nome, só enquanto você informar.</p>
+      </div>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:47%;top:46%"><span class="pino pino--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span></span><span class="pos" style="left:70%;top:17%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22V10"/><rect x="6" y="2.5" width="12" height="8" rx="1.5"/><path d="M9 6.5h6"/><path d="M8.5 22h7"/></svg></span></span><button class="mapa__acao" type="button" aria-label="Centralizar na minha localização"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg></button></div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro "><figcaption>Mapa e relatos</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Problemas por perto">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      <a class="botao botao--primario botao--bloco" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Relatar problema</a>
+      <div class="pilha pilha--media">
+        <h2 class="secao-titulo">Problemas por perto</h2>
+        <div class="opcoes" role="group" aria-label="Filtrar por status">
+          <button class="opcao" type="button" aria-pressed="true">Todos</button>
+          <button class="opcao" type="button" aria-pressed="false">Abertos</button>
+          <button class="opcao" type="button" aria-pressed="false">Resolvidos</button>
+        </div>
+      </div>
+      <ul class="relatos">
+        <li><a class="relato" href="#"><span class="relato__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg></span><span><span class="relato__titulo">Buraco grande</span><span class="relato__lugar">Av. Prestes Maia, a 180 m</span></span><span class="status status--aberto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Aberto</span></a></li>
+        <li><a class="relato" href="#"><span class="relato__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg></span><span><span class="relato__titulo">Calçada quebrada</span><span class="relato__lugar">Perto da Fatec, a 240 m</span></span><span class="status status--aberto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Aberto</span></a></li>
+        <li><a class="relato" href="#"><span class="relato__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg></span><span><span class="relato__titulo">Trecho sem iluminação</span><span class="relato__lugar">Rua da Fatec, a 310 m</span></span><span class="status status--analise"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="7"/><path d="m21 21-5.5-5.5"/><path d="M10.5 7.5v3l2 1.5"/></svg>Em análise</span></a></li>
+      </ul>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span>
+    <span class="pos" style="left:28%;top:62%"><span class="pino pino--grave"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 15 7 10.5l3.5 1 3-2.5 5 1.5 2 4-3.5 3.5-5-1-3.5 1.5z" fill="currentColor"/><path d="M13.5 9V5M7 10.5 5 7M18.5 10.5 20.5 7"/></svg></span></span>
+    <span class="pos" style="left:52%;top:38%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg></span></span>
+    <span class="pos" style="left:72%;top:60%"><span class="pino pino--analise"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="7"/><path d="m21 21-5.5-5.5"/><path d="M10.5 7.5v3l2 1.5"/></svg></span></span>
+    <span class="pos" style="left:18%;top:26%"><span class="pino pino--resolvido"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></span>
+    <button class="mapa__acao" type="button" aria-label="Centralizar na minha localização"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg></button>
+  </div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro "><figcaption>Formulário de relato</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><form class="tela__conteudo tela__conteudo--estreito form" onsubmit="return false">
+  <div class="pilha pilha--justa"><a class="botao botao--texto botao--voltar" href="#">Voltar ao mapa</a><h1 class="tela__titulo">Relatar problema</h1></div>
+  <fieldset class="campo"><legend class="campo__rotulo">Qual é o problema?</legend>
+    <div class="tipos"><label class="tipo"><input type="radio" name="tipo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 15 7 10.5l3.5 1 3-2.5 5 1.5 2 4-3.5 3.5-5-1-3.5 1.5z" fill="currentColor"/><path d="M13.5 9V5M7 10.5 5 7M18.5 10.5 20.5 7"/></svg><span>Buraco</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label><label class="tipo"><input type="radio" name="tipo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="4.5" r="1.8"/><path d="M10 8.5V14h5l2.5 5.5"/><path d="M10 10.5h5"/><path d="M7.5 11a5.2 5.2 0 1 0 6.8 6.5"/></svg><span>Falta de rampa</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label><label class="tipo"><input type="radio" name="tipo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5a6.5 6.5 0 0 0-4 11.6c.8.7 1.2 1.5 1.2 2.4h5.6c0-.9.4-1.7 1.2-2.4A6.5 6.5 0 0 0 12 2.5z"/><path d="M9.5 20h5M10.5 22.5h3"/></svg><span>Má iluminação</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label><label class="tipo"><input type="radio" name="tipo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 5.5h19L19.5 9h-15z"/><path d="M6 9v12M18 9v12"/><path d="M6 16h12"/></svg><span>Ponto sem cobertura</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label><label class="tipo"><input type="radio" name="tipo" checked><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg><span>Calçada quebrada</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label></div>
+  </fieldset>
+  <fieldset class="campo"><legend class="campo__rotulo">Dá para passar?</legend>
+    <div class="tipos"><label class="tipo"><input type="radio" name="sev" checked><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg><span>Dá, com cuidado</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label><label class="tipo"><input type="radio" name="sev"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg><span>Não dá para passar</span><span class="tipo__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span></label></div>
+  </fieldset>
+  <div class="campo"><span class="campo__rotulo">Onde?</span>
+    <div class="local"><div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:50%;top:46%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg></span></span></div>
+      <div class="local__rodape"><span>Perto de Av. Prestes Maia. Arraste o mapa para ajustar.</span><button class="botao botao--secundario botao--icone" type="button" aria-label="Usar minha localização"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg></button></div></div>
+  </div>
+  <div class="campo"><span class="campo__rotulo">Foto <span class="campo__opcional">(ajuda a resolver mais rápido)</span></span>
+    <label class="foto"><input type="file" accept="image/*" capture="environment" aria-label="Tirar ou escolher foto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7.5h3.5L9 5h6l1.5 2.5H20a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>Tirar ou escolher foto</label>
+    <p class="campo__ajuda">Não fotografe rostos nem placas de carro. A foto é reduzida antes do envio.</p></div>
+  <div class="campo"><label class="campo__rotulo" for="x-desc">Detalhes <span class="campo__opcional">(opcional)</span></label><textarea class="entrada" id="x-desc" placeholder="Ex.: o buraco fica junto à guia"></textarea></div>
+  <div class="form__rodape"><button class="botao botao--primario botao--bloco" type="submit">Enviar relato</button></div>
+</form></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro "><figcaption>Ranking e impacto</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><div class="tela__conteudo tela__conteudo--estreito">
+  <h1 class="tela__titulo">Turmas</h1>
+  <div class="minha-turma"><span class="minha-turma__posicao">3º</span><span class="minha-turma__nome">ADS 3º semestre</span><span class="minha-turma__falta">340 pontos. Faltam 20 para passar Biocombustíveis 5º.</span></div>
+  <ol class="ranking" aria-label="Ranking das turmas, dados de demonstração">
+    <li><span class="ranking__pos"><span class="sr-only">1º</span><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg></span><span class="ranking__turma">ADS 5º semestre</span><span class="ranking__pontos">415 pts</span></li><li><span class="ranking__pos">2º</span><span class="ranking__turma">Biocombustíveis 5º</span><span class="ranking__pontos">360 pts</span></li><li aria-current="true"><span class="ranking__pos">3º</span><span class="ranking__turma">ADS 3º semestre</span><span class="ranking__pontos">340 pts</span></li><li><span class="ranking__pos">4º</span><span class="ranking__turma">ADS 1º semestre</span><span class="ranking__pontos">275 pts</span></li><li><span class="ranking__pos">5º</span><span class="ranking__turma">Biocombustíveis 3º</span><span class="ranking__pontos">190 pts</span></li>
+  </ol>
+  <section class="pilha" aria-label="Sua contribuição">
+    <h2 class="secao-titulo">O que você fez</h2>
+    <div class="numeros">
+      <div class="numero"><strong>6</strong><span>relatos enviados</span></div>
+      <div class="numero"><strong>2</strong><span>problemas resolvidos</span></div>
+      <div class="numero"><strong>45 min</strong><span>informando o ônibus</span></div>
+    </div>
+  </section>
+  <section class="pilha">
+    <h2 class="secao-titulo">Como ganhar pontos</h2>
+    <ul class="pontos-regras">
+      <li><span>Informar o ônibus, a cada 5 min</span><strong>+2 pts</strong></li>
+      <li><span>Enviar um relato com foto</span><strong>+10 pts</strong></li>
+      <li><span>Seu relato é resolvido</span><strong>+5 pts</strong></li>
+    </ul>
+  </section>
+</div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro "><figcaption>Painel da prefeitura</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><div class="tela__conteudo">
+  <h1 class="tela__titulo">Painel da prefeitura</h1>
+  <p class="aviso-dados"><span><strong>Dados de demonstração.</strong> Estes números ilustram o painel e não descrevem Araçatuba.</span></p>
+  <div class="resumo">
+    <div class="resumo__item"><span class="resumo__valor">47</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Abertos</span></div>
+    <div class="resumo__item"><span class="resumo__valor">18</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="7"/><path d="m21 21-5.5-5.5"/><path d="M10.5 7.5v3l2 1.5"/></svg>Em análise</span></div>
+    <div class="resumo__item"><span class="resumo__valor">63</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>Resolvidos</span></div>
+  </div>
+  <div class="tabela-rolagem"><table class="tabela-painel">
+    <caption>Regiões com mais problemas abertos</caption>
+    <thead><tr><th scope="col">Região</th><th scope="col">Abertos</th><th scope="col" class="so-largo">Em análise</th><th scope="col">Resolv.</th><th scope="col">Atraso médio</th><th scope="col" class="so-largo col-texto">Mais comum</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Centro</th><td><span class="barra-celula"><span class="barra-celula__valor">16</span><span class="barra" aria-hidden="true"><span style="--v:100%"></span></span></span></td><td class="so-largo">6</td><td>21</td><td>6 min</td><td class="so-largo col-texto">Calçada quebrada</td></tr>
+      <tr><th scope="row">Zona Norte</th><td><span class="barra-celula"><span class="barra-celula__valor">12</span><span class="barra" aria-hidden="true"><span style="--v:75%"></span></span></span></td><td class="so-largo">4</td><td>14</td><td>9 min</td><td class="so-largo col-texto">Má iluminação</td></tr>
+      <tr><th scope="row">Zona Leste</th><td><span class="barra-celula"><span class="barra-celula__valor">9</span><span class="barra" aria-hidden="true"><span style="--v:56%"></span></span></span></td><td class="so-largo">3</td><td>11</td><td>4 min</td><td class="so-largo col-texto">Buraco</td></tr>
+      <tr><th scope="row">Zona Sul</th><td><span class="barra-celula"><span class="barra-celula__valor">6</span><span class="barra" aria-hidden="true"><span style="--v:38%"></span></span></span></td><td class="so-largo">3</td><td>10</td><td>3 min</td><td class="so-largo col-texto">Falta de rampa</td></tr>
+      <tr><th scope="row">Zona Oeste</th><td><span class="barra-celula"><span class="barra-celula__valor">4</span><span class="barra" aria-hidden="true"><span style="--v:25%"></span></span></span></td><td class="so-largo">2</td><td>7</td><td>2 min</td><td class="so-largo col-texto">Ponto sem cobertura</td></tr>
+    </tbody>
+  </table></div>
+  <p class="texto-2 texto-peq">Atraso médio: diferença entre o horário cadastrado e os avisos ao vivo dos passageiros.</p>
+</div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+  </div></section>
+
+  <section class="mock__so-desktop">
+    <h2 class="grupo">Desktop e projetor</h2>
+    <div class="pilha" style="gap:28px">
+    <figure class="quadro quadro--largo"><figcaption>Rotas: painel à esquerda, mapa à direita</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+<section class="painel-lateral tela__conteudo" aria-label="Comparar rotas">
+  
+<form class="busca" onsubmit="return false">
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span>
+  <div class="busca__campo"><label class="busca__rotulo" for="o2">De onde</label><input class="busca__input" id="o2" value="Fatec Araçatuba" placeholder="Rua, bairro ou lugar"></div>
+  <button class="busca__trocar" type="button" aria-label="Trocar origem e destino"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 20V5M8 5 4 9M8 5l4 4"/><path d="M16 4v15M16 19l-4-4M16 19l4-4"/></svg></button>
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>
+  <div class="busca__campo busca__campo--destino"><label class="busca__rotulo" for="d2">Para onde</label><input class="busca__input" id="d2" value="Praça Rui Barbosa" placeholder="Rua, bairro ou lugar"></div>
+  <span class="busca__linha"></span>
+</form>
+  
+<div class="opcoes opcoes--grade" role="group" aria-label="Sobre você">
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho bike</label>
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho carro</label>
+  <label class="opcao opcao--inteira"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Rota acessível: evita calçada ruim e falta de rampa</label>
+</div>
+  <div class="resultado-cabeca"><h2 class="secao-titulo">Fatec Araçatuba até Praça Rui Barbosa</h2><p class="texto-2 texto-peq">Hoje às 19:20, à noite. 1,0 km.</p></div>
+  
+<div class="conjunto-placa">
+  <article class="placa placa--verde cartao-rota" aria-label="Recomendação: ônibus">
+    <p class="cartao-rota__chamada">Melhor jeito hoje</p>
+    <div class="cartao-rota__cabeca">
+      <span class="modo modo--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+      <div class="pilha pilha--justa">
+        <h3 class="cartao-rota__nome">Ônibus</h3>
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">próximo em 4 min</span></p>
+      </div>
+    </div>
+    <dl class="metricas">
+      <div class="metrica"><dt>tempo com espera</dt><dd>14 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 5,00</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>40 g</dd></div>
+    </dl>
+    <div class="alertas"><a class="chip-alerta chip-alerta--leve" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 5.5h19L19.5 9h-15z"/><path d="M6 9v12M18 9v12"/><path d="M6 16h12"/></svg>Ponto sem cobertura</a></div>
+    <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+  </article>
+  <p class="placa-adicional"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg><span><strong>Os relatos mudaram a recomendação</strong>A pé seria a primeira opção, mas hoje tem 2 alertas no caminho: calçada quebrada e trecho sem iluminação. O ônibus evita os dois.</span></p>
+</div>
+  <div class="lista-rotas">
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--ape"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="13" cy="4.5" r="1.8"/><path d="M12.5 8.5 10.5 14l3.5 2.5 1 5"/><path d="M10.5 14 8.5 21.5"/><path d="M12.5 8.5l3 2.8 3 .7"/><path d="M12.5 8.5 8.5 10l-1.5 3.5"/></svg></span><div><h3 class="cartao-rota__nome">A pé</h3><p class="cartao-rota__nota">Seria a primeira opção sem os alertas</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>12 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Calçada quebrada</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--bike"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17 9 9.5h6.2L18.5 17"/><path d="M9 9.5 12 17l3.2-7.5"/><path d="M7.5 6.5H11M9 9.5 8.8 6.5"/><path d="M13.8 6h2.7l-1.3 3.5"/></svg></span><div><h3 class="cartao-rota__nome">Bike</h3><p class="cartao-rota__nota">Marque “Tenho bike” para entrar na recomendação</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>6 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--grave" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg>Buraco grande</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--carro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 11l1.5-4.3A2.5 2.5 0 0 1 8.9 5h6.2a2.5 2.5 0 0 1 2.4 1.7L19 11"/><path d="M4 11h16a1 1 0 0 1 1 1v5H3v-5a1 1 0 0 1 1-1z"/><path d="M6 17v2.5M18 17v2.5"/><path d="M7 14h.01M17 14h.01"/></svg></span><div><h3 class="cartao-rota__nome">Carro</h3><p class="cartao-rota__nota">Sem alertas no caminho</p></div></div>
+  <dl class="metricas"><div class="metrica metrica--melhor"><dt>mais rápido</dt><dd>5 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 1,20</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>150 g</dd></div></dl>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article></div>
+  <div class="pilha pilha--justa"><p class="texto-2 texto-peq">Custo e CO<sub>2</sub> são estimativas com valores de exemplo.</p><a class="botao botao--texto botao--voltar" href="#">Como calculamos</a></div>
+</section><div class="mapa mapa--so-largo">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M205 505H300V330H480V205H525" fill="none" stroke="var(--modo-ape)" stroke-width="6" stroke-dasharray="1 14" stroke-linecap="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:25.6%;top:84%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span></span><span class="pos" style="left:65.6%;top:24%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span></span><span class="pos" style="left:36.4%;top:55%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg></span></span><span class="pos" style="left:60.6%;top:34%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5a6.5 6.5 0 0 0-4 11.6c.8.7 1.2 1.5 1.2 2.4h5.6c0-.9.4-1.7 1.2-2.4A6.5 6.5 0 0 0 12 2.5z"/><path d="M9.5 20h5M10.5 22.5h3"/></svg></span></span></div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro quadro--largo"><figcaption>Ônibus ao vivo</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Previsão do ônibus">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      
+<div class="placa placa--azul">
+  <div class="linha-onibus">
+    <span class="modo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+    <div class="linha-onibus__texto"><h2 class="linha-onibus__nome">Linha D1 Fatec–Centro</h2><p class="linha-onibus__ponto">Ponto: Fatec, portão principal</p></div>
+    <a class="botao botao--texto" href="#">Trocar</a>
+  </div>
+</div>
+      <div class="previsao">
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">Atualizado há 20 s por 2 passageiros</span></p>
+        <p class="previsao__valor">4 <span class="previsao__unidade">min</span></p>
+        <p class="previsao__texto">para chegar ao seu ponto. Faltam 2 pontos.</p>
+      </div>
+      
+<ol class="trajeto" aria-label="Faltam 2 pontos até o seu">
+  <li><span class="trajeto__ponto"></span>Terminal</li>
+  <li><span class="trajeto__onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>Ônibus</li>
+  <li><span class="trajeto__ponto"></span>Praça</li>
+  <li class="e-seu"><span class="trajeto__seu"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>Seu ponto</li>
+</ol>
+      <div class="pilha pilha--media">
+        <a class="botao botao--primario botao--bloco" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>Estou neste ônibus</a>
+        <p class="campo__ajuda">Avisa quem está no ponto. Sua localização vai sem nome, só enquanto você informar.</p>
+      </div>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:47%;top:46%"><span class="pino pino--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span></span><span class="pos" style="left:70%;top:17%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22V10"/><rect x="6" y="2.5" width="12" height="8" rx="1.5"/><path d="M9 6.5h6"/><path d="M8.5 22h7"/></svg></span></span><button class="mapa__acao" type="button" aria-label="Centralizar na minha localização"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg></button></div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    <figure class="quadro quadro--largo quadro--medio"><figcaption>Painel da prefeitura, com as colunas extras</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><div class="tela__conteudo">
+  <h1 class="tela__titulo">Painel da prefeitura</h1>
+  <p class="aviso-dados"><span><strong>Dados de demonstração.</strong> Estes números ilustram o painel e não descrevem Araçatuba.</span></p>
+  <div class="resumo">
+    <div class="resumo__item"><span class="resumo__valor">47</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Abertos</span></div>
+    <div class="resumo__item"><span class="resumo__valor">18</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="7"/><path d="m21 21-5.5-5.5"/><path d="M10.5 7.5v3l2 1.5"/></svg>Em análise</span></div>
+    <div class="resumo__item"><span class="resumo__valor">63</span><span class="resumo__rotulo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>Resolvidos</span></div>
+  </div>
+  <div class="tabela-rolagem"><table class="tabela-painel">
+    <caption>Regiões com mais problemas abertos</caption>
+    <thead><tr><th scope="col">Região</th><th scope="col">Abertos</th><th scope="col" class="so-largo">Em análise</th><th scope="col">Resolv.</th><th scope="col">Atraso médio</th><th scope="col" class="so-largo col-texto">Mais comum</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Centro</th><td><span class="barra-celula"><span class="barra-celula__valor">16</span><span class="barra" aria-hidden="true"><span style="--v:100%"></span></span></span></td><td class="so-largo">6</td><td>21</td><td>6 min</td><td class="so-largo col-texto">Calçada quebrada</td></tr>
+      <tr><th scope="row">Zona Norte</th><td><span class="barra-celula"><span class="barra-celula__valor">12</span><span class="barra" aria-hidden="true"><span style="--v:75%"></span></span></span></td><td class="so-largo">4</td><td>14</td><td>9 min</td><td class="so-largo col-texto">Má iluminação</td></tr>
+      <tr><th scope="row">Zona Leste</th><td><span class="barra-celula"><span class="barra-celula__valor">9</span><span class="barra" aria-hidden="true"><span style="--v:56%"></span></span></span></td><td class="so-largo">3</td><td>11</td><td>4 min</td><td class="so-largo col-texto">Buraco</td></tr>
+      <tr><th scope="row">Zona Sul</th><td><span class="barra-celula"><span class="barra-celula__valor">6</span><span class="barra" aria-hidden="true"><span style="--v:38%"></span></span></span></td><td class="so-largo">3</td><td>10</td><td>3 min</td><td class="so-largo col-texto">Falta de rampa</td></tr>
+      <tr><th scope="row">Zona Oeste</th><td><span class="barra-celula"><span class="barra-celula__valor">4</span><span class="barra" aria-hidden="true"><span style="--v:25%"></span></span></span></td><td class="so-largo">2</td><td>7</td><td>2 min</td><td class="so-largo col-texto">Ponto sem cobertura</td></tr>
+    </tbody>
+  </table></div>
+  <p class="texto-2 texto-peq">Atraso médio: diferença entre o horário cadastrado e os avisos ao vivo dos passageiros.</p>
+</div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="grupo">Os três estados do ônibus</h2>
+    <div class="grade">
+      <figure class="quadro quadro--baixo"><figcaption>Horário: ninguém informando</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Previsão do ônibus">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      
+<div class="placa placa--azul">
+  <div class="linha-onibus">
+    <span class="modo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+    <div class="linha-onibus__texto"><h2 class="linha-onibus__nome">Linha D1 Fatec–Centro</h2><p class="linha-onibus__ponto">Ponto: Fatec, portão principal</p></div>
+    <a class="botao botao--texto" href="#">Trocar</a>
+  </div>
+</div>
+      <div class="previsao previsao--horario">
+        <p class="linha linha--justa"><span class="selo selo--horario"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>HORÁRIO</span><span class="frescor">Ninguém informando esta linha agora</span></p>
+        <p class="previsao__valor">19:40</p>
+        <p class="previsao__texto"><strong>Previsão pelo horário cadastrado.</strong> Não sabemos onde o ônibus está, então ele pode adiantar ou atrasar.</p>
+      </div>
+      <div class="pilha pilha--media">
+        <a class="botao botao--primario botao--bloco" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>Estou neste ônibus</a>
+        <p class="campo__ajuda">Seja a primeira pessoa a informar. Quem está no ponto passa a ver o ônibus ao vivo.</p>
+      </div>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:70%;top:17%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22V10"/><rect x="6" y="2.5" width="12" height="8" rx="1.5"/><path d="M9 6.5h6"/><path d="M8.5 22h7"/></svg></span></span></div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+      <figure class="quadro quadro--baixo"><figcaption>Simulação: faixa fixa em todas as telas</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header><div class="app__aviso faixa-simulacao" role="status"><span><strong>SIMULAÇÃO.</strong> Ônibus e posição não são reais.</span><a class="botao botao--texto" href="#">Sair</a></div>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Previsão simulada do ônibus">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      
+<div class="placa placa--azul">
+  <div class="linha-onibus">
+    <span class="modo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+    <div class="linha-onibus__texto"><h2 class="linha-onibus__nome">Linha D1 Fatec–Centro</h2><p class="linha-onibus__ponto">Ponto: Fatec, portão principal</p></div>
+    <a class="botao botao--texto" href="#">Trocar</a>
+  </div>
+</div>
+      <div class="previsao">
+        <p class="linha linha--justa"><span class="selo selo--simulacao">SIMULAÇÃO</span><span class="frescor">Ônibus fictício, não é a posição real</span></p>
+        <p class="previsao__valor">3 <span class="previsao__unidade">min</span></p>
+        <p class="previsao__texto">Previsão simulada para a apresentação.</p>
+      </div>
+      
+<ol class="trajeto" aria-label="Faltam 2 pontos até o seu">
+  <li><span class="trajeto__ponto"></span>Terminal</li>
+  <li><span class="trajeto__onibus trajeto__simulado"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>Simulado</li>
+  <li><span class="trajeto__ponto"></span>Praça</li>
+  <li class="e-seu"><span class="trajeto__seu"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>Seu ponto</li>
+</ol>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:47%;top:46%"><span class="pino pino--onibus pino--simulado"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg><span class="pino__tag">SIM</span></span></span><span class="pos" style="left:70%;top:17%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22V10"/><rect x="6" y="2.5" width="12" height="8" rx="1.5"/><path d="M9 6.5h6"/><path d="M8.5 22h7"/></svg></span></span></div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+      <figure class="quadro quadro--baixo"><figcaption>Tema escuro</figcaption>
+<div class="app" data-theme="dark"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+  <section class="folha" aria-label="Previsão do ônibus">
+    <button class="folha__alca" type="button" aria-label="Recolher painel" aria-expanded="true"></button>
+    <div class="folha__corpo">
+      
+<div class="placa placa--azul">
+  <div class="linha-onibus">
+    <span class="modo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+    <div class="linha-onibus__texto"><h2 class="linha-onibus__nome">Linha D1 Fatec–Centro</h2><p class="linha-onibus__ponto">Ponto: Fatec, portão principal</p></div>
+    <a class="botao botao--texto" href="#">Trocar</a>
+  </div>
+</div>
+      <div class="previsao">
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">Atualizado há 20 s por 2 passageiros</span></p>
+        <p class="previsao__valor">4 <span class="previsao__unidade">min</span></p>
+        <p class="previsao__texto">para chegar ao seu ponto. Faltam 2 pontos.</p>
+      </div>
+      
+<ol class="trajeto" aria-label="Faltam 2 pontos até o seu">
+  <li><span class="trajeto__ponto"></span>Terminal</li>
+  <li><span class="trajeto__onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>Ônibus</li>
+  <li><span class="trajeto__ponto"></span>Praça</li>
+  <li class="e-seu"><span class="trajeto__seu"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>Seu ponto</li>
+</ol>
+      <div class="pilha pilha--media">
+        <a class="botao botao--primario botao--bloco" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>Estou neste ônibus</a>
+        <p class="campo__ajuda">Avisa quem está no ponto. Sua localização vai sem nome, só enquanto você informar.</p>
+      </div>
+    </div>
+  </section>
+  <div class="mapa">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:47%;top:46%"><span class="pino pino--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span></span><span class="pos" style="left:70%;top:17%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22V10"/><rect x="6" y="2.5" width="12" height="8" rx="1.5"/><path d="M9 6.5h6"/><path d="M8.5 22h7"/></svg></span></span><button class="mapa__acao" type="button" aria-label="Centralizar na minha localização"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg></button></div>
+</div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="grupo">Início, carregando e tema escuro</h2>
+    <div class="grade">
+      <figure class="quadro quadro--baixo"><figcaption>Rotas antes da busca</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><div class="tela__conteudo">
+  <h1 class="tela__titulo">Qual é o melhor jeito de chegar lá hoje?</h1>
+  
+<form class="busca" onsubmit="return false">
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span>
+  <div class="busca__campo"><label class="busca__rotulo" for="o3">De onde</label><input class="busca__input" id="o3" value="" placeholder="Rua, bairro ou lugar"></div>
+  <button class="busca__trocar" type="button" aria-label="Trocar origem e destino"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 20V5M8 5 4 9M8 5l4 4"/><path d="M16 4v15M16 19l-4-4M16 19l4-4"/></svg></button>
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>
+  <div class="busca__campo busca__campo--destino"><label class="busca__rotulo" for="d3">Para onde</label><input class="busca__input" id="d3" value="" placeholder="Rua, bairro ou lugar"></div>
+  <span class="busca__linha"></span>
+</form>
+  
+<div class="opcoes opcoes--grade" role="group" aria-label="Sobre você">
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho bike</label>
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho carro</label>
+  <label class="opcao opcao--inteira"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Rota acessível: evita calçada ruim e falta de rampa</label>
+</div>
+  <button class="botao botao--primario botao--bloco" type="button">Comparar rotas</button>
+  <p class="texto-2 texto-peq">Quem mora aqui avisa o que tem no caminho, e a recomendação muda com isso.</p>
+</div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+      <figure class="quadro quadro--baixo"><figcaption>Carregando</figcaption>
+<div class="app"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela"><div class="tela__conteudo">
+  
+<form class="busca" onsubmit="return false">
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span>
+  <div class="busca__campo"><label class="busca__rotulo" for="o4">De onde</label><input class="busca__input" id="o4" value="Fatec Araçatuba" placeholder="Rua, bairro ou lugar"></div>
+  <button class="busca__trocar" type="button" aria-label="Trocar origem e destino"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 20V5M8 5 4 9M8 5l4 4"/><path d="M16 4v15M16 19l-4-4M16 19l4-4"/></svg></button>
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>
+  <div class="busca__campo busca__campo--destino"><label class="busca__rotulo" for="d4">Para onde</label><input class="busca__input" id="d4" value="Praça Rui Barbosa" placeholder="Rua, bairro ou lugar"></div>
+  <span class="busca__linha"></span>
+</form>
+  <p role="status" class="texto-2">Comparando rotas…</p>
+  <div class="esqueleto" style="min-height:170px"></div><div class="esqueleto"></div><div class="esqueleto"></div>
+</div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+      <figure class="quadro quadro--baixo"><figcaption>Rotas no tema escuro</figcaption>
+<div class="app" data-theme="dark"><div class="app__interno">
+  
+<header class="topo">
+  <a class="logo" href="#" aria-label="GoGreen, início"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="3"><path d="M12 21V4M5 11l7-7 7 7"/></svg>GoGreen</a>
+  <span class="topo__espaco"></span>
+  <span class="etiqueta-demo">Dados de demonstração</span>
+  <button class="botao botao--icone" type="button" data-alternar-tema aria-label="Alternar tema claro e escuro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+</header>
+  <div class="app__corpo"><div class="tela tela--dividida">
+<section class="painel-lateral tela__conteudo" aria-label="Comparar rotas">
+  
+<form class="busca" onsubmit="return false">
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span>
+  <div class="busca__campo"><label class="busca__rotulo" for="o5">De onde</label><input class="busca__input" id="o5" value="Fatec Araçatuba" placeholder="Rua, bairro ou lugar"></div>
+  <button class="busca__trocar" type="button" aria-label="Trocar origem e destino"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 20V5M8 5 4 9M8 5l4 4"/><path d="M16 4v15M16 19l-4-4M16 19l4-4"/></svg></button>
+  <span class="busca__marca"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span>
+  <div class="busca__campo busca__campo--destino"><label class="busca__rotulo" for="d5">Para onde</label><input class="busca__input" id="d5" value="Praça Rui Barbosa" placeholder="Rua, bairro ou lugar"></div>
+  <span class="busca__linha"></span>
+</form>
+  
+<div class="opcoes opcoes--grade" role="group" aria-label="Sobre você">
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho bike</label>
+  <label class="opcao"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Tenho carro</label>
+  <label class="opcao opcao--inteira"><input type="checkbox"><span class="opcao__caixa"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg></span>Rota acessível: evita calçada ruim e falta de rampa</label>
+</div>
+  <div class="resultado-cabeca"><h2 class="secao-titulo">Fatec Araçatuba até Praça Rui Barbosa</h2><p class="texto-2 texto-peq">Hoje às 19:20, à noite. 1,0 km.</p></div>
+  
+<div class="conjunto-placa">
+  <article class="placa placa--verde cartao-rota" aria-label="Recomendação: ônibus">
+    <p class="cartao-rota__chamada">Melhor jeito hoje</p>
+    <div class="cartao-rota__cabeca">
+      <span class="modo modo--onibus"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span>
+      <div class="pilha pilha--justa">
+        <h3 class="cartao-rota__nome">Ônibus</h3>
+        <p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="frescor">próximo em 4 min</span></p>
+      </div>
+    </div>
+    <dl class="metricas">
+      <div class="metrica"><dt>tempo com espera</dt><dd>14 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 5,00</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>40 g</dd></div>
+    </dl>
+    <div class="alertas"><a class="chip-alerta chip-alerta--leve" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 5.5h19L19.5 9h-15z"/><path d="M6 9v12M18 9v12"/><path d="M6 16h12"/></svg>Ponto sem cobertura</a></div>
+    <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+  </article>
+  <p class="placa-adicional"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg><span><strong>Os relatos mudaram a recomendação</strong>A pé seria a primeira opção, mas hoje tem 2 alertas no caminho: calçada quebrada e trecho sem iluminação. O ônibus evita os dois.</span></p>
+</div>
+  <div class="lista-rotas">
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--ape"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="13" cy="4.5" r="1.8"/><path d="M12.5 8.5 10.5 14l3.5 2.5 1 5"/><path d="M10.5 14 8.5 21.5"/><path d="M12.5 8.5l3 2.8 3 .7"/><path d="M12.5 8.5 8.5 10l-1.5 3.5"/></svg></span><div><h3 class="cartao-rota__nome">A pé</h3><p class="cartao-rota__nota">Seria a primeira opção sem os alertas</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>12 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Calçada quebrada</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--bike"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17 9 9.5h6.2L18.5 17"/><path d="M9 9.5 12 17l3.2-7.5"/><path d="M7.5 6.5H11M9 9.5 8.8 6.5"/><path d="M13.8 6h2.7l-1.3 3.5"/></svg></span><div><h3 class="cartao-rota__nome">Bike</h3><p class="cartao-rota__nota">Marque “Tenho bike” para entrar na recomendação</p></div></div>
+  <dl class="metricas"><div class="metrica"><dt>tempo</dt><dd>6 min</dd></div><div class="metrica metrica--melhor"><dt>mais barato</dt><dd>R$ 0</dd></div><div class="metrica metrica--melhor"><dt>menos CO<sub>2</sub></dt><dd>0 g</dd></div></dl>
+  <div class="alertas"><p class="alertas__resumo">2 alertas no caminho</p><a class="chip-alerta chip-alerta--grave" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg>Buraco grande</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Trecho sem iluminação</a></div>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article>
+<article class="cartao-rota">
+  <div class="cartao-rota__cabeca"><span class="modo modo--carro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 11l1.5-4.3A2.5 2.5 0 0 1 8.9 5h6.2a2.5 2.5 0 0 1 2.4 1.7L19 11"/><path d="M4 11h16a1 1 0 0 1 1 1v5H3v-5a1 1 0 0 1 1-1z"/><path d="M6 17v2.5M18 17v2.5"/><path d="M7 14h.01M17 14h.01"/></svg></span><div><h3 class="cartao-rota__nome">Carro</h3><p class="cartao-rota__nota">Sem alertas no caminho</p></div></div>
+  <dl class="metricas"><div class="metrica metrica--melhor"><dt>mais rápido</dt><dd>5 min</dd></div><div class="metrica"><dt>custo</dt><dd>R$ 1,20</dd></div><div class="metrica"><dt>CO<sub>2</sub></dt><dd>150 g</dd></div></dl>
+  <div class="cartao-rota__acoes"><a class="botao botao--texto" href="#">Ver caminho</a></div>
+</article></div>
+  <div class="pilha pilha--justa"><p class="texto-2 texto-peq">Custo e CO<sub>2</sub> são estimativas com valores de exemplo.</p><a class="botao botao--texto botao--voltar" href="#">Como calculamos</a></div>
+</section><div class="mapa mapa--so-largo">
+<svg class="mapa-falso" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <rect width="800" height="600" fill="var(--mapa-fundo)"/>
+  <g fill="var(--mapa-quadra)">
+    <rect x="60" y="40" width="130" height="90"/><rect x="220" y="40" width="130" height="90"/><rect x="380" y="40" width="130" height="90"/><rect x="540" y="40" width="130" height="90"/>
+    <rect x="60" y="160" width="130" height="90"/><rect x="380" y="160" width="130" height="90"/><rect x="700" y="160" width="130" height="90"/>
+    <rect x="220" y="280" width="130" height="90"/><rect x="540" y="280" width="130" height="90"/>
+    <rect x="60" y="400" width="130" height="90"/><rect x="380" y="400" width="130" height="90"/><rect x="700" y="400" width="130" height="90"/>
+    <rect x="220" y="520" width="130" height="90"/><rect x="540" y="520" width="130" height="90"/>
+  </g>
+  <g stroke="var(--mapa-rua-borda)" stroke-width="20" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="34" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <g stroke="var(--mapa-rua)" stroke-width="16" fill="none">
+    <path d="M-20 145H820M-20 265H820M-20 385H820M-20 505H820M205-20V620M365-20V620M525-20V620M685-20V620"/>
+    <path stroke-width="28" d="M-20 560 C200 500 300 340 460 270 S700 90 820 40"/>
+  </g>
+  <path d="M205 505V385H365V265H525V145" fill="none" stroke="var(--modo-onibus)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M205 505H300V330H480V205H525" fill="none" stroke="var(--modo-ape)" stroke-width="6" stroke-dasharray="1 14" stroke-linecap="round"/>
+</svg>
+<span class="mapa-falso__nota">Mapa ilustrativo. No app: Leaflet + OpenStreetMap.</span>
+<span class="mapa__atribuicao">© OpenStreetMap</span><span class="pos" style="left:25.6%;top:84%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6" fill="var(--cor-superficie, #fff)" stroke-width="3"/></svg></span></span><span class="pos" style="left:65.6%;top:24%"><span class="pino pino--ponto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-6.8 8-12.5a8 8 0 0 0-16 0C4 15.2 12 22 12 22z" fill="currentColor"/><circle cx="12" cy="9.5" r="2.8" fill="var(--cor-superficie, #fff)" stroke="none"/></svg></span></span><span class="pos" style="left:36.4%;top:55%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="1"/><path d="M2.5 12H9M15 12h6.5M7 5v7M17 12v7"/><path d="M14 5l-3 3.5 2.5 3-3 3 2 4.5"/></svg></span></span><span class="pos" style="left:60.6%;top:34%"><span class="pino pino--atencao"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5a6.5 6.5 0 0 0-4 11.6c.8.7 1.2 1.5 1.2 2.4h5.6c0-.9.4-1.7 1.2-2.4A6.5 6.5 0 0 0 12 2.5z"/><path d="M9.5 20h5M10.5 22.5h3"/></svg></span></span></div></div></div>
+  
+<nav class="nav" aria-label="Principal">
+  <a class="nav__item" href="#" aria-current="page"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>Rotas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg>Ônibus</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mapa</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H3.5v1.5A3.5 3.5 0 0 0 7.2 11M17 6h3.5v1.5a3.5 3.5 0 0 1-3.7 3.5"/><path d="M12 15v4M8 20.5h8"/></svg>Turmas</a><a class="nav__item" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" stroke-width="2.6"><path d="M3.5 20.5h17"/><path d="M7 20.5V13M12 20.5V5M17 20.5V10"/></svg>Painel</a>
+</nav>
+</div></div></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="grupo">Estados vazios e de erro</h2>
+    <div class="estados">
+      <figure><figcaption>Sem GPS</figcaption><div class="estado "><span class="estado__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 4.4A7.5 7.5 0 0 1 19.5 9.5c0 2.2-1.2 4.6-2.7 6.6M13.9 18.9c-1 1.2-1.9 2.1-1.9 2.1s-7.5-5.9-7.5-11.5c0-1 .2-1.9.5-2.8"/><path d="M3 3l18 18"/></svg></span><h3 class="estado__titulo">Não conseguimos sua localização</h3><p class="estado__texto">Ative a localização do navegador ou digite o endereço.</p><a class="botao botao--secundario" href="#">Digitar endereço</a></div></figure>
+      <figure><figcaption>Sem rede</figcaption><div class="estado "><span class="estado__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3l18 18"/><path d="M8.5 16.5a5 5 0 0 1 6-.8M5 12.8a10 10 0 0 1 4-2.4M19 12.8a10 10 0 0 0-5.2-2.7M2 9a15 15 0 0 1 4-2.7M22 9A15 15 0 0 0 10.5 5.1"/><path d="M12 20h.01"/></svg></span><h3 class="estado__titulo">Você está sem internet</h3><p class="estado__texto">Mostramos o que já estava salvo. Seu relato é enviado quando a conexão voltar.</p><a class="botao botao--secundario" href="#">Tentar de novo</a></div></figure>
+      <figure><figcaption>Sem dados de ônibus</figcaption><div class="estado "><span class="estado__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M12 3v7.5"/><path d="M7 17.5V20.5M17 17.5V20.5"/><path d="M8 14h.01M16 14h.01"/></svg></span><h3 class="estado__titulo">Esta linha não tem horário cadastrado</h3><p class="estado__texto">Sem aviso de passageiros e sem tabela, não dá para prever a chegada.</p><a class="botao botao--secundario" href="#">Escolher outra linha</a></div></figure>
+      <figure><figcaption>Erro na rota</figcaption><div class="estado estado--erro"><span class="estado__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg></span><h3 class="estado__titulo">Não encontramos caminho até esse destino</h3><p class="estado__texto">Confira o endereço ou escolha um lugar próximo em Araçatuba.</p><a class="botao botao--secundario" href="#">Editar destino</a></div></figure>
+      <figure><figcaption>Mapa sem relatos</figcaption><div class="estado "><span class="estado__icone"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span><h3 class="estado__titulo">Nenhum problema relatado aqui</h3><p class="estado__texto">Viu um buraco ou uma calçada quebrada? Conte para os vizinhos.</p><a class="botao botao--secundario" href="#">Relatar problema</a></div></figure>
+      <figure><figcaption>Toasts e erro de campo</figcaption><div class="pilha">
+        <div class="toast toast--ok"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg><span>Relato enviado. +10 pontos para ADS 3º semestre.</span></div>
+        <div class="toast toast--erro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3l18 18"/><path d="M8.5 16.5a5 5 0 0 1 6-.8M5 12.8a10 10 0 0 1 4-2.4M19 12.8a10 10 0 0 0-5.2-2.7M2 9a15 15 0 0 1 4-2.7M22 9A15 15 0 0 0 10.5 5.1"/><path d="M12 20h.01"/></svg><span>Relato salvo. Vamos enviar quando a internet voltar.</span><button class="botao" type="button" aria-label="Fechar aviso"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+        <div class="campo"><p class="campo__erro"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Marque o local no mapa para enviar.</p></div>
+      </div></figure>
+      <figure><figcaption>Informando o ônibus</figcaption><div class="informando"><p class="linha linha--justa"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span></p><h3 class="estado__titulo">Você está informando a Linha D1</h3><p class="estado__texto">Quem está no ponto já vê o ônibus. +2 pontos a cada 5 min.</p><button class="botao botao--parar botao--bloco" type="button">Parar de informar</button></div></figure>
+      <figure><figcaption>Sugestões da busca</figcaption><ul class="sugestoes"><li><button type="button"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22"/></svg>Usar minha localização</button></li><li><button type="button"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21.5s7.5-6.5 7.5-12a7.5 7.5 0 0 0-15 0c0 5.5 7.5 12 7.5 12z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Fatec Araçatuba</button></li><li><button type="button"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21.5s7.5-6.5 7.5-12a7.5 7.5 0 0 0-15 0c0 5.5 7.5 12 7.5 12z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Praça Rui Barbosa</button></li></ul></figure>
+      <figure><figcaption>Foto escolhida</figcaption><div class="foto-previa"><img alt="Prévia da foto" width="72" height="72" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Crect width='72' height='72' fill='%23C6CAC5'/%3E%3Cpath d='M0 50 30 30l42 22v20H0z' fill='%2370797D'/%3E%3C/svg%3E"><span>calcada.jpg, reduzida para 180 KB</span><button class="botao botao--icone" type="button" aria-label="Remover foto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></figure>
+      <figure><figcaption>Selos</figcaption><p class="linha"><span class="selo selo--aovivo"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.6 19.4a10.5 10.5 0 0 1 0-14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg>AO VIVO</span><span class="selo selo--horario"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>HORÁRIO</span><span class="selo selo--simulacao">SIMULAÇÃO</span></p></figure>
+      <figure><figcaption>Severidade e status</figcaption><div class="pilha pilha--media"><div class="alertas"><a class="chip-alerta chip-alerta--leve" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.5h.01"/></svg>Leve</a><a class="chip-alerta chip-alerta--atencao" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/></svg>Atenção</a><a class="chip-alerta chip-alerta--grave" href="#"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/></svg>Grave</a></div><p class="linha"><span class="status status--aberto"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/></svg>Aberto</span><span class="status status--analise"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="7"/><path d="m21 21-5.5-5.5"/><path d="M10.5 7.5v3l2 1.5"/></svg>Em análise</span><span class="status status--resolvido"><svg class="icone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>Resolvido</span></p></div></figure>
+    </div>
+  </section>
+</div>
+<script>
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-alternar-tema]');
+    if (b) {
+      var r = document.documentElement;
+      r.setAttribute('data-theme', r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+  });
+</script>
+</body>
+</html>

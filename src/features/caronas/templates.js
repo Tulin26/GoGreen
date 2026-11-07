@@ -1,0 +1,1 @@
+export const AVISO = `<p class="alert alert-warning aviso-carona"><strong>Carona é entre vocês.</strong> O GoGreen não confere a identidade de ninguém e não cobra nada. Não aceite nem peça pagamento pela vaga. Prefira pontos de encontro públicos, avise alguém do trajeto e confira a placa antes de entrar. Só para maiores de 18 anos.</p>`;

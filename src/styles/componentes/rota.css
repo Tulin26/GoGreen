@@ -1,0 +1,84 @@
+                                          
+.resultado-cabeca { display: flex; flex-direction: column; gap: 2px; }
+.lista-rotas { display: flex; flex-direction: column; gap: var(--esp-3); }
+
+.cartao-rota {
+  display: flex;
+  flex-direction: column;
+  background: var(--bs-card-bg, var(--cor-superficie));
+  border: 1px solid var(--bs-card-border-color, var(--cor-divisor));
+  border-radius: 10px;
+}
+.cartao-rota__corpo { display: flex; flex-direction: column; gap: var(--esp-3); padding: var(--bs-card-spacer-y, 1rem); }
+.cartao-rota--recomendada { border-left: 4px solid var(--cor-acao); }
+.cartao-rota__chamada {
+  color: var(--cor-acao-forte);
+  font-size: var(--fs-mini);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.025em;
+}
+.cartao-rota__cabeca { display: flex; align-items: center; gap: var(--esp-3); }
+.cartao-rota__nome { font-size: var(--fs-sub); font-weight: var(--peso-forte); line-height: 1.15; }
+.cartao-rota__nota { font-size: var(--fs-peq); line-height: 1.25; color: var(--cor-texto-2); }
+.cartao-rota__acoes { display: flex; justify-content: flex-end; margin-top: -4px; }
+
+                                                            
+.modo {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--modo-cor, var(--modo-carro));
+  color: var(--sobre-modo);
+  flex: none;
+}
+.modo--carro { --modo-cor: var(--modo-carro); }
+.modo--moto { --modo-cor: var(--modo-carro); }
+.modo--onibus { --modo-cor: var(--modo-onibus); }
+.modo--bike { --modo-cor: var(--modo-bike); }
+.modo--ape { --modo-cor: var(--modo-ape); }
+                                                                                 
+.placa .modo { background: #FFFFFF; color: #15191B; width: 48px; height: 48px; }
+.placa .modo .icone { width: 30px; height: 30px; }
+
+                                                                                    
+.metricas { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--esp-2); }
+.metrica { display: flex; flex-direction: column-reverse; justify-content: flex-end; min-width: 0; }
+.metrica dd {
+  font-size: var(--fs-sub);
+  font-weight: var(--peso-forte);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.metrica dt { font-size: var(--fs-mini); font-weight: var(--peso-medio); color: var(--cor-texto-2); line-height: 1.2; margin-top: 3px; }
+.placa .metrica dd { font-size: var(--fs-titulo); }
+.placa .metrica dt { color: inherit; }
+.metrica--melhor dt { color: var(--cor-texto); font-weight: var(--peso-forte); }
+
+                                          
+.alertas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+.alertas__resumo { width: 100%; font-size: var(--fs-peq); font-weight: var(--peso-forte); line-height: 1.2; }
+.chip-alerta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: var(--alvo-min);
+  padding: 5px 11px 5px 7px;
+  border: 2px solid var(--sobre-placa-clara);
+  border-radius: var(--raio-campo);
+  font-size: var(--fs-peq);
+  font-weight: var(--peso-medio);
+  line-height: 1.12;
+  text-align: left;
+  text-decoration: none;
+  max-width: 100%;
+}
+.chip-alerta .icone { width: 22px; height: 22px; }
+.chip-alerta--leve { background: var(--cor-superficie); color: var(--cor-texto); border-color: var(--sev-leve); }
+.chip-alerta--leve .icone { color: var(--sev-leve); }
+.chip-alerta--atencao { background: var(--sev-atencao); color: var(--sobre-placa-clara); }
+.chip-alerta--grave { background: var(--placa-vermelha); color: #FFFFFF; border-color: var(--placa-vermelha); }
+.placa .chip-alerta--leve { border-color: #15191B; background: #FFFFFF; color: #15191B; }
+.placa .chip-alerta--leve .icone { color: #0B4A9E; }

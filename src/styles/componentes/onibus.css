@@ -1,0 +1,60 @@
+                                                                                       
+.regua { margin: var(--esp-3) 0; }
+.regua__pontas { display: flex; justify-content: space-between; gap: var(--esp-2); font-weight: 600; font-size: .85rem; }
+.regua__trilho {
+  position: relative;
+  height: 44px;
+  margin: var(--esp-2) 14px;
+  background: linear-gradient(var(--cor-borda-forte), var(--cor-borda-forte)) center / 100% 4px no-repeat;
+}
+.regua__onibus, .regua__voce {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  box-shadow: 0 0 0 2px #0B4A9E;
+  font-weight: 700;
+  line-height: 1;
+}
+.regua__onibus .icone, .regua__voce .icone { width: 18px; height: 18px; }
+.regua__onibus--volta { box-shadow: 0 0 0 2px #7A3E00; }
+.regua__voce { padding: 4px; box-shadow: 0 0 0 2px #00603C; z-index: 2; }
+.regua__ponto { position: absolute; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: var(--cor-borda-forte); transform: translate(-50%, -50%); }
+                                                                       
+.pino--estimado { opacity: .85; outline: 2px dashed currentColor; outline-offset: -3px; border-radius: 50%; }
+.pino--ponto-selecionado::before { background: #1f7a50; border-color: #fff; box-shadow: 0 0 0 3px #1f7a50; }
+.pino--ponto-selecionado { color: #fff; }
+.lista-pontos-onibus__item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2);
+  padding: var(--esp-2) 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.lista-pontos-onibus__item:hover,
+.lista-pontos-onibus__item[aria-pressed="true"] { color: var(--cor-primaria, #1f7a50); }
+.lista-pontos-onibus__item:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+                                                                       
+@container app (min-width: 1100px) {
+  .tela--dividida > .folha.painel-lateral { gap: 0; }
+  .folha.painel-lateral .folha__corpo { gap: var(--esp-4); padding: 18px; }
+  .mapa--onibus .mapa__erro { left: min(470px, calc(100% - 24px)); right: 16px; max-width: 520px; }
+}
+
+                                                                                                                  
+@media (max-width: 1099px) {
+  .tela--dividida > .mapa--onibus { display: block; order: 1; flex: 0 0 auto; width: 100%; height: 48vh; min-height: 300px; }
+}

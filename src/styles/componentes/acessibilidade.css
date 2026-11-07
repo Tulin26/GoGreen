@@ -1,0 +1,12 @@
+                                                         
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (forced-colors: active) {
+  .placa, .placa-adicional, .selo, .chip-alerta, .modo, .opcao, .tipo { border: 2px solid CanvasText; }
+  .nav__item[aria-current="page"] { outline: 3px solid Highlight; outline-offset: -3px; }
+}

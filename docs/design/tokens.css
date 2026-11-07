@@ -1,0 +1,226 @@
+                            
+                                                             
+                                                                                
+                                                                           
+                                             
+                                                                                              
+
+@font-face {
+  font-family: "Overpass";
+  src: url("./fonts/overpass-latin-wght-normal.woff2") format("woff2-variations"),
+       url("./fonts/overpass-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+                                                                                       
+  --fonte: "Overpass", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --peso-normal: 450;
+  --peso-medio: 600;
+  --peso-forte: 800;
+
+  --fs-mini: 0.8125rem;                                     
+  --fs-peq: 0.9375rem;             
+  --fs-corpo: 1.0625rem;                                                      
+  --fs-sub: 1.25rem;               
+  --fs-titulo: 1.625rem;           
+  --fs-grande: 2.25rem;            
+  --fs-placar: 3.5rem;                                  
+  --lh-corpo: 1.42;
+  --lh-titulo: 1.12;
+
+              
+  --esp-1: 4px;
+  --esp-2: 8px;
+  --esp-3: 12px;
+  --esp-4: 16px;
+  --esp-5: 24px;
+  --esp-6: 32px;
+  --esp-7: 48px;
+  --gutter: 16px;
+
+                                                                  
+  --raio-placa: 12px;                                 
+  --raio-campo: 6px;                        
+  --raio-selo: 4px;                            
+  --raio-folha: 18px;                       
+
+                                                               
+  --sombra-folha: 0 -6px 20px rgb(21 25 27 / 0.22);
+  --sombra-toast: 0 6px 18px rgb(21 25 27 / 0.32);
+
+             
+  --alvo-min: 44px;
+  --alvo-confortavel: 52px;
+
+                                                                     
+  --placa-amarela: #FFC81E;
+  --placa-laranja: #FF7A00;
+  --sobre-placa-clara: #15191B;
+  --sobre-placa-escura: #FFFFFF;
+
+                                                                  
+  --asfalto: #23282B;
+  --asfalto-texto: #FFFFFF;
+  --asfalto-texto-2: #D9DDDA;
+  --faixa-branca: #FFFFFF;
+  --faixa-amarela: #FFC81E;
+
+  --duracao: 160ms;
+}
+
+                                                               
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --cor-fundo: #F1F2EE;
+  --cor-superficie: #FFFFFF;
+  --cor-superficie-2: #E4E6E1;
+  --cor-texto: #15191B;
+  --cor-texto-2: #3E474B;                                                              
+  --cor-borda-forte: #15191B;
+  --cor-borda: #70797D;                                                  
+  --cor-divisor: #C6CAC5;                                              
+  --cor-acao: #00603C;
+  --cor-acao-forte: #004A2E;
+  --cor-sobre-acao: #FFFFFF;
+  --cor-link: #00603C;
+  --cor-foco: #15191B;
+  --cor-foco-halo: #FFC81E;
+  --cor-dado: #3E474B;                               
+
+  --placa-verde: #00603C;
+  --placa-azul: #0B4A9E;
+  --placa-vermelha: #C3161C;
+
+                                                            
+                                                                                                    
+  --modo-carro: #5A6368;
+  --modo-onibus: #0B4A9E;
+  --modo-bike: #B3261E;
+  --modo-ape: #15191B;
+  --sobre-modo: #FFFFFF;
+
+                                                                                 
+  --sev-leve: #0B4A9E;
+  --sev-atencao: #FFC81E;
+  --sev-grave: #C3161C;
+  --sev-grave-texto: #A31015;
+  --sev-resolvido: #00603C;
+
+              
+  --estado-erro: #A31015;
+  --estado-ok: #00603C;
+  --selo-vivo-fundo: #00603C;
+  --selo-vivo-texto: #FFFFFF;
+
+                                                                       
+  --mapa-fundo: #E9EBE6;
+  --mapa-quadra: #DDE0DA;
+  --mapa-rua: #FFFFFF;
+  --mapa-rua-borda: #B9BEB8;
+  --mapa-filtro: none;
+
+  --toast-fundo: #15191B;
+  --toast-texto: #FFFFFF;
+}
+
+                                                                                 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --cor-fundo: #171B1D;
+    --cor-superficie: #22282B;
+    --cor-superficie-2: #2E3539;
+    --cor-texto: #F4F6F2;
+    --cor-texto-2: #C9CFCC;
+    --cor-borda-forte: #E3E7E3;
+    --cor-borda: #868F93;
+    --cor-divisor: #3E474B;
+    --cor-acao: #37C98A;
+    --cor-acao-forte: #5DDBA3;
+    --cor-sobre-acao: #0F1416;
+    --cor-link: #6FE0AE;
+    --cor-foco: #FFC81E;
+    --cor-foco-halo: #15191B;
+    --cor-dado: #C9CFCC;
+    --placa-verde: #006B43;
+    --placa-azul: #1257B4;
+    --placa-vermelha: #D0242A;
+    --modo-carro: #A3ADB2;
+    --modo-onibus: #86B6FF;
+    --modo-bike: #FF9583;
+    --modo-ape: #F4F6F2;
+    --sobre-modo: #15191B;
+    --sev-leve: #86B6FF;
+    --sev-atencao: #FFC81E;
+    --sev-grave: #FF6F66;
+    --sev-grave-texto: #FF9D96;
+    --sev-resolvido: #6FE0AE;
+    --estado-erro: #FF9D96;
+    --estado-ok: #6FE0AE;
+    --selo-vivo-fundo: #37C98A;
+    --selo-vivo-texto: #0F1416;
+    --mapa-fundo: #1E2326;
+    --mapa-quadra: #262C2F;
+    --mapa-rua: #3C4347;
+    --mapa-rua-borda: #2E3539;
+    --mapa-filtro: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+    --toast-fundo: #F4F6F2;
+    --toast-texto: #15191B;
+    --sombra-folha: 0 -6px 20px rgb(0 0 0 / 0.5);
+    --sombra-toast: 0 6px 18px rgb(0 0 0 / 0.6);
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --cor-fundo: #171B1D;
+  --cor-superficie: #22282B;
+  --cor-superficie-2: #2E3539;
+  --cor-texto: #F4F6F2;
+  --cor-texto-2: #C9CFCC;
+  --cor-borda-forte: #E3E7E3;
+  --cor-borda: #868F93;
+  --cor-divisor: #3E474B;
+  --cor-acao: #37C98A;
+  --cor-acao-forte: #5DDBA3;
+  --cor-sobre-acao: #0F1416;
+  --cor-link: #6FE0AE;
+  --cor-foco: #FFC81E;
+  --cor-foco-halo: #15191B;
+  --cor-dado: #C9CFCC;
+  --placa-verde: #006B43;
+  --placa-azul: #1257B4;
+  --placa-vermelha: #D0242A;
+  --modo-carro: #A3ADB2;
+  --modo-onibus: #86B6FF;
+  --modo-bike: #FF9583;
+  --modo-ape: #F4F6F2;
+  --sobre-modo: #15191B;
+  --sev-leve: #86B6FF;
+  --sev-atencao: #FFC81E;
+  --sev-grave: #FF6F66;
+  --sev-grave-texto: #FF9D96;
+  --sev-resolvido: #6FE0AE;
+  --estado-erro: #FF9D96;
+  --estado-ok: #6FE0AE;
+  --selo-vivo-fundo: #37C98A;
+  --selo-vivo-texto: #0F1416;
+  --mapa-fundo: #1E2326;
+  --mapa-quadra: #262C2F;
+  --mapa-rua: #3C4347;
+  --mapa-rua-borda: #2E3539;
+  --mapa-filtro: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+  --toast-fundo: #F4F6F2;
+  --toast-texto: #15191B;
+  --sombra-folha: 0 -6px 20px rgb(0 0 0 / 0.5);
+  --sombra-toast: 0 6px 18px rgb(0 0 0 / 0.6);
+}
+
+                                                                           
+@media (min-width: 1200px) {
+  html { font-size: 112.5%; }
+}

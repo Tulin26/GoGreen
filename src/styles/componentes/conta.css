@@ -1,0 +1,34 @@
+                      
+.topo a.botao--icone { color: var(--cor-texto); }
+.lista-cartoes { display: flex; flex-direction: column; gap: var(--esp-3); }
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  padding: var(--esp-3) var(--esp-4);
+  background: var(--bs-card-bg, var(--cor-superficie));
+  border: 1px solid var(--bs-card-border-color, var(--cor-divisor));
+  border-radius: var(--bs-card-border-radius, var(--raio-placa));
+}
+.cartao__titulo { font-size: var(--fs-sub); font-weight: var(--peso-forte); line-height: 1.2; }
+.cartao__acoes { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+.grade-campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-3); }
+.grade-campos .campo--inteiro { grid-column: 1 / -1; }
+.aviso-carona {
+  padding: var(--bs-alert-padding-y, 0.75rem) var(--bs-alert-padding-x, 1rem);
+  color: var(--bs-alert-color, #664d03);
+  background: var(--bs-alert-bg, #fff3cd);
+  border: var(--bs-alert-border-width, 1px) solid var(--bs-alert-border-color, #ffecb5);
+  border-radius: var(--bs-alert-border-radius, var(--raio-campo));
+  font-size: var(--fs-peq);
+  line-height: 1.35;
+}
+
+                                
+.campo-senha { position: relative; }
+.campo-senha .entrada { width: 100%; padding-right: 52px; }
+.campo-senha__ver { position: absolute; top: 0; right: 0; bottom: 0; width: 48px; display: grid; place-items: center; background: none; border: 0; color: var(--cor-texto-2, inherit); cursor: pointer; }
+.campo-senha__ver svg { width: 22px; height: 22px; }
+
+                                  
+.campo--grupo { border: 0; padding: 0; margin: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--esp-2); }

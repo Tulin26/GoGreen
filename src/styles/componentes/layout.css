@@ -1,0 +1,172 @@
+                                            
+.tela { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.tela__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  padding: var(--esp-4) var(--gutter) var(--esp-5);
+}
+.tela__conteudo > * { flex-shrink: 0; }                                                                             
+.tela__titulo {
+  font-size: var(--fs-titulo);
+  font-weight: var(--peso-forte);
+  line-height: var(--lh-titulo);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.tela__intro { color: var(--cor-texto-2); }
+.secao-titulo { font-size: var(--fs-sub); font-weight: var(--peso-forte); line-height: 1.2; }
+.pilha { display: flex; flex-direction: column; gap: var(--esp-3); }
+.pilha--justa { gap: var(--esp-1); }
+.pilha--media { gap: 6px; }
+.linha { display: flex; align-items: center; gap: var(--esp-2); flex-wrap: wrap; }
+.linha--justa { gap: 6px; }
+.linha--entre { justify-content: space-between; }
+.texto-2 { color: var(--cor-texto-2); }
+.texto-peq { font-size: var(--fs-peq); }
+
+.tela--dividida { position: relative; }
+.tela--dividida > .mapa { order: -1; display: none; flex: 1 1 240px; min-height: 240px; }
+.mapa--so-largo { display: none; }
+
+.so-largo { display: none; }
+
+.rotas-intro { display: flex; flex-direction: column; gap: 5px; }
+.rotas-intro .tela__titulo { font-size: clamp(1.55rem, 2vw, 2rem); }
+.rotas-intro .tela__intro { max-width: 38ch; }
+
+.preferencias { border-top: 1px solid var(--cor-divisor); }
+.preferencias__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+}
+.preferencias__summary::-webkit-details-marker { display: none; }
+.preferencias__summary strong { font-weight: var(--peso-medio); }
+.preferencias__summary span { color: var(--cor-texto-2); font-size: var(--fs-mini); text-align: right; }
+.preferencias__summary::after { content: '+'; font-size: 1.25rem; line-height: 1; }
+.preferencias[open] .preferencias__summary::after { content: '−'; }
+.preferencias .opcoes { padding: 0 0 var(--esp-3); }
+
+.visao-rota {
+  display: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  background: var(--cor-superficie-2);
+  border: 1px solid var(--cor-divisor);
+  border-radius: 8px;
+}
+.visao-rota__botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  border-radius: 5px;
+  color: var(--cor-texto-2);
+  font-size: var(--fs-peq);
+  font-weight: var(--peso-medio);
+}
+.visao-rota__botao[aria-pressed="true"] {
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: 0 1px 3px rgb(23 35 28 / 0.12);
+}
+.visao-rota__botao .icone { width: 18px; height: 18px; }
+
+@media (max-width: 1099px) {
+  .tela--dividida > .painel-lateral {
+    gap: var(--esp-3);
+    padding: var(--esp-4) var(--gutter) var(--esp-5);
+  }
+  .visao-rota { display: grid; }
+  .tela--dividida[data-mobile-view="lista"] > .mapa { display: none; }
+  .tela--dividida[data-mobile-view="mapa"] {
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 0;
+    overflow: hidden;
+  }
+  .app__corpo:has(.tela--dividida[data-mobile-view="mapa"]) { overflow: hidden; }
+  .tela--dividida[data-mobile-view="mapa"] .rotas-intro,
+  .tela--dividida[data-mobile-view="mapa"] .preferencias,
+  .tela--dividida[data-mobile-view="mapa"] [data-resultado] { display: none; }
+  .tela--dividida[data-mobile-view="mapa"] > .painel-lateral {
+    flex: 0 0 auto;
+    gap: var(--esp-2);
+    padding: var(--esp-2) var(--gutter);
+    overflow: visible;
+  }
+  .tela--dividida[data-mobile-view="mapa"] > .mapa {
+    order: 1;
+    display: block;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 180px;
+  }
+}
+
+@container app (min-width: 1100px) {
+  .app__interno {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "topo nav" "corpo corpo";
+  }
+  .topo {
+    min-height: 76px;
+    gap: var(--esp-4);
+    padding-inline: clamp(20px, 3vw, 44px);
+    position: relative;
+    border-bottom: 0;
+  }
+  .etiqueta-demo { max-width: none; text-align: left; }
+  .topo__espaco { display: none; }
+  .nav {
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    justify-content: start;
+    align-items: center;
+    padding: 0 clamp(8px, 1vw, 16px);
+    gap: var(--esp-1);
+    grid-template-columns: none;
+    border-top: 0;
+    box-shadow: none;
+  }
+  .nav__item {
+    flex-direction: row;
+    gap: var(--esp-2);
+    min-height: 48px;
+    margin: 0 2px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: var(--fs-peq);
+  }
+
+  .tela--dividida {
+    display: grid;
+    grid-template-columns: minmax(380px, 460px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    min-height: 0;
+    flex: 1;
+  }
+  .tela--dividida > .mapa { order: 0; display: block; min-height: 0; }
+  .tela--dividida > .folha,
+  .tela--dividida > .painel-lateral {
+    margin: 0;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-right: 2px solid var(--cor-borda-forte);
+    overflow-y: auto;
+  }
+  .mapa--so-largo { display: block; }
+  .visao-rota { display: none; }
+  .so-largo { display: revert; }
+  .so-estreito { display: none; }
+  .tela__conteudo--estreito { width: min(100%, 720px); margin-inline: auto; }
+}
