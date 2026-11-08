@@ -2,10 +2,13 @@
 
 import { consultarOverpass } from './overpass.mjs';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { SEARCH_AREA } from '../src/config/cidade.js';
 import { parseOverpass } from '../src/servicos/pontos-onibus.js';
 
 const OUT = 'public/dados/pontos-onibus.json';
-const QUERY = '[out:json][timeout:60];area["name"="Araçatuba"]["boundary"="administrative"]->.a;node["highway"="bus_stop"](area.a);out;';
+// Busca pela área da cidade, e não pelo nome: "Araçatuba" também é nome de lugar em Santa Catarina.
+const BBOX = `${SEARCH_AREA.minLat},${SEARCH_AREA.minLng},${SEARCH_AREA.maxLat},${SEARCH_AREA.maxLng}`;
+const QUERY = `[out:json][timeout:60];node["highway"="bus_stop"](${BBOX});out;`;
 
 try {
   const pontos = parseOverpass(await consultarOverpass(QUERY));

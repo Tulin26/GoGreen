@@ -14,6 +14,9 @@ export async function route() {
   const id = ++navigationId;
   const body = $('[data-corpo]');
   const { name, query } = parseHash();
+  // Um diálogo aberto numa tela (ex.: cadastrar carro a partir de Caronas) não pode sobreviver à troca de tela:
+  // ao salvar, ele avisaria a tela antiga, e a nova não se atualizaria.
+  document.querySelectorAll('dialog[open]').forEach((d) => d.close());
   cleanup?.();
   cleanup = null;
   body.scrollTop = 0;
