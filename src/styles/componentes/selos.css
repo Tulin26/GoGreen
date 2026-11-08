@@ -1,4 +1,4 @@
-                                                    
+
 .selo {
   display: inline-flex;
   align-items: center;
@@ -23,3 +23,10 @@
 .frescor { font-size: var(--fs-peq); color: var(--cor-texto-2); line-height: 1.2; }
 .placa .frescor { color: inherit; }
 
+
+/* Situação de um pedido de carona: aceita em destaque, pendente com borda, encerrados apagados. */
+.selo--status { box-shadow: inset 0 0 0 2px var(--cor-borda-forte); background: var(--cor-superficie); color: var(--cor-texto); }
+.selo--aceita { background: var(--selo-vivo-fundo); color: var(--selo-vivo-texto); box-shadow: none; }
+.selo--recusada, .selo--cancelada { color: var(--cor-texto-2); box-shadow: inset 0 0 0 1px var(--cor-divisor); font-weight: var(--peso-normal, 500); }
+.pedidos__encerrados { margin-top: var(--esp-4, 16px); }
+.pedidos__encerrados summary { cursor: pointer; font-weight: var(--peso-forte); padding: var(--esp-2, 8px) 0; }

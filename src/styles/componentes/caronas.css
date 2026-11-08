@@ -1,0 +1,102 @@
+/* Tela Caronas: abas, formulário em passos, cartões padronizados. Usa as cores do tema (claro e escuro). */
+.caronas__topo { margin-bottom: var(--esp-4); }
+.caronas__topo .tela__titulo { margin: 0 0 var(--esp-1); }
+.caronas__topo p { margin: 0; }
+.caronas__painel[hidden] { display: none; }
+
+/* Abas */
+.abas { display: flex; gap: 4px; padding: 4px; margin-bottom: var(--esp-4); background: var(--cor-superficie-2); border: 1px solid var(--cor-divisor); border-radius: 12px; }
+.abas__aba {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 var(--esp-3);
+  border: 0; border-radius: 9px; background: transparent; color: var(--cor-texto-2); font: inherit; font-size: var(--fs-peq); font-weight: 600; white-space: nowrap; cursor: pointer;
+}
+.abas__aba:hover { color: var(--cor-texto); }
+.abas__aba[aria-selected="true"] { background: var(--cor-superficie); color: var(--cor-texto); box-shadow: 0 1px 3px rgb(0 0 0 / 0.18); }
+.abas__aba:focus-visible { outline: 2px solid var(--cor-acao); outline-offset: 2px; }
+.abas__contagem { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--cor-acao); color: #fff; font-size: 0.78rem; line-height: 1; }
+@media (max-width: 400px) { .abas__aba { padding: 0 var(--esp-2); font-size: var(--fs-mini); } }
+
+/* Formulário em passos */
+.rota-form { display: flex; flex-direction: column; gap: var(--esp-4); }
+.bloco { padding: var(--esp-4); background: var(--cor-superficie); border: 1px solid var(--cor-divisor); border-radius: 14px; box-shadow: var(--sombra-cartao); }
+.bloco__titulo { display: flex; align-items: center; gap: var(--esp-3); margin: 0 0 var(--esp-2); font-size: 1.05rem; }
+.bloco__num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--cor-acao); color: #fff; font-size: 0.85rem; flex: none; }
+.bloco__dica { margin: 0 0 var(--esp-3); color: var(--cor-texto-2); font-size: var(--fs-peq); }
+.papeis { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-3); margin: 0; padding: 0; border: 0; }
+@media (max-width: 560px) { .papeis { grid-template-columns: 1fr; } }
+.papel { position: relative; display: block; cursor: pointer; }
+.papel input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.papel__corpo { display: flex; flex-direction: column; gap: 2px; height: 100%; padding: var(--esp-3) var(--esp-4); border: 2px solid var(--cor-divisor); border-radius: 12px; background: var(--cor-superficie); }
+.papel__corpo span { color: var(--cor-texto-2); font-size: var(--fs-peq); }
+.papel input:checked + .papel__corpo { border-color: var(--cor-acao); background: var(--cor-superficie-2); }
+.papel input:focus-visible + .papel__corpo { outline: 2px solid var(--cor-acao); outline-offset: 2px; }
+[data-oferta] { margin-top: var(--esp-3); }
+
+/* Cartões: rotas, pedidos e motoristas */
+.caronas .trajeto__cartao { display: flex; flex-direction: column; gap: var(--esp-2); padding: var(--esp-4); background: var(--cor-superficie); border: 1px solid var(--cor-divisor); border-radius: 14px; box-shadow: var(--sombra-cartao); }
+.caronas .trajeto__cartao h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 0; font-size: 1.05rem; line-height: 1.3; }
+.caronas .trajeto__cartao p { margin: 0; }
+.caronas .cartao-rota__acoes, .rota-item__acoes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--esp-2); margin-top: var(--esp-2); padding-top: var(--esp-3); border-top: 1px solid var(--cor-divisor); }
+.rota-item__trajeto { font-size: 1.1rem; }
+.rota-item__seta { color: var(--cor-texto-2); }
+.rota-item__quando { color: var(--cor-texto-2); font-size: var(--fs-peq); }
+.selo--papel { align-self: flex-start; }
+.selo--papel-motorista { background: var(--cor-acao); color: #fff; box-shadow: none; }
+.selo--papel-passageiro { background: var(--cor-superficie-2); color: var(--cor-texto); box-shadow: inset 0 0 0 1px var(--cor-divisor); }
+.caronas .secao-titulo { margin: var(--esp-5) 0 var(--esp-3); font-size: 1.1rem; }
+.caronas .secao-titulo:first-child { margin-top: 0; }
+.vazio { padding: var(--esp-6) var(--esp-4); text-align: center; border: 1px dashed var(--cor-divisor); border-radius: 14px; }
+.vazio__titulo { margin: 0 0 var(--esp-1); font-weight: 700; }
+.vazio p { margin: 0; }
+.vazio .botao { margin-top: var(--esp-3); }
+.caronas [data-candidatos] { margin-top: var(--esp-5); }
+
+/* Métricas do pedido (desvio, combustível, divisão, CO₂): 4 itens, em 2 colunas no celular para não se sobreporem. */
+.caronas .metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-3) var(--esp-4); margin: var(--esp-2) 0; }
+.caronas .metrica dd { margin: 0; font-size: 1.15rem; white-space: normal; overflow-wrap: anywhere; }
+@media (min-width: 640px) { .caronas .metricas { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* Tela Rotas: resultado e cartões de motorista (também usados na aba Caronas) */
+.resultado-titulo { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; line-height: 1.25; }
+.resultado-titulo__seta { color: var(--cor-texto-2); }
+.carona { gap: 4px; }
+.carona__topo { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-3); }
+.carona__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 0; }
+.carona__hora { flex: none; padding: 3px 10px; border-radius: 999px; background: var(--cor-superficie-2); box-shadow: inset 0 0 0 1px var(--cor-divisor); font-weight: 700; font-variant-numeric: tabular-nums; }
+.carona__trajeto { font-weight: 600; }
+.carona__seta { color: var(--cor-texto-2); }
+.carona__meta, .carona__desvio { font-size: var(--fs-peq); color: var(--cor-texto-2); }
+.carona__desvio strong { color: var(--cor-texto); }
+.carona .botao { margin-top: var(--esp-2); align-self: stretch; }
+.carona[hidden] { display: none; }
+[data-caronas-perto] .botao--bloco { margin-top: var(--esp-2); }
+
+/* Aba Ônibus: busca de linhas e controle de sentido */
+.onibus-busca { margin: var(--esp-3) 0 var(--esp-1); }
+.onibus-busca input { width: 100%; }
+.onibus-busca__contagem { margin: 0 0 var(--esp-2); }
+.onibus-escolha .lista-linhas { background: var(--cor-superficie); border: 1px solid var(--cor-divisor); border-radius: 14px; box-shadow: var(--sombra-cartao); overflow: hidden; }
+.onibus-escolha .lista-linhas[hidden] { display: none; }
+.sentidos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; margin: var(--esp-3) 0; background: var(--cor-superficie-2); border: 1px solid var(--cor-divisor); border-radius: 12px; }
+.sentidos .opcao { justify-content: center; min-height: 44px; padding: 0 var(--esp-2); text-align: center; border: 0; border-radius: 9px; background: transparent; box-shadow: none; color: var(--cor-texto-2); font-weight: 600; }
+.sentidos .opcao[aria-pressed="true"] { background: var(--cor-superficie); color: var(--cor-texto); box-shadow: 0 1px 3px rgb(0 0 0 / 0.18); }
+.botao--trocar { flex: none; white-space: nowrap; }
+
+/* Tela Rotas: com o resultado na tela, o painel mostra só ele, com "Voltar" no topo */
+.painel-form { display: contents; }
+.painel-voltar { display: none; }
+[data-painel][data-modo="resultado"] .painel-form { display: none; }
+[data-painel][data-modo="resultado"] .painel-voltar { position: sticky; top: 0; z-index: 4; display: flex; padding: var(--esp-2) 0; background: var(--cor-fundo); }
+[data-painel][data-busca="feita"][data-modo="form"] [data-resultado] { display: none; }
+.resultado-cabeca h2 { scroll-margin-top: 84px; }
+
+/* Mapa de reserva (OpenStreetMap): fica abaixo dos painéis do app e sem a caixa branca padrão do ícone */
+.mapa-leaflet { z-index: 0; }
+.pino-leaflet { background: none; border: 0; }
+.mapa-leaflet .leaflet-control-attribution { font-size: 10px; }
+
+/* Celular, visão "Mapa" com o resultado na tela: só o Voltar e o seletor Lista/Mapa ficam por cima, para a rota aparecer */
+@media (max-width: 1099px) {
+  .tela--dividida[data-mobile-view="mapa"] [data-painel][data-modo="resultado"] [data-resultado] { display: none; }
+}
+.mapa-leaflet--escuro .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92); }

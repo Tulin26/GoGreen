@@ -1,4 +1,4 @@
-                                          
+
 .folha {
   position: relative;
   z-index: 10;
@@ -28,7 +28,6 @@
 .folha__corpo { display: flex; flex-direction: column; gap: var(--esp-4); padding: var(--esp-5) var(--gutter) var(--esp-4); }
 .folha[data-estado="recolhida"] .folha__corpo > :not(.folha__resumo) { display: none; }
 
-                         
 .linha-onibus { display: flex; align-items: center; gap: var(--esp-3); }
 .linha-onibus .modo { background: #FFFFFF; color: #0B4A9E; }
 .linha-onibus__texto { flex: 1; min-width: 0; }
@@ -44,12 +43,11 @@
   font-variant-numeric: tabular-nums;
 }
 .previsao__unidade { font-size: var(--fs-titulo); letter-spacing: 0; }
-                                                                                                  
+
 .previsao--horario .previsao__valor { font-weight: var(--peso-medio); }
 .previsao__texto { font-size: var(--fs-peq); color: var(--cor-texto-2); line-height: 1.3; }
 .previsao__texto strong { color: var(--cor-texto); }
 
-                                               
 .trajeto {
   display: grid;
   grid-auto-flow: column;
@@ -57,7 +55,7 @@
   position: relative;
   padding-top: 6px;
 }
-                                                                                                 
+
 .trajeto li:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -85,7 +83,6 @@
 .trajeto__seu { display: grid; place-items: center; width: 32px; height: 32px; color: var(--cor-texto); background: var(--cor-superficie); }
 .trajeto li.e-seu { color: var(--cor-texto); font-weight: var(--peso-forte); }
 
-                                   
 .informando {
   display: flex;
   flex-direction: column;

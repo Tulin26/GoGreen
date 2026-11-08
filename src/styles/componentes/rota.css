@@ -1,4 +1,4 @@
-                                          
+
 .resultado-cabeca { display: flex; flex-direction: column; gap: 2px; }
 .lista-rotas { display: flex; flex-direction: column; gap: var(--esp-3); }
 
@@ -22,7 +22,6 @@
 .cartao-rota__nota { font-size: var(--fs-peq); line-height: 1.25; color: var(--cor-texto-2); }
 .cartao-rota__acoes { display: flex; justify-content: flex-end; margin-top: -4px; }
 
-                                                            
 .modo {
   display: grid;
   place-items: center;
@@ -38,11 +37,10 @@
 .modo--onibus { --modo-cor: var(--modo-onibus); }
 .modo--bike { --modo-cor: var(--modo-bike); }
 .modo--ape { --modo-cor: var(--modo-ape); }
-                                                                                 
+
 .placa .modo { background: #FFFFFF; color: #15191B; width: 48px; height: 48px; }
 .placa .modo .icone { width: 30px; height: 30px; }
 
-                                                                                    
 .metricas { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--esp-2); }
 .metrica { display: flex; flex-direction: column-reverse; justify-content: flex-end; min-width: 0; }
 .metrica dd {
@@ -57,7 +55,6 @@
 .placa .metrica dt { color: inherit; }
 .metrica--melhor dt { color: var(--cor-texto); font-weight: var(--peso-forte); }
 
-                                          
 .alertas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
 .alertas__resumo { width: 100%; font-size: var(--fs-peq); font-weight: var(--peso-forte); line-height: 1.2; }
 .chip-alerta {

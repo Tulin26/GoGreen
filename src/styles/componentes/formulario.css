@@ -1,4 +1,4 @@
-                                                
+
 .form { display: flex; flex-direction: column; gap: var(--esp-5); }
 .campo { display: flex; flex-direction: column; gap: 6px; border: 0; padding: 0; margin: 0; min-width: 0; }
 .campo__rotulo { padding: 0; font-weight: var(--peso-forte); line-height: 1.2; }
@@ -19,7 +19,6 @@ legend.campo__rotulo { margin-bottom: 6px; }
 .entrada[aria-invalid="true"] { border-color: var(--estado-erro); border-width: 2px; }
 textarea.entrada { min-height: 88px; resize: vertical; }
 
-                                                     
 .tipos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-2); }
 .tipo {
   position: relative;
@@ -45,7 +44,6 @@ textarea.entrada { min-height: 88px; resize: vertical; }
 .tipo:has(input:checked) .tipo__marca { display: block; }
 .tipo:has(input:focus-visible) { outline: 3px solid var(--cor-foco); box-shadow: 0 0 0 6px var(--cor-foco-halo); }
 
-                  
 .local { display: flex; flex-direction: column; border: 2px solid var(--cor-borda-forte); border-radius: var(--raio-campo); overflow: hidden; }
 .local .mapa { min-height: 128px; height: 128px; }
 .local__rodape { display: flex; align-items: center; gap: var(--esp-2); padding: 6px 6px 6px var(--esp-3); background: var(--cor-superficie); border-top: 2px solid var(--cor-borda-forte); font-size: var(--fs-peq); line-height: 1.2; }

@@ -1,4 +1,4 @@
-                                                                                      
+
 .mapa { position: relative; isolation: isolate; background: var(--mapa-fundo); overflow: hidden; min-height: 200px; }
 .mapa__atribuicao {
   position: absolute;
@@ -13,7 +13,6 @@
   line-height: 1.3;
 }
 
-                                                        
 .mapa__acao {
   position: absolute;
   right: var(--esp-3);
@@ -29,7 +28,6 @@
   border-radius: var(--raio-campo);
 }
 
-                                                                  
 .pino {
   position: relative;
   display: grid;

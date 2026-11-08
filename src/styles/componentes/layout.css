@@ -1,4 +1,4 @@
-                                            
+
 .tela { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
 .tela__conteudo {
   display: flex;
@@ -6,7 +6,7 @@
   gap: var(--esp-4);
   padding: var(--esp-4) var(--gutter) var(--esp-5);
 }
-.tela__conteudo > * { flex-shrink: 0; }                                                                             
+.tela__conteudo > * { flex-shrink: 0; }
 .tela__titulo {
   font-size: var(--fs-titulo);
   font-weight: var(--peso-forte);

@@ -1,6 +1,4 @@
-                                               
-                                                                        
-                                                              
+
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -23,7 +21,6 @@ sub { font-size: 0.68em; line-height: 0; vertical-align: -0.2em; }
 
 a { color: var(--cor-link); text-underline-offset: 0.16em; text-decoration-thickness: 2px; }
 
-                                                                   
 :focus-visible {
   outline: 3px solid var(--cor-foco);
   outline-offset: 0;

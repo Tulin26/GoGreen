@@ -1,4 +1,4 @@
-                                                                                                                  
+
 .placa {
   position: relative;
   padding: var(--esp-4) 18px 18px;
@@ -19,8 +19,6 @@
 .placa--azul { background: var(--placa-azul); }
 .placa :focus-visible { outline-color: #FFFFFF; box-shadow: 0 0 0 6px #15191B; }
 
-                                                                                    
-                                                  
 .conjunto-placa { display: flex; flex-direction: column; }
 .placa-adicional {
   position: relative;
@@ -36,7 +34,7 @@
   font-size: var(--fs-peq);
   line-height: 1.32;
 }
-                                                              
+
 .placa-adicional::before,
 .placa-adicional::after {
   content: "";

@@ -1,4 +1,4 @@
-                                  
+
 .toasts { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 76px; z-index: 40; display: flex; flex-direction: column; gap: var(--esp-2); pointer-events: none; }
 .toast {
   display: flex;
@@ -20,7 +20,6 @@
 .toast--erro { border-left: 8px solid var(--placa-vermelha); }
 .toast--ok { border-left: 8px solid #37C98A; }
 
-                                                                     
 .estado {
   display: flex;
   flex-direction: column;
@@ -41,7 +40,6 @@
 .esqueleto--baixo { min-height: 72px; }
 @keyframes respira { 50% { opacity: 0.55; } }
 
-                                                      
 @container app (min-width: 860px) {
   .folha__alca { display: none; }
   .folha__corpo { padding-top: var(--esp-4); }

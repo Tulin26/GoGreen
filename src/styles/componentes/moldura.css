@@ -1,4 +1,4 @@
-                                     
+
 .app {
   container: app / inline-size;
   position: relative;
@@ -34,7 +34,6 @@
 }
 .topo__espaco { flex: 1; }
 
-                                      
 .logo {
   display: inline-flex;
   align-items: center;
@@ -66,7 +65,6 @@
   text-align: center;
 }
 
-                                                                               
 .nav {
   position: relative;
   display: grid;
