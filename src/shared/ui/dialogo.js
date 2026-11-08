@@ -1,6 +1,5 @@
 import { icon } from './icones.js';
 
-                                                              
 export function openDialog({ html, className = '', onClose }) {
   const d = document.createElement('dialog');
   d.className = `dialogo ${className}`;
