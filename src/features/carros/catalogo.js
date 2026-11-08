@@ -1,6 +1,5 @@
 import { fetchConsumo } from '../../servicos/consumo.js';
 
-                                                                                         
 let promise = null;
 
 const COLS = ['marca', 'modelo', 'versao', 'motor', 'combustivel', 'ciclo', 'km_e', 'km_g', 'co2_e', 'co2_g', 'kwh'];
@@ -12,7 +11,6 @@ const sortPt = (list) => [...new Set(list)].sort((a, b) => a.localeCompare(b, 'p
 export const brands = (catalog) => sortPt(catalog.map((c) => c.marca));
 export const modelsOf = (catalog, marca) => sortPt(catalog.filter((c) => c.marca === marca).map((c) => c.modelo));
 
-                                                                           
 export function versionsOf(catalog, marca, modelo, ano) {
   const rows = catalog.filter((c) => c.marca === marca && c.modelo === modelo);
   if (!rows.length) return [];
@@ -24,7 +22,6 @@ export function versionsOf(catalog, marca, modelo, ano) {
   return [...seen.values()].sort((a, b) => `${a.versao}${a.motor}`.localeCompare(`${b.versao}${b.motor}`, 'pt-BR'));
 }
 
-                                                       
 export function carFieldsFromEntry(e) {
   const fuel = { F: 'flex', G: 'gasolina', E: 'etanol', D: 'diesel', V: 'eletrico' }[e.combustivel];
   const fields = { combustivel: fuel, origem_consumo: 'inmetro', versao: `${e.versao} ${e.motor}`.trim() || null };

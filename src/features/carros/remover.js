@@ -1,7 +1,6 @@
 import { store } from '../../dados/index.js';
 import { closeButton, openDialog } from '../../shared/ui/dialogo.js';
 
-                                                                                 
 export async function removeVehicle(id) {
   const routes = await store.listDailyRoutes().catch(() => []);
   const linked = routes.filter((route) => route.car_id === id).length;

@@ -7,7 +7,6 @@ const FUEL_NAME = { F: 'flex', G: 'gasolina', E: 'etanol', D: 'diesel', V: 'elé
 const versionKey = (e) => `${e.versao}|${e.motor}|${e.combustivel}`;
 const comma = (n) => String(n).replace('.', ',');
 
-                                                                
 export function carFieldsHtml() {
   const year = new Date().getFullYear();
   return `<div class="grade-campos">
@@ -37,7 +36,6 @@ export function carFieldsHtml() {
     <p class="texto-peq" data-resumo></p>`;
 }
 
-                                                                              
 export function bindCarFields(box) {
   const year = new Date().getFullYear();
   const q = (s) => $(s, box);
@@ -69,7 +67,7 @@ export function bindCarFields(box) {
   }
 
   function fillVersions() {
-                                                                                             
+
     const select = q('#c-versao');
     const chosen = select.value;
     fill(select, currentVersions(), 'Escolha a versão', versionKey, (e) => `${e.versao} ${e.motor} (${FUEL_NAME[e.combustivel]})`.replace(/\s+/g, ' ').trim());

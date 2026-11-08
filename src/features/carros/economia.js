@@ -1,11 +1,10 @@
-                                                                                                                    
+
 import { FOSSIL_G_PER_LITER, FUELS } from '../../config/combustiveis.js';
 
 export const fuelsOf = (car) => (car.combustivel === 'flex' ? ['gasolina', 'etanol'] : [car.combustivel]);
 
 export const kmPerLiter = (car, fuel) => Number(car[`km_l_${fuel}`]) || null;
 
-                                                                                               
 export function co2PerKm(car, fuel) {
   if (fuel === 'eletrico') return 0;
   const known = car[`co2_g_km_${fuel}`];
@@ -16,7 +15,6 @@ export function co2PerKm(car, fuel) {
 
 export const carLabel = (car) => `${car.modelo} ${car.ano}`;
 
-                                                                                                   
 export function tripChoices(cars, km, prices) {
   const out = [];
   for (const car of cars) {
@@ -31,11 +29,4 @@ export function tripChoices(cars, km, prices) {
     }
   }
   return out.sort((a, b) => a.money - b.money || a.co2 - b.co2);
-}
-
-                                                                 
-export function ethanolBreakEven(car, prices) {
-  const g = kmPerLiter(car, 'gasolina');
-  const e = kmPerLiter(car, 'etanol');
-  return g && e && prices.gasolina ? (prices.gasolina * e) / g : null;
 }

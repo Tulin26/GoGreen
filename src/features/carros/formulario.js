@@ -9,7 +9,6 @@ import { MOTO_MODELS } from '../../config/motos.js';
 
 const motoBrandOptions = Object.keys(MOTO_MODELS).map((brand) => `<option value="${esc(brand)}">${esc(brand)}</option>`).join('');
 
-                                           
 export function openCarForm(onSaved = () => {}) {
   const d = openDialog({
     html: `<form class="dialogo__corpo" novalidate>
