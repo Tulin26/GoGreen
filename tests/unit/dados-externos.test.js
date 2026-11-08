@@ -102,7 +102,7 @@ test('elétrico sem dado, consumo impossível e cabeçalho ficam de fora', () =>
 
 test('agrupa textos do PDF em linhas e tira repetidos', () => {
   const it = (str, x, y) => ({ str, transform: [1, 0, 0, 1, x, y] });
-                                                                             
+
   const rows = groupRows([it('B', 20, 463.4), it('A', 10, 463.6), it('C', 10, 460.3), it(' ', 5, 460.3)]);
   assert.deepEqual(rows[0].map((t) => t[1]), ['A', 'B']);
   assert.equal(rows[1].length, 1);

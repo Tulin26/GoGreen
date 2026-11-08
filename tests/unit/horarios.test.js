@@ -25,7 +25,7 @@ test('próxima saída no mesmo dia', () => {
 
 test('depois da última saída vai para o dia seguinte', () => {
   const dir = lineByCode('104').directions[0];
-  const next = nextDepartures(dir, new Date('2026-11-04T02:50:00Z'), 1);                  
+  const next = nextDepartures(dir, new Date('2026-11-04T02:50:00Z'), 1);
   assert.equal(next[0].time, '06:20');
   assert.equal(next[0].today, false);
   assert.equal(next[0].inMinutes, 390);
@@ -33,7 +33,7 @@ test('depois da última saída vai para o dia seguinte', () => {
 
 test('linha sem domingo pula para segunda', () => {
   const dir = lineByCode('103').directions[0];
-  const next = nextDepartures(dir, new Date('2026-11-08T15:00:00Z'), 1);                    
+  const next = nextDepartures(dir, new Date('2026-11-08T15:00:00Z'), 1);
   assert.equal(next[0].time, '06:20');
   assert.equal(next[0].day, 'util');
 });

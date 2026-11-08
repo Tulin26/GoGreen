@@ -20,7 +20,7 @@ test('suggestPlaces restringe à área de Araçatuba, ao Brasil e ao português'
   assert.deepEqual(req.includedRegionCodes, ['br']);
   assert.equal(req.language, 'pt-BR');
   assert.ok(req.locationRestriction.west < -50.4 && req.locationRestriction.east > -50.4);
-                                                                         
+
   assert.ok(req.locationRestriction.north - req.locationRestriction.south < 0.3);
   assert.ok(req.sessionToken);
 });
@@ -54,7 +54,41 @@ test('searchPlaces devolve os lugares com ponto [lat, lng] já pronto', async ()
   assert.ok(calls.search[0].fields.includes('location'));
 });
 
-test('searchPlaces lança quando o Google falha, para a tela avisar', async () => {
+const OSM = [{ name: 'Etec Dr. Adail Nunes da Silva', display_name: 'Etec Dr. Adail Nunes da Silva, Rua Teste, Vila Nova, Araçatuba, São Paulo', lat: '-21.21', lon: '-50.44' }];
+const fetchOsm = (corpo, ok = true) => { const chamadas = []; globalThis.fetch = async (url) => { chamadas.push(String(url)); return { ok, status: ok ? 200 : 503, json: async () => corpo }; }; return chamadas; };
+
+test('searchPlaces: quando o Google falha, a busca continua pelo OpenStreetMap', async () => {
   setGoogleForTests({ importLibrary: async () => { throw new Error('google-nao-carregou'); } });
-  await assert.rejects(searchPlaces('x'), /google-nao-carregou/);
+  const chamadas = fetchOsm(OSM);
+  const [p] = await searchPlaces('etec');
+  assert.deepEqual(p, { title: 'Etec Dr. Adail Nunes da Silva', subtitle: 'Rua Teste, Vila Nova, Araçatuba', point: [-21.21, -50.44] });
+  assert.match(chamadas[0], /nominatim\.openstreetmap\.org\/search\?/);
+  assert.match(chamadas[0], /bounded=1/);
+  assert.match(chamadas[0], /countrycodes=br/);
+});
+
+test('searchPlaces: o Google achou, o OpenStreetMap nem é chamado; o Google não achou nada, é chamado', async () => {
+  const achou = fakeMaps({ places: [{ displayName: 'Fatec', formattedAddress: 'Av. Prestes Maia', location: { lat: () => -21.18, lng: () => -50.45 } }] });
+  setGoogleForTests(achou.maps);
+  const chamadas = fetchOsm(OSM);
+  assert.equal((await searchPlaces('fatec'))[0].title, 'Fatec');
+  assert.equal(chamadas.length, 0);
+  setGoogleForTests(fakeMaps({ places: [] }).maps);
+  const depois = fetchOsm(OSM); // fakeMaps troca o fetch; rearma o do OpenStreetMap
+  assert.equal((await searchPlaces('etec'))[0].title, 'Etec Dr. Adail Nunes da Silva');
+  assert.equal(depois.length, 1);
+});
+
+test('searchPlaces: sem Google e com o OpenStreetMap fora do ar, devolve lista vazia em vez de quebrar a busca', async () => {
+  setGoogleForTests({ importLibrary: async () => { throw new Error('google-nao-carregou'); } });
+  fetchOsm({}, false);
+  assert.deepEqual(await searchPlaces('qualquer'), []);
+  globalThis.fetch = async () => { throw new TypeError('fetch failed'); };
+  assert.deepEqual(await searchPlaces('qualquer'), []);
+});
+
+test('searchPlaces: o cancelamento da busca continua sendo erro, para a tela ignorar', async () => {
+  setGoogleForTests({ importLibrary: async () => { throw new Error('google-nao-carregou'); } });
+  globalThis.fetch = async () => { throw new DOMException('aborted', 'AbortError'); };
+  await assert.rejects(searchPlaces('x'), (e) => e.name === 'AbortError');
 });

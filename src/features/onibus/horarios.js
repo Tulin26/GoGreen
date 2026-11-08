@@ -1,6 +1,5 @@
 const TZ = 'America/Sao_Paulo';
 
-                                                                                                    
 export function localParts(date = new Date()) {
   const parts = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(date);
   const get = (t) => parts.find((p) => p.type === t).value;
@@ -18,10 +17,6 @@ export const DAY_LABEL = { util: 'dia útil', sabado: 'sábado', domingo: 'domin
 const toMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
 const NEXT = { Mon: 'Tue', Tue: 'Wed', Wed: 'Thu', Thu: 'Fri', Fri: 'Sat', Sat: 'Sun', Sun: 'Mon' };
 
-   
-                                                                                                      
-                                             
-   
 export function nextDepartures(direction, date = new Date(), count = 3) {
   const { weekday, minutes } = localParts(date);
   const out = [];

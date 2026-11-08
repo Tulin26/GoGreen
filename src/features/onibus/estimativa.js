@@ -2,9 +2,7 @@ import { BUS } from '../../config/transporte.js';
 import { pointAlong, polylineLength, projectOnPolyline } from '../../shared/mapa/geometria.js';
 import { dayType, localParts } from './horarios.js';
 
-                                                                                                                          
-                                                                                                                                
-const MAX_OFFSET_M = 400;                                                                                       
+const MAX_OFFSET_M = 400;
 const STOP_BUFFER_M = 150;
 const projectedStopsCache = new WeakMap();
 
@@ -13,14 +11,8 @@ const clock = (min) => { const m = ((Math.round(min) % 1440) + 1440) % 1440; ret
 const nowMinutes = (now) => localParts(now).minutes + now.getSeconds() / 60;
 const departuresOn = (dir, date) => (dir?.[dayType(localParts(date).weekday)] ?? []).map(toMin);
 
-                                                                                   
 export const tripMinutes = (km) => (km / BUS.kmh) * 60;
 
-   
-                                                                                                                        
-                                                                                                          
-                                                                         
-   
 export function estimatedBuses(line, path, now = new Date()) {
   const total = polylineLength(path.geometry);
   const duration = tripMinutes(path.km ?? total / 1000);
@@ -38,11 +30,6 @@ export function estimatedBuses(line, path, now = new Date()) {
   return out;
 }
 
-   
-                                                                                                                       
-                                                                                              
-                                                                                                                             
-   
 export function arrivalsAt(point, line, path, now = new Date(), count = 3) {
   const total = polylineLength(path.geometry);
   const duration = tripMinutes(path.km ?? total / 1000);
@@ -65,10 +52,6 @@ export function arrivalsAt(point, line, path, now = new Date(), count = 3) {
   return { offRoute: false, offsetM: offset, arrivals: found.slice(0, count) };
 }
 
-   
-                                                                                                                  
-                                                                                            
-   
 export function stopsOnRoute(stops, line, path, now = new Date()) {
   let cached = projectedStopsCache.get(path);
   if (!cached || cached.stops !== stops) {

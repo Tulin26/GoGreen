@@ -10,10 +10,11 @@ import { prefs } from '../../shared/preferencias.js';
 import { $ } from '../../shared/ui/dom.js';
 import { toast } from '../../shared/ui/toast.js';
 import { requireLogin } from '../conta/login.js';
-import { askConsent, stopReporting } from './informar.js';
-import { LINES, lineByCode } from '../../config/linhas-onibus.js';
-import { drawBuses, drawBusRoute } from './mapa-onibus.js';
 import { stopsOnRoute } from './estimativa.js';
+import { bindLinePicker } from './escolha.js';
+import { askConsent, stopReporting } from './informar.js';
+import { lineByCode } from '../../config/linhas-onibus.js';
+import { drawBuses, drawBusRoute } from './mapa-onibus.js';
 import { prediction } from './previsao.js';
 import { pickerHtml, sentText, sheetHtml } from './templates.js';
 
@@ -39,7 +40,7 @@ export function renderOnibus(root) {
   let estimateTimer = null;
 
   const getLine = () => (lineCode ? lineByCode(lineCode) : null);
-  const state = () => ({ dirIndex, positions, userPoint, lastDistance });
+  const state = () => ({ dirIndex, positions, userPoint, lastDistance, path: estimatePath, stops: estimateStops });
   const draw = (line) => drawBuses(handle, busLayer, line, state(), !estimatePath);
   const drawRoute = (line) => drawBusRoute(routeLayer, line, estimatePath, estimateStops);
 
@@ -57,8 +58,9 @@ export function renderOnibus(root) {
         ? { top: 44, right: 44, bottom: 44, left: 480 }
         : 40;
       handle?.fit(path.geometry, padding);
+      paintSheet();
       draw(line);
-    } catch {                                                                             }
+    } catch {}
   }
 
   function paintSheet() {
@@ -67,7 +69,7 @@ export function renderOnibus(root) {
     if (!line || !sheet) return;
     shownKind = prediction(line, state()).kind;
     shownTrip = Boolean(session.trip);
-                                                                                                              
+
     const focused = document.activeElement;
     const key = sheet.contains(focused) ? ['data-informar', 'data-gps', 'data-marcar', 'data-trocar', 'data-parar', 'data-sentido'].find((k) => focused.hasAttribute(k)) : null;
     const selector = key ? `[${key}${key === 'data-sentido' ? `="${focused.getAttribute(key)}"` : ''}]` : null;
@@ -91,7 +93,6 @@ export function renderOnibus(root) {
     refresh();
   }
 
-                                                                                                
   function refresh() {
     const line = getLine();
     if (!line) return;
@@ -109,7 +110,6 @@ export function renderOnibus(root) {
     refresh();
   }
 
-                                                                                  
   function announce() {
     const live = $('[data-previsao-sr]', root);
     const value = $('.previsao__valor', root)?.textContent.trim();
@@ -133,6 +133,7 @@ export function renderOnibus(root) {
     const line = getLine();
     if (!line) {
       root.innerHTML = `<div class="tela">${pickerHtml()}</div>`;
+      bindLinePicker(root);
       $('.foco-titulo', root)?.focus();
       return;
     }
@@ -162,7 +163,7 @@ export function renderOnibus(root) {
     }).catch(() => {});
     loadRoute(line);
     pollTimer = setInterval(poll, BUS.pingSeconds * 1000);
-    estimateTimer = setInterval(() => { if (!document.hidden && estimatePath) drawRoute(getLine()); }, 60000);
+    estimateTimer = setInterval(() => { if (!document.hidden && estimatePath) refresh(); }, 10000);
   }
 
   root.onclick = async (e) => {
@@ -170,6 +171,12 @@ export function renderOnibus(root) {
     const pick = t.closest('[data-linha]');
     if (pick) { lineCode = pick.dataset.linha; dirIndex = 0; prefs.set('line', lineCode); prefs.set('dir', 0); paint(); return; }
     if (t.closest('[data-trocar]')) { lineCode = null; prefs.set('line', null); paint(); return; }
+    const spot = t.closest('[data-ponto-trajeto]');
+    if (spot && estimatePath) {
+      const s = stopsOnRoute(estimateStops, getLine(), estimatePath)[Number(spot.dataset.pontoTrajeto)];
+      if (s) handle?.setView(s.stop.coords, 17);
+      return;
+    }
     const dir = t.closest('[data-sentido]');
     if (dir) { dirIndex = Number(dir.dataset.sentido); prefs.set('dir', dirIndex); paintSheet(); return; }
     if (t.closest('[data-parar]')) { stopReporting(); return; }

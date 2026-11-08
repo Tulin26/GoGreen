@@ -27,16 +27,15 @@ test('limites da cidade', () => {
   assert.ok(!inBounds([-23.55, -46.63], CITY.bounds));
 });
 
-
 import { projectOnPolyline } from '../../src/shared/mapa/geometria.js';
 
 test('projectOnPolyline devolve a distância percorrida até o ponto mais próximo e o desvio', () => {
-  const line = [[-21.2, -50.44], [-21.2, -50.43], [-21.2, -50.42]];                                              
+  const line = [[-21.2, -50.44], [-21.2, -50.43], [-21.2, -50.42]];
   const total = polylineLength(line);
   const onTheMiddle = projectOnPolyline([-21.2, -50.43], line);
   assert.ok(Math.abs(onTheMiddle.along - total / 2) < 5);
   assert.ok(onTheMiddle.offset < 1);
-  const beside = projectOnPolyline([-21.2 + 200 / 111320, -50.425], line);                                        
+  const beside = projectOnPolyline([-21.2 + 200 / 111320, -50.425], line);
   assert.ok(Math.abs(beside.offset - 200) < 5);
   assert.ok(beside.along > total / 2 && beside.along < total);
 });
