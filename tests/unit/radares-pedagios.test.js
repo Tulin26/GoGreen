@@ -48,3 +48,14 @@ test('loadRadaresPedagios devolve lista vazia se o arquivo não carregar', async
   globalThis.fetch = async () => { throw new Error('offline'); };
   try { assert.deepEqual(await loadRadaresPedagios(), []); } finally { globalThis.fetch = real; }
 });
+
+test('cabines vizinhas viram uma praça de pedágio só, e praças distantes continuam separadas', () => {
+  const json = { elements: [
+    { type: 'node', id: 1, lat: -21.2101, lon: -50.7323, tags: { barrier: 'toll_booth' } },
+    { type: 'node', id: 2, lat: -21.2103, lon: -50.7323, tags: { barrier: 'toll_booth', name: 'Praça Guararapes' } },
+    { type: 'node', id: 3, lat: -21.4156, lon: -50.1949, tags: { barrier: 'toll_booth' } },
+  ] };
+  const lista = parseRadaresPedagios(json);
+  assert.equal(lista.length, 2);
+  assert.equal(lista[0].nome, 'Praça Guararapes');
+});

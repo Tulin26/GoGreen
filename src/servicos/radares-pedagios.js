@@ -1,7 +1,11 @@
+import { haversine } from '../shared/mapa/geometria.js';
 import { fetchDoSite } from './site.js';
 
 /** Região baixada no build: Araçatuba e as rodovias em volta (cerca de 35 km), para pegar os pedágios de quem sai da cidade. */
 export const REGIAO = { minLat: -21.55, maxLat: -20.95, minLng: -50.8, maxLng: -50.1 };
+
+/** Cabines a menos disto (em metros) são a mesma praça de pedágio: o OpenStreetMap marca cada cabine. */
+const MESMA_PRACA_M = 300;
 
 const ehRadar = (t) => t.highway === 'speed_camera' || t.enforcement === 'maxspeed';
 const ehPedagio = (t) => t.barrier === 'toll_booth' || t.highway === 'toll_gantry';
@@ -25,7 +29,12 @@ export function parseRadaresPedagios(json) {
     const id = `${e.type}/${e.id}`;
     if (vistos.has(id)) continue;
     vistos.add(id);
-    lista.push({ id, tipo, coords: [lat, lng], nome: tags.name ?? null, velocidade: tipo === 'radar' ? velocidade(tags) : null });
+    const coords = [lat, lng];
+    if (tipo === 'pedagio') {
+      const praca = lista.find((i) => i.tipo === 'pedagio' && haversine(i.coords, coords) < MESMA_PRACA_M);
+      if (praca) { praca.nome ??= tags.name ?? null; continue; }
+    }
+    lista.push({ id, tipo, coords, nome: tags.name ?? null, velocidade: tipo === 'radar' ? velocidade(tags) : null });
   }
   return lista;
 }
