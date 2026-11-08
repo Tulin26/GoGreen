@@ -14,17 +14,14 @@ export function moneyFor(mode, km, { student = false, gasPrice = COST.gasPerLite
 
 export const co2For = (mode, km) => CO2_G_PER_PKM[mode] * km;
 
-                                                                                               
 export const busMinutes = (km) => (km / BUS.kmh) * 60 + BUS.accessWalkMin + BUS.waitMin;
 
-                                                                  
 export const pickAlternative = (alternatives) => alternatives.reduce((a, b) => (b.minutes < a.minutes ? b : a));
 
 export const baseScore = (o) => o.minutes + o.money * WEIGHTS.perReal + o.co2 * WEIGHTS.perGram;
 
-                                                                                   
 export function isCandidate(option, { hasBike = false, hasCar = false, hasMoto = false, accessible = false, usesBus = true, walks = true } = {}) {
-                                                                                        
+
   if (option.mode === 'foot') return walks && Math.round(option.minutes) <= MAX_MINUTES.foot;
   if (option.mode === 'bike') return hasBike && !accessible && Math.round(option.minutes) <= MAX_MINUTES.bike;
   if (option.mode === 'car') return hasCar;
@@ -32,9 +29,6 @@ export function isCandidate(option, { hasBike = false, hasCar = false, hasMoto =
   return usesBus;
 }
 
-   
-                                                                                   
-   
 export function rankOptions(options, prefs = {}) {
   const order = (a, b) => baseScore(a) - baseScore(b) || a.co2 - b.co2;
   const candidates = options.filter((o) => isCandidate(o, prefs));
@@ -48,7 +42,6 @@ export function rankOptions(options, prefs = {}) {
   return { best, others };
 }
 
-                                                                   
 export function bestMetrics(options) {
   const min = (key) => Math.min(...options.map((o) => o[key]));
   const close = (a, b) => Math.abs(a - b) < 0.5;

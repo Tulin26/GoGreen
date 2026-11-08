@@ -9,10 +9,6 @@ function nearestIndex(point, line) {
   return best;
 }
 
-   
-                                                                               
-                                                                                                                                        
-   
 export function matchRide({ from, to, hora }, { geometry, hora: rideHora }, { maxMinutes = MATCH.maxMinutes } = {}) {
   if (!geometry || geometry.length < 2) return null;
   if (Math.abs(toMinutes(hora) - toMinutes(rideHora)) > maxMinutes) return null;

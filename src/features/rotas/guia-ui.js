@@ -6,7 +6,6 @@ import { createGuide } from './guia.js';
 
 const POOR_FIX_M = 80;
 
-                                                                                                                                    
 export function createGuiaUi({ root, mapa }) {
   const box = $('[data-guia]', root);
   let stopWatch = null;
@@ -28,7 +27,6 @@ export function createGuiaUi({ root, mapa }) {
     box.hidden = false;
   };
 
-                                                                     
   function start(legs) {
     end();
     const guide = createGuide(legs);

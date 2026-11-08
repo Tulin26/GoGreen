@@ -1,6 +1,5 @@
 import { icon } from '../../shared/ui/icones.js';
 
-                                                                                                                                        
 export const buscaHtml = () => `<form class="busca" novalidate>
   <span class="busca__marca">${icon('origem')}</span>
   <div class="busca__campo"><label class="busca__rotulo rs-field-label" for="r-de">De onde</label><input class="form-control busca__input" id="r-de" placeholder="Rua, bairro ou lugar" autocomplete="off" enterkeyhint="next"></div>

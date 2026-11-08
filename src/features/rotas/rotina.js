@@ -4,7 +4,6 @@ import { nowHHMM } from './extras.js';
 
 const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-                                                                                                  
 export const rotinaHtml = () => `
   <div class="trajeto__quando">
     <label class="rs-field-label" for="r-hora">Saio às</label><input class="form-control" id="r-hora" type="time">
@@ -22,7 +21,7 @@ export function createRotina(root) {
   const err = $('[data-erro-rotina]', root);
   $('#r-hora', root).value = nowHHMM();
   return {
-                                                                                                    
+
     trip(from, to) {
       err.hidden = true;
       const dias = $$('[data-dia]', root).filter((c) => c.checked).map((c) => Number(c.dataset.dia));

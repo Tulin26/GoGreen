@@ -11,18 +11,12 @@ function nearestIndex(point, line) {
   return best;
 }
 
-                                                                               
 function slice(geometry, a, b) {
   const i = nearestIndex(a, geometry);
   const j = nearestIndex(b, geometry);
   return i < j ? geometry.slice(i, j + 1) : [a, b];
 }
 
-   
-                                                                                           
-                                                                                                                
-                                                                                                                                    
-   
 export async function buildLegs(option, trip, route) {
   const d = option.detail ?? option;
   const walk = async (from, to, step) => {
@@ -44,7 +38,7 @@ export async function buildLegs(option, trip, route) {
     const where = d.meeting || 'o ponto de encontro';
     const ride = `Vá de carro com ${d.ride.motorista}${d.drop ? ` até ${d.drop}` : ''}.`;
     const toDriver = await walk(trip.from, d.boardPoint, `Caminhe ${m(haversine(trip.from, d.boardPoint))} até ${where} e esteja lá às ${d.ride.hora}.`);
-                                                                                                       
+
     const car = { mode: 'car', geometry: slice(d.geometry, d.boardPoint, d.alightPoint), km: option.km, minutes: null, step: toDriver ? ride : `Esteja em ${where} às ${d.ride.hora}. ${ride}` };
     const toDest = await walk(d.alightPoint, trip.to, `Caminhe ${m(haversine(d.alightPoint, trip.to))} até o destino.`);
     return done([toDriver, car, toDest], [{ point: d.boardPoint, label: `Encontro com ${d.ride.motorista}` }, { point: d.alightPoint, label: 'Desembarque' }]);

@@ -9,6 +9,7 @@ import { isNight } from './recomendacao.js';
 
 export const telaHtml = () => `<div class="tela tela--dividida" data-mobile-view="mapa">
     <section class="painel-lateral tela__conteudo" aria-label="Planejar uma rota" data-painel>
+      <div class="painel-form" data-form>
       <div class="rotas-intro">
         <div class="rotas-intro__linha"><span class="rotas-intro__chapeu">Planejar rota</span><span class="rotas-intro__cidade">Araçatuba · SP</span></div>
         <h1 class="tela__titulo foco-titulo rs-t-display" tabindex="-1" data-titulo>Por onde a gente vai?</h1>
@@ -29,6 +30,8 @@ export const telaHtml = () => `<div class="tela tela--dividida" data-mobile-view
         </div>
       </details>
       <button class="btn btn-success botao botao--primario botao--bloco rs-btn-primary" type="button" data-comparar>Encontrar meu caminho</button>
+      </div>
+      <div class="painel-voltar"><button class="btn btn-outline-success botao botao--secundario" type="button" data-voltar><span aria-hidden="true">←</span> Voltar</button></div>
       <div class="visao-rota" role="group" aria-label="Visualização das rotas">
         <button type="button" class="visao-rota__botao" data-visao-rota="lista" aria-pressed="false">${icon('rota')}Lista</button>
         <button type="button" class="visao-rota__botao" data-visao-rota="mapa" aria-pressed="true">${icon('mapa')}Mapa</button>
@@ -42,11 +45,10 @@ export const telaHtml = () => `<div class="tela tela--dividida" data-mobile-view
 
 export const CARREGANDO = '<p role="status">Comparando rotas…</p><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div>';
 
-                                                                                     
 export function resultadoHtml({ from, to, options, ranked, ctx, prices, now = new Date() }) {
   const hhmm = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }).format(now);
   return `
-    <div class="resultado-cabeca"><h2 class="secao-titulo">${esc(from)} até ${esc(to)}</h2>
+    <div class="resultado-cabeca"><h2 class="secao-titulo resultado-titulo">${esc(from)} <span class="resultado-titulo__seta" aria-hidden="true">→</span><span class="sr-only"> até </span> ${esc(to)}</h2>
       <p class="texto-2 texto-peq">Hoje às ${hhmm}${isNight(now) ? ', à noite' : ''}. ${fmtKm(options.find((o) => o.mode === 'foot').km)} a pé.</p></div>
     <div class="pilha" data-caronas-perto></div>
     <div class="conjunto-placa">${card(ranked.best, ctx, true)}</div>
@@ -54,7 +56,7 @@ export function resultadoHtml({ from, to, options, ranked, ctx, prices, now = ne
     <div class="pilha" data-extras><p class="texto-2 texto-peq" role="status">Buscando ônibus pelos pontos, caronas e bicicletas de aluguel…</p></div>
     <div class="pilha pilha--justa">
       <p class="texto-2 texto-peq">Custo, tempo de ônibus e ${CO2} são estimativas. ${priceNote(prices)}</p>
-      <p class="texto-2 texto-peq" data-aviso-beta>As rotas a pé e de bicicleta vêm do Google em fase beta e podem não ter calçada ou ciclovia: confira o caminho no local.</p>
+      <p class="texto-2 texto-peq" data-aviso-beta>As rotas vêm do OpenStreetMap, um mapa feito por voluntários: podem faltar calçada, rampa ou ciclovia. Confira o caminho no local.</p>
       <div class="acoes-rodape">
         <button class="btn btn-link botao botao--texto" type="button" data-como>Como calculamos</button>
       </div>
