@@ -14,6 +14,8 @@ export const icons = {
   alerta: svg('<path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M12 8v5M12 16.5h.01"/>'),
   losango: svg('<path d="M12 2 22 12 12 22 2 12z" fill="#FFC81E" stroke="#15191B"/><path d="M12 7.5V13M12 16.5h.01" stroke="#15191B" stroke-width="2.4"/>'),
   octogono: svg('<path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z" fill="#C3161C" stroke="#FFFFFF" stroke-width="1"/><path d="M12 7v6.5M12 17h.01" stroke="#FFFFFF" stroke-width="2.6"/>'),
+  radar: svg('<rect x="2.5" y="4.5" width="13" height="8.5" rx="1.5"/><circle cx="9" cy="8.75" r="2.25"/><path d="M15.5 7 20 5v7.5l-4.5-2"/><path d="M9 13v8M6 21h6"/>'),
+  pedagio: svg('<path d="M3 21V9.5L7.5 6 12 9.5V21"/><path d="M2 21h11"/><path d="M6 12.5h3"/><path d="M12 14.5h9.5" stroke-width="3"/><path d="M15 14.5h1.5M19 14.5h1.5" stroke="var(--cor-superficie, #fff)" stroke-width="3" stroke-linecap="butt"/>'),
   info: svg('<circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.5h.01"/>'),
 
   buraco: svg('<path d="M3.5 15 7 10.5l3.5 1 3-2.5 5 1.5 2 4-3.5 3.5-5-1-3.5 1.5z" fill="currentColor"/><path d="M13.5 9V5M7 10.5 5 7M18.5 10.5 20.5 7"/>'),

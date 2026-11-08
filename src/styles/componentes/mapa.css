@@ -59,6 +59,12 @@
 .pino--onibus { color: #FFFFFF; width: 48px; height: 48px; }
 .pino--onibus::before { width: 42px; height: 42px; border-radius: 8px; background: var(--placa-azul); border: 2px solid #FFFFFF; box-shadow: 0 0 0 2px #15191B; }
 .pino--onibus > .icone { width: 26px; height: 26px; }
+.pino--radar { color: #FFFFFF; width: 40px; height: 40px; }
+.pino--radar::before { width: 32px; height: 32px; border-radius: 50%; background: #15191B; border: 3px solid var(--placa-vermelha); box-shadow: 0 0 0 1.5px #FFFFFF; }
+.pino--radar > .icone { width: 19px; height: 19px; stroke-width: 2.2; }
+.pino--pedagio { color: #15191B; width: 40px; height: 40px; }
+.pino--pedagio::before { width: 32px; height: 32px; border-radius: 6px; background: var(--placa-amarela); border: 2px solid #15191B; }
+.pino--pedagio > .icone { width: 20px; height: 20px; stroke-width: 2.2; }
 .pino__tag {
   position: absolute;
   top: -8px;

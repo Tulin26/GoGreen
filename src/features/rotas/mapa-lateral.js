@@ -1,4 +1,6 @@
 import { createMap, reducedMotion } from '../../shared/mapa/mapa.js';
+import { descrever, loadRadaresPedagios } from '../../servicos/radares-pedagios.js';
+import { toast } from '../../shared/ui/toast.js';
 import { drawRoute } from './mapa-rota.js';
 
 const isWide = () => window.matchMedia('(min-width: 1100px)').matches;
@@ -9,6 +11,7 @@ export function createRouteMap(box, { onMobileMap = () => {} } = {}) {
   let layers = null;
   let userLayer = null;
   let carpoolLayer = null;
+  let avisosLayer = null;
   let carpoolItems = [];
   let selected = null;
   let needsDraw = false;
@@ -25,7 +28,9 @@ export function createRouteMap(box, { onMobileMap = () => {} } = {}) {
       layers = h.group();
       userLayer = h.group();
       carpoolLayer = h.group();
+      avisosLayer = h.group();
       drawCarpools();
+      drawAvisos();
       return h;
     });
     const h = await promise;
@@ -47,6 +52,17 @@ export function createRouteMap(box, { onMobileMap = () => {} } = {}) {
       carpoolLayer.line(geometry, { color: '#B85C00', dashed: Boolean(estimated) });
       carpoolLayer.pin(driver.from, { css: 'pino--onibus', ic: 'carro', title: `${driver.motorista} sai às ${driver.hora}` });
       carpoolLayer.pin(driver.to, { ic: 'destino', title: `${driver.motorista} vai até ${driver.destino}` });
+    }
+  }
+
+  // Radares de velocidade e pedágios do OpenStreetMap, sempre no mapa. Tocar no símbolo mostra o limite ou o nome.
+  async function drawAvisos() {
+    const itens = await loadRadaresPedagios();
+    if (!alive || !avisosLayer) return;
+    avisosLayer.clear();
+    for (const item of itens) {
+      const texto = descrever(item);
+      avisosLayer.pin(item.coords, { css: `pino--${item.tipo}`, ic: item.tipo, title: texto, onClick: () => toast(texto, { ms: 3500 }) });
     }
   }
 

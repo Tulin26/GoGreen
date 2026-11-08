@@ -6,7 +6,7 @@
   "description": "GoGreen: o melhor jeito de se locomover pela cidade, com informações dos próprios moradores.",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/baixar-consumo.mjs && node scripts/baixar-pontos.mjs && node scripts/baixar-enderecos.mjs && vite build",
+    "build": "node scripts/baixar-consumo.mjs && node scripts/baixar-pontos.mjs && node scripts/baixar-radares-pedagios.mjs && node scripts/baixar-enderecos.mjs && vite build",
     "preview": "vite preview",
     "test": "node --test \"tests/unit/*.test.js\" \"tests/database/*.test.js\"",
     "test:e2e": "node tests/e2e/rotas-unica-tela.cjs && node tests/e2e/onibus-estimativa.cjs",

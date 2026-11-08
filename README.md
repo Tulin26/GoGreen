@@ -13,6 +13,7 @@ Site responsivo que responde **"Qual é o melhor jeito de chegar lá hoje?"** em
 | Todas as opções em Rotas | Ao planejar uma rota, aparecem a pé, bike, ônibus, carro e também ônibus pelos pontos do OpenStreetMap (estimado), bicicleta de aluguel (fictícia) e carona. Escolher uma opção desenha o caminho por trechos no mapa (a pé até a bicicleta, depois pedalando) e lista o passo a passo. Cada opção mostra o horário de saída e chegada e o CO₂ evitado por dia, semana e mês |
 | Iniciar rota | Depois de escolher uma opção, "Iniciar rota" guia a pessoa com o GPS em tempo real: mostra o passo atual e quanto falta, marca onde ela está no mapa, avisa se sai do traçado e termina ao chegar |
 | Ruas e números de casa | A busca conhece as 1.625 ruas de Araçatuba e 75 mil números de casa (CNEFE do IBGE), mesmo sem internet. Número que não consta é estimado entre os vizinhos e marcado como aproximado. Clicar em qualquer parte do cartão de uma opção escolhe essa opção |
+| Radares e pedágios | O mapa de Rotas mostra os radares de velocidade (círculo preto com borda vermelha) e os pedágios (placa amarela) de Araçatuba e das rodovias em volta, com dados do OpenStreetMap baixados no build. Tocar no símbolo mostra o limite do radar ou o nome da praça |
 | Carona no mapa | O foco do app. Em **Rotas**, ao planejar o trajeto, aparecem todos os motoristas que passam perto, com o desvio de cada um (calculado pelas ruas do OpenStreetMap), e as rotas deles são desenhadas no mapa em laranja. Dá para pedir carona dali. Na aba **Caronas**, quem dá carona cadastra a rota, recebe as solicitações e vê o desvio, o mapa com a rota nova, o custo e o CO₂ antes de aceitar; quem pediu acompanha o status |
 | Chat da carona | Passageiro e motorista conversam, por pedido, para combinar preço e ponto de encontro. O app não processa pagamento. Na demonstração, o motorista de exemplo responde sozinho |
 | Caronas | Quem vai para um destino oferece vagas, e quem precisa pede. Telefone e placa só aparecem depois que a vaga é aceita. Sem pagamento pelo app |
@@ -92,7 +93,7 @@ src/shared/      peças comuns: mapa do Google, avisos, diálogos, ícones
 src/config/      valores do cálculo, linhas de ônibus e lugares
 src/styles/      cores, tipografia e um CSS por componente
 api/             função da Vercel que busca o preço dos combustíveis na ANP
-scripts/         gera, no build, o consumo (Inmetro), os pontos de ônibus (OpenStreetMap) e as ruas com número (IBGE)
+scripts/         gera, no build, o consumo (Inmetro), os pontos de ônibus, radares e pedágios (OpenStreetMap) e as ruas com número (IBGE)
 api/            funções da Vercel: login (auth.js) e acesso ao banco (db.js)
 banco/          tabelas e regras de segurança do Neon (000_base.sql e migracoes/)
 tests/           unit (com regras de arquitetura), database e e2e
@@ -111,6 +112,7 @@ Os detalhes estão em [docs/ARQUITETURA.md](docs/ARQUITETURA.md).
 | Passe escolar | R$ 2,65, em abr/2025 | [Hojemais](https://www.hojemais.com.br/aracatuba/noticia/cotidiano/transporte-coletivo-em-aracatuba-tera-tarifa-zero-aos-domingos-e-feriados) |
 | Gasolina em Araçatuba | R$ 6,31 por litro, em 12/09/2026 | [Numerando, com dados da ANP](https://numerando.com.br/combustiveis/cidade/aracatuba-sp) |
 | Ruas e números de casa | 1.625 ruas e 75 mil números, Censo 2022 | [IBGE, CNEFE](https://ftp.ibge.gov.br/Cadastro_Nacional_de_Enderecos_para_Fins_Estatisticos/Censo_Demografico_2022/Arquivos_CNEFE/CSV/Municipio/35_SP/) |
+| Radares e pedágios | Nós `highway=speed_camera`, `barrier=toll_booth` e `highway=toll_gantry` em cerca de 35 km | [OpenStreetMap](https://www.openstreetmap.org/copyright) (ODbL) |
 | Linhas e horários da TUA | 14 linhas, quadro de 20/09/2026 | [onibus.online](https://onibus.online/empresas/tua-transportes-urbanos-aracatuba/) |
 | Base legal do tema | Acessibilidade universal e gestão democrática | [Lei 12.587/2012](https://www.mprj.mp.br/documents/20184/226705/Lei_12587.pdf) |
 
