@@ -1,5 +1,5 @@
-                                                                                                    
-                                                                                                        
+
+
 (function () {
   var gm = { polylines: [], markers: [], circles: [], routeCalls: [], mapCenter: null };
   gm.livePolylines = function () { return gm.polylines.filter(function (p) { return p.map; }).length; };
@@ -37,33 +37,14 @@
   function Bounds() { this.pts = []; }
   Bounds.prototype.extend = function (p) { this.pts.push(p); };
 
-  function computeRoutes(req) {
-    gm.routeCalls.push(req);
-    var a = req.origin, b = req.destination;
-    var dist = meters(a, b) * 1.2;
-    var speed = { WALKING: 4.8, BICYCLING: 15, DRIVING: 30 }[req.travelMode];
-    function route(bump) {
-      var path = [];
-      for (var i = 0; i <= 12; i++) {
-        var t = i / 12;
-        path.push({ lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t + bump * Math.sin(Math.PI * t) });
-      }
-      return { distanceMeters: dist, durationMillis: (dist / 1000 / speed) * 3600000, path: path };
-    }
-    var routes = [route(0)];
-    if (req.computeAlternativeRoutes) routes.push(route(0.004));
-    return Promise.resolve({ routes: routes });
-  }
-
   var libs = {
     maps: { Map: MapClass, Polyline: Polyline, Circle: Circle },
     marker: { AdvancedMarkerElement: Marker },
-    core: { LatLngBounds: Bounds, event: { trigger: function () {} } },
-    routes: { Route: { computeRoutes: computeRoutes } },
+    core: { LatLngBounds: Bounds, ColorScheme: { LIGHT: 'LIGHT', DARK: 'DARK', FOLLOW_SYSTEM: 'FOLLOW_SYSTEM' }, event: { trigger: function () {} } },
     places: {
       AutocompleteSessionToken: function () {},
       AutocompleteSuggestion: { fetchAutocompleteSuggestions: function (req) { return Promise.resolve({ suggestions: window.__gmSuggest ? window.__gmSuggest(req) : [] }); } },
-                                                                                                            
+
       Place: { searchByText: function () { return Promise.resolve({ places: [{ displayName: 'Bairro Teste', formattedAddress: 'Araçatuba - SP', location: { lat: function () { return -21.24; }, lng: function () { return -50.49; } } }] }); } },
     },
   };

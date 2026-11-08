@@ -6,7 +6,6 @@ import { closeButton, openDialog } from '../../shared/ui/dialogo.js';
 import { $ } from '../../shared/ui/dom.js';
 import { toast } from '../../shared/ui/toast.js';
 
-                                                                                              
 let watchId = null;
 let tripTimer = null;
 
@@ -17,7 +16,7 @@ export async function stopReporting(reason) {
   watchId = null;
   clearTimeout(tripTimer);
   setTrip(null);
-  try { await store.endTrip(trip); } catch {                                        }
+  try { await store.endTrip(trip); } catch {}
   toast(reason === 'tempo' ? `Paramos de informar depois de ${BUS.tripMaxMin} min. Obrigado.` : 'Obrigado por informar.');
 }
 

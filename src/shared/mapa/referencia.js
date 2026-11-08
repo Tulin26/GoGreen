@@ -2,10 +2,6 @@ import { haversine } from './geometria.js';
 
 const NEAR_M = 300;
 
-   
-                                                                                                                   
-                                                                      
-   
 export function meetingPoint(point, landmarks) {
   const named = landmarks.filter((l) => l.nome);
   if (!named.length) return null;
@@ -13,7 +9,6 @@ export function meetingPoint(point, landmarks) {
   return d <= NEAR_M ? best.nome : `a ${Math.round(d)} m de ${best.nome}`;
 }
 
-                                                                                                               
 export function stopLabel(stop, landmarks) {
   if (stop.nome) return `ponto ${stop.nome}`;
   const near = meetingPoint(stop.coords, landmarks);

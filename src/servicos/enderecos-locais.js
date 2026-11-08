@@ -1,20 +1,12 @@
 import { normalize } from '../shared/texto.js';
 import { fetchDoSite } from './site.js';
 
-                                                                                                                         
-                                                                                                          
-                                                                                                  
-
 const PARTICLES = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
 const titleCase = (s) => s.toLowerCase().split(/\s+/).filter(Boolean).map((w, i) => (i > 0 && PARTICLES.has(w) ? w : w[0].toUpperCase() + w.slice(1))).join(' ');
 const ABBREV = { r: 'rua', av: 'avenida', dr: 'doutor', dra: 'doutora', prof: 'professor', profa: 'professora', pca: 'praca', pc: 'praca', al: 'alameda', tv: 'travessa', est: 'estrada', rod: 'rodovia', jd: 'jardim', vl: 'vila', cel: 'coronel', eng: 'engenheiro', pres: 'presidente', gen: 'general', cap: 'capitao', ten: 'tenente', mal: 'marechal' };
 const MIN_QUERY = 3;
 const MAX_RESULTS = 6;
 
-   
-                                                                                                       
-                                                                                                                                                   
-   
 export function parseCnefe(csv) {
   const lines = csv.split('\n');
   const head = lines[0].trim().split(';');
@@ -42,7 +34,6 @@ export function parseCnefe(csv) {
   });
 }
 
-                                                                                                                                       
 export function expandRuas(ruas) {
   return ruas.map(({ n, b, h }) => {
     const addr = [];
@@ -66,7 +57,6 @@ function pointFor(street, number) {
   return { point: [near.lat, near.lng], exact: false, approx: true };
 }
 
-                                                                                                         
 export function searchLocal(query, ruas) {
   const tokens = normalize(query).replace(/[.,;]/g, ' ').split(/\s+/).filter(Boolean).map((t) => ABBREV[t] ?? t);
   let number = null;
@@ -91,8 +81,29 @@ export function searchLocal(query, ruas) {
   });
 }
 
+const SIMILAR_M = 60;
+
+/**
+ * Endereço mais próximo de um ponto, pelos números de casa do IBGE (sem internet e sem Google). Até 60 m, devolve rua e número;
+ * mais longe, só a rua. Nulo se não houver casa a até maxM metros. ruas: o resultado de loadRuas().
+ */
+export function nearestAddress(point, ruas, maxM = 150) {
+  const cos = Math.cos((point[0] * Math.PI) / 180);
+  let best = null;
+  for (const s of ruas) {
+    for (const a of s.addr) {
+      if (!(a.num > 0)) continue;
+      const distance = Math.hypot((a.lat - point[0]) * 111320, (a.lng - point[1]) * 111320 * cos);
+      if (distance <= maxM && (!best || distance < best.distance)) best = { s, a, distance };
+    }
+  }
+  if (!best) return null;
+  const { s, a, distance } = best;
+  return { title: distance <= SIMILAR_M ? `${s.n}, ${a.num}` : s.n, street: s.n, subtitle: `${s.b} · Araçatuba`, distance };
+}
+
 let loading = null;
-                                                                                                   
+
 export function loadRuas() {
   loading ??= fetchDoSite('/dados/enderecos.json', { timeoutMs: 60000, isValid: (j) => Array.isArray(j.ruas) && j.ruas.length > 0 })
     .then((j) => { const r = j ? expandRuas(j.ruas) : []; if (!r.length) loading = null; return r; })

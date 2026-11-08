@@ -1,33 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { describePositionError, getPosition } from '../../src/shared/mapa/posicao.js';
-
-const withGeo = (geolocation, fn) => {
-  const real = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', { value: { geolocation }, configurable: true });
-  return fn().finally(() => { if (real) Object.defineProperty(globalThis, 'navigator', real); else delete globalThis.navigator; });
-};
+import { describePositionError } from '../../src/shared/mapa/posicao.js';
 
 test('mensagens distintas para cada erro de GPS', () => {
   assert.match(describePositionError({ code: 1 }), /permiss/i);
   assert.match(describePositionError({ code: 2 }), /sinal|dispon/i);
   assert.match(describePositionError({ code: 3 }), /demorou|tempo/i);
   assert.match(describePositionError(new Error('sem-gps')), /não tem GPS|não oferece/i);
-});
-
-test('se a alta precisão falha, tenta de novo com baixa precisão', async () => {
-  const calls = [];
-  const geolocation = { getCurrentPosition: (ok, fail, opts) => { calls.push(opts.enableHighAccuracy); if (opts.enableHighAccuracy) fail({ code: 3 }); else ok({ coords: { latitude: -21.2, longitude: -50.43 } }); } };
-  const p = await withGeo(geolocation, () => getPosition());
-  assert.deepEqual(p, [-21.2, -50.43]);
-  assert.deepEqual(calls, [true, false]);
-});
-
-test('permissão negada não tenta de novo', async () => {
-  let n = 0;
-  const geolocation = { getCurrentPosition: (ok, fail) => { n++; fail({ code: 1 }); } };
-  await withGeo(geolocation, () => assert.rejects(getPosition(), (e) => e.code === 1));
-  assert.equal(n, 1);
 });
 
 import { watchPosition } from '../../src/shared/mapa/posicao.js';
@@ -85,8 +64,8 @@ const fix = (lat, acc) => ({ coords: { latitude: lat, longitude: -50.43, accurac
 test('getBestPosition espera uma leitura boa em vez de aceitar a primeira (aproximada)', async () => {
   await withWatch(null, async (h, cleared) => {
     const p = getBestPosition({ maxWaitMs: 5000, goodEnoughM: 60 });
-    h.ok(fix(-21.5, 3000));                               
-    h.ok(fix(-21.2, 25));                  
+    h.ok(fix(-21.5, 3000));
+    h.ok(fix(-21.2, 25));
     const best = await p;
     assert.deepEqual(best.point, [-21.2, -50.43]);
     assert.equal(best.accuracy, 25);

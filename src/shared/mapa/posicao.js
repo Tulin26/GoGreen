@@ -1,23 +1,3 @@
-                   
-const once = (opts) => new Promise((resolve, reject) => {
-  if (!navigator.geolocation) { reject(new Error('sem-gps')); return; }
-  navigator.geolocation.getCurrentPosition((p) => resolve([p.coords.latitude, p.coords.longitude]), reject, opts);
-});
-
-   
-                                                                                                              
-                                                                             
-   
-export async function getPosition(opts = {}) {
-  try {
-    return await once({ enableHighAccuracy: true, timeout: 8000, maximumAge: 30000, ...opts });
-  } catch (e) {
-    if (e?.code === 1 || e?.message === 'sem-gps') throw e;
-    return once({ enableHighAccuracy: false, timeout: 15000, maximumAge: 120000, ...opts });
-  }
-}
-
-                                                       
 export function describePositionError(e) {
   if (e?.message === 'sem-gps') return 'Este aparelho ou navegador não oferece localização. Digite o endereço.';
   if (e?.code === 1) return 'Sem permissão de localização para este site. Libere nas configurações do navegador (ícone de cadeado) e tente de novo, ou digite o endereço.';
@@ -25,11 +5,6 @@ export function describePositionError(e) {
   return 'Sem sinal de localização agora. Tente em um lugar aberto ou digite o endereço.';
 }
 
-   
-                                                                                                                          
-                                                                                                                          
-                                              
-   
 export function watchPosition(onFix, onError = () => {}) {
   if (!navigator.geolocation) { onError(new Error('sem-gps')); return () => {}; }
   const id = navigator.geolocation.watchPosition(
@@ -40,11 +15,6 @@ export function watchPosition(onFix, onError = () => {}) {
   return () => navigator.geolocation.clearWatch(id);
 }
 
-   
-                                                                                                                  
-                                                                                                                   
-                                                                                                                     
-   
 export function getBestPosition({ maxWaitMs = 12000, goodEnoughM = 60 } = {}) {
   return new Promise((resolve, reject) => {
     let best = null;
@@ -59,7 +29,7 @@ export function getBestPosition({ maxWaitMs = 12000, goodEnoughM = 60 } = {}) {
       if (best.accuracy <= goodEnoughM) finish();
     }, (e) => {
       lastError = e;
-      if (e?.code === 1 || e?.message === 'sem-gps') end(reject, e);                                                    
+      if (e?.code === 1 || e?.message === 'sem-gps') end(reject, e);
     });
     if (!settled) timer = setTimeout(finish, maxWaitMs);
   });

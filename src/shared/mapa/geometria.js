@@ -1,7 +1,6 @@
 const R = 6371000;
 const rad = (d) => (d * Math.PI) / 180;
 
-                                                        
 export function haversine(a, b) {
   const dLat = rad(b[0] - a[0]);
   const dLng = rad(b[1] - a[1]);
@@ -9,7 +8,6 @@ export function haversine(a, b) {
   return 2 * R * Math.asin(Math.sqrt(s));
 }
 
-                                                                                                    
 export function distanceToSegment(p, a, b) {
   const k = Math.cos(rad(p[0]));
   const toXY = (q) => [rad(q[1] - p[1]) * k * R, rad(q[0] - p[0]) * R];
@@ -36,7 +34,6 @@ export function polylineLength(line) {
   return total;
 }
 
-                                                          
 export function pointAlong(line, fraction) {
   const f = Math.max(0, Math.min(1, fraction));
   const target = polylineLength(line) * f;
@@ -56,10 +53,6 @@ export function inBounds(p, b) {
   return p[0] >= b.minLat && p[0] <= b.maxLat && p[1] >= b.minLng && p[1] <= b.maxLng;
 }
 
-   
-                                                                                                                          
-                                                                                              
-   
 export function projectOnPolyline(p, line) {
   if (!line?.length) return { along: 0, offset: Infinity };
   if (line.length === 1) return { along: 0, offset: haversine(p, line[0]) };

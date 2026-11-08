@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { expandRuas, parseCnefe, searchLocal } from '../../src/servicos/enderecos-locais.js';
+import { expandRuas, nearestAddress, parseCnefe, searchLocal } from '../../src/servicos/enderecos-locais.js';
 
 const HEADER = 'COD_UNICO_ENDERECO;COD_UF;COD_MUNICIPIO;COD_DISTRITO;COD_SUBDISTRITO;COD_SETOR;NUM_QUADRA;NUM_FACE;CEP;DSC_LOCALIDADE;NOM_TIPO_SEGLOGR;NOM_TITULO_SEGLOGR;NOM_SEGLOGR;NUM_ENDERECO;DSC_MODIFICADOR;NOM_COMP_ELEM1;VAL_COMP_ELEM1;NOM_COMP_ELEM2;VAL_COMP_ELEM2;NOM_COMP_ELEM3;VAL_COMP_ELEM3;NOM_COMP_ELEM4;VAL_COMP_ELEM4;NOM_COMP_ELEM5;VAL_COMP_ELEM5;LATITUDE;LONGITUDE;NV_GEO_COORD';
 const row = (tipo, titulo, nome, num, bairro, lat, lng) => `1;35;3502804;1;1;1;1;1;16013130;${bairro};${tipo};${titulo};${nome};${num};;;;;;;;;;;;${lat};${lng};1`;
@@ -8,8 +8,8 @@ const CSV = [
   HEADER,
   row('RUA', '', 'FLORIANO PEIXOTO', 100, 'VILA MENDONCA', '-21.2000', '-50.4300'),
   row('RUA', '', 'FLORIANO PEIXOTO', 200, 'VILA MENDONCA', '-21.2010', '-50.4300'),
-  row('RUA', '', 'FLORIANO PEIXOTO', 200, 'VILA MENDONCA', '-21.2999', '-50.4999'),                                 
-  row('RUA', '', 'FLORIANO PEIXOTO', 0, 'VILA MENDONCA', '-21.2500', '-50.4300'),                          
+  row('RUA', '', 'FLORIANO PEIXOTO', 200, 'VILA MENDONCA', '-21.2999', '-50.4999'),
+  row('RUA', '', 'FLORIANO PEIXOTO', 0, 'VILA MENDONCA', '-21.2500', '-50.4300'),
   row('AVENIDA', 'DOUTOR', 'ANTONIO GOMES', 50, 'SAUDADE', '-21.2100', '-50.4400'),
   row('RUA', '', 'FLORIANO PEIXOTO', 300, 'VILA MENDONCA', '-21.2020', '-50.4300'),
 ].join('\n');
@@ -65,4 +65,14 @@ test('consulta curta ou sem rua devolve vazio', () => {
   assert.deepEqual(searchLocal('ab', ruas), []);
   assert.deepEqual(searchLocal('xyz inexistente 12', ruas), []);
   assert.deepEqual(searchLocal('123', ruas), []);
+});
+
+test('nearestAddress: perto de uma casa devolve rua e número; um pouco mais longe, só a rua; sem casa por perto, nada', () => {
+  assert.equal(nearestAddress([-21.20003, -50.4300], ruas).title, 'Rua Floriano Peixoto, 100');
+  const meio = nearestAddress([-21.2000, -50.4291], ruas);
+  assert.equal(meio.title, 'Rua Floriano Peixoto');
+  assert.ok(meio.distance > 60 && meio.distance <= 150);
+  assert.match(nearestAddress([-21.2100, -50.4400], ruas).street, /Antonio Gomes/);
+  assert.equal(nearestAddress([-21.30, -50.30], ruas), null);
+  assert.equal(nearestAddress([-21.2000, -50.4291], ruas, 50), null);
 });

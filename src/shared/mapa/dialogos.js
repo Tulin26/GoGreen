@@ -5,7 +5,6 @@ import { icon } from '../ui/icones.js';
 import { inBounds } from './geometria.js';
 import { createMap } from './mapa.js';
 
-                                                                     
 export function pickPointOnMap({ title = 'Escolha o ponto no mapa', start = CITY.center } = {}) {
   return new Promise((resolve) => {
     let result = null;
@@ -35,7 +34,6 @@ export function pickPointOnMap({ title = 'Escolha o ponto no mapa', start = CITY
   });
 }
 
-                                                                         
 export function openMapDialog({ title, draw }) {
   let handle = null;
   const d = openDialog({

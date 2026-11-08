@@ -1,6 +1,6 @@
-                                                                                                                     
-                                                                                                                         
-                                            
+// E2E da estimativa dos ônibus: com o relógio fixo em terça 07:30, a linha 103 tem um ônibus a caminho (saiu 07:20).
+// Confere a régua, os ônibus estimados no mapa e a previsão de passagem pelo ponto da pessoa. Google e preços simulados.
+// Uso: node tests/e2e/onibus-estimativa.cjs
 const { chromium } = require('playwright');
 const { spawn, spawnSync, execSync } = require('child_process');
 const fs = require('fs');
@@ -12,28 +12,30 @@ const PORT = 4183;
 const BASE = `http://localhost:${PORT}/`;
 const cors = { 'access-control-allow-origin': '*' };
 const FAKE_GOOGLE = fs.readFileSync(path.join(__dirname, 'fake-google.js'), 'utf8');
+const { respostaFalsa } = require('./fake-osrm.cjs');
 let fails = 0;
 const check = (name, ok, extra = '') => { console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}${extra ? ` (${extra})` : ''}`); if (!ok) fails += 1; };
 
-                                                                                          
+// Meio do trajeto simulado (reta do Terminal Urbano até o "Bairro Teste" da fake-google).
 const MIDDLE = { latitude: (-21.203169 + -21.24) / 2, longitude: (-50.4385078 + -50.49) / 2 };
 
 (async () => {
-  const build = spawnSync('npx', ['vite', 'build', '--outDir', DIST, '--emptyOutDir'], { cwd: ROOT, env: { ...process.env, VITE_GOOGLE_MAPS_KEY: 'chave-de-teste', VITE_SUPABASE_URL: '', VITE_SUPABASE_ANON_KEY: '' }, stdio: 'ignore', shell: process.platform === 'win32' });
+  const build = spawnSync('npx', ['vite', 'build', '--outDir', DIST, '--emptyOutDir'], { cwd: ROOT, env: { ...process.env, VITE_GOOGLE_MAPS_KEY: 'chave-de-teste', VITE_USAR_BANCO: '' }, stdio: 'ignore', shell: process.platform === 'win32' });
   if (build.status !== 0) throw new Error('build falhou');
   const server = spawn('npx', ['vite', 'preview', '--outDir', DIST, '--port', String(PORT), '--strictPort'], { cwd: ROOT, stdio: 'ignore', detached: process.platform !== 'win32', shell: process.platform === 'win32' });
-  for (let i = 0; i < 60; i++) { try { if ((await fetch(BASE)).ok) break; } catch {                     } await new Promise((r) => setTimeout(r, 500)); }
+  for (let i = 0; i < 60; i++) { try { if ((await fetch(BASE)).ok) break; } catch { /* ainda subindo */ } await new Promise((r) => setTimeout(r, 500)); }
   const browser = await chromium.launch();
   const errors = [];
   try {
     for (const [label, viewport] of [['celular', { width: 390, height: 844 }], ['computador', { width: 1280, height: 900 }]]) {
       const ctx = await browser.newContext({ viewport, locale: 'pt-BR', timezoneId: 'America/Sao_Paulo', permissions: ['geolocation'], geolocation: MIDDLE });
       await ctx.route('https://maps.googleapis.com/**', (r) => r.fulfill({ contentType: 'application/javascript', body: FAKE_GOOGLE }));
+      await ctx.route('https://routing.openstreetmap.de/**', (r) => r.fulfill({ json: respostaFalsa(r.request().url()), headers: { 'access-control-allow-origin': '*' } }));
       await ctx.route('**/api/combustiveis', (r) => r.fulfill({ json: { precos: { gasolina: 6.3, etanol: 3.59, diesel: 7.32 } }, headers: cors }));
       const page = await ctx.newPage();
       page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
       page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::ERR/.test(m.text())) errors.push(`console: ${m.text()}`); });
-      await page.clock.setFixedTime(new Date('2026-11-03T10:30:00Z'));                             
+      await page.clock.setFixedTime(new Date('2026-11-03T10:30:00Z')); // terça, 07:30 em Araçatuba
 
       await page.goto(`${BASE}#/onibus`);
       await page.locator('[data-linha="103"]').click();
@@ -59,7 +61,7 @@ const MIDDLE = { latitude: (-21.203169 + -21.24) / 2, longitude: (-50.4385078 + 
   }
   check('sem erros de script no console', errors.length === 0, errors.slice(0, 3).join(' | '));
   await browser.close();
-  try { if (process.platform === 'win32') execSync(`taskkill /pid ${server.pid} /T /F`, { stdio: 'ignore' }); else process.kill(-server.pid); } catch {                    }
+  try { if (process.platform === 'win32') execSync(`taskkill /pid ${server.pid} /T /F`, { stdio: 'ignore' }); else process.kill(-server.pid); } catch { /* já encerrado */ }
   console.log(fails ? `\n${fails} falha(s)` : '\nTudo certo');
   process.exit(fails ? 1 : 0);
 })();

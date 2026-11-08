@@ -41,9 +41,9 @@ test('o trajeto de uma linha é calculado uma vez só na sessão', async () => {
 test('sem lugar achado, ou sem rota de verdade do Google, não inventa trajeto', async () => {
   setGoogleForTests(fakeMaps({ places: [] }).maps);
   assert.equal(await loadLinePath(L('203', 'Teste', 'X')), null);
-  const outro = { ...place, location: { lat: () => -21.27, lng: () => -50.41 } };                                                                       
+  const outro = { ...place, location: { lat: () => -21.27, lng: () => -50.41 } };
   setGoogleForTests(fakeMaps({ places: [outro], computeRoutes: async () => { throw new Error('off'); } }).maps);
-  assert.equal(await loadLinePath(L('204', 'Teste', 'Y')), null);                                                                   
+  assert.equal(await loadLinePath(L('204', 'Teste', 'Y')), null);
 });
 
 test('sem o Google (sem chave) devolve null e tenta de novo depois', async () => {

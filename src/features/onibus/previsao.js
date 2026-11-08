@@ -2,12 +2,11 @@ import { BUS } from '../../config/transporte.js';
 import { esc, fmtAgo } from '../../shared/formato.js';
 import { haversine } from '../../shared/mapa/geometria.js';
 import { icon } from '../../shared/ui/icones.js';
+import { estimateHtml } from './estimativa-ui.js';
 import { DAY_LABEL, formatWait, nextDepartures } from './horarios.js';
 
-                                                 
 export const fromName = (name) => (/^(Terminal|Bairro)$/.test(name) ? `do ${name}` : `de ${esc(name)}`);
 
-                                                                                                  
 export function prediction(line, state) {
   const { dirIndex, positions, userPoint, lastDistance } = state;
   const dir = line.directions[dirIndex] ?? line.directions[0];
@@ -47,7 +46,8 @@ export function prediction(line, state) {
   const noMoreToday = !first.today;
   return {
     kind: 'horario',
-    html: `<div class="previsao previsao--horario">
+    hasEstimate: Boolean(state.path),
+    html: `${state.path ? estimateHtml(line, state) : ''}<div class="previsao previsao--horario">
       <p class="linha linha--justa"><span class="selo selo--horario">${icon('relogio')}HORÁRIO</span><span class="frescor">Ninguém informando esta linha agora</span></p>
       ${noMoreToday ? '<p class="secao-titulo">Sem mais saídas hoje</p>' : ''}
       <p class="previsao__valor">${value}</p>

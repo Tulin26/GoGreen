@@ -10,7 +10,6 @@ const LANDMARKS = PLACES.map((p) => ({ nome: p.title, coords: p.point }));
 const pct = (m, total) => `${Math.max(0, Math.min(100, (m / total) * 100)).toFixed(1)}%`;
 const whenText = (a) => `${a.clock} (${formatWait(a.inMinutes)})`;
 
-                                                                                                                              
 function rulerHtml(line, state, now) {
   const { path, userPoint, stops } = state;
   const total = polylineLength(path.geometry);
@@ -46,10 +45,6 @@ function stopsHtml(line, state, now) {
     <ul class="lista-saidas lista-pontos-onibus">${list.map((s, i) => `<li><button type="button" class="lista-pontos-onibus__item" data-ponto-trajeto="${i}" aria-label="Mostrar ${esc(stopLabel(s.stop, named))} no mapa"><span>${esc(stopLabel(s.stop, named))}</span><strong>${s.next ? whenText(s.next) : 'sem saída'}</strong></button></li>`).join('')}</ul></details>`;
 }
 
-   
-                                                                                                                                   
-                                                                                          
-   
 export function estimateHtml(line, state, now = new Date()) {
   if (!state.path) return '<p class="texto-2 texto-peq" role="status">Calculando o trajeto estimado desta linha…</p>';
   return `<div class="previsao previsao--estimativa">
