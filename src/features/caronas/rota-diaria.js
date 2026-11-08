@@ -3,6 +3,7 @@ import { session } from '../../shared/estado.js';
 import { esc } from '../../shared/formato.js';
 import { $, $$ } from '../../shared/ui/dom.js';
 import { icon } from '../../shared/ui/icones.js';
+import { confirmar } from '../../shared/ui/confirmar.js';
 import { toast } from '../../shared/ui/toast.js';
 import { openCarForm } from '../carros/formulario.js';
 import { removeVehicle } from '../carros/remover.js';
@@ -10,43 +11,49 @@ import { requireLogin } from '../conta/login.js';
 import { createBusca } from '../rotas/busca.js';
 import { buscaHtml } from '../rotas/busca-html.js';
 import { acceptTerms } from './dialogos.js';
+import { formatDays } from './regras.js';
 
 const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const rideVehicleLabel = (c) => `${c.tipo === 'moto' ? 'Moto' : 'Carro'} ${c.marca} ${c.modelo} ${c.ano}`;
 
-const formHtml = () => `<h2 class="secao-titulo">Minha rota diária</h2>
-  <p class="texto-2 texto-peq">Onde você sai e para onde vai todo dia. Use um ponto de encontro e evite o endereço exato da sua casa: origem e destino aparecem para quem procura carona.</p>
-  ${buscaHtml()}
-  <div class="trajeto__quando">
-    <label class="rs-field-label" for="c-ida">Saio às</label><input class="form-control" id="c-ida" type="time" value="07:00">
-    <label class="rs-field-label" for="c-volta">Volto às (opcional)</label><input class="form-control" id="c-volta" type="time">
-  </div>
-  <fieldset class="trajeto__dias"><legend class="rs-field-label">Dias da semana</legend>
-    ${DIAS.map((d, i) => `<label class="opcao"><input type="checkbox" data-dia="${i}"${i >= 1 && i <= 5 ? ' checked' : ''}><span class="opcao__caixa">${icon('check')}</span>${d}</label>`).join('')}
-  </fieldset>
-  <fieldset class="trajeto__dias"><legend class="rs-field-label">Eu...</legend>
-    <label class="opcao"><input type="radio" name="papel" value="passageiro" checked data-papel><span class="opcao__caixa">${icon('check')}</span>Preciso de carona</label>
-    <label class="opcao"><input type="radio" name="papel" value="motorista" data-papel><span class="opcao__caixa">${icon('check')}</span>Ofereço carona (Tenho carro ou moto)</label>
-  </fieldset>
-  <div data-oferta hidden>
-    <div class="grade-campos">
-      <div class="campo"><label class="campo__rotulo" for="c-carro">Veículo da carona</label><select class="form-select entrada select" id="c-carro" data-carro></select></div>
-      <div class="campo"><label class="campo__rotulo" for="c-vagas">Vagas</label><input class="form-control entrada" id="c-vagas" type="number" min="1" max="6" value="3" inputmode="numeric"></div>
+const bloco = (n, titulo, dica, corpo) => `<section class="bloco"><h3 class="bloco__titulo"><span class="bloco__num" aria-hidden="true">${n}</span>${titulo}</h3>${dica ? `<p class="bloco__dica">${dica}</p>` : ''}${corpo}</section>`;
+
+const papelCard = (valor, titulo, texto, marcado) => `<label class="papel"><input type="radio" name="papel" value="${valor}"${marcado ? ' checked' : ''} data-papel><span class="papel__corpo"><strong>${titulo}</strong><span>${texto}</span></span></label>`;
+
+const formHtml = () => `<div class="rota-form">
+  ${bloco(1, 'Trajeto', 'Use um ponto de encontro e evite o endereço exato da sua casa: origem e destino aparecem para quem procura carona.', buscaHtml())}
+  ${bloco(2, 'Quando', '', `<div class="trajeto__quando">
+      <label class="rs-field-label" for="c-ida">Saio às</label><input class="form-control" id="c-ida" type="time" value="07:00">
+      <label class="rs-field-label" for="c-volta">Volto às (opcional)</label><input class="form-control" id="c-volta" type="time">
     </div>
-    <button class="botao botao--texto" type="button" data-apagar-veiculo hidden>Apagar veículo, placa e rotas vinculadas</button>
-  </div>
+    <fieldset class="trajeto__dias"><legend class="rs-field-label">Dias da semana</legend>
+      ${DIAS.map((d, i) => `<label class="opcao"><input type="checkbox" data-dia="${i}"${i >= 1 && i <= 5 ? ' checked' : ''}><span class="opcao__caixa">${icon('check')}</span>${d}</label>`).join('')}
+    </fieldset>`)}
+  ${bloco(3, 'Como você participa', '', `<fieldset class="papeis"><legend class="sr-only">Como você participa</legend>
+      ${papelCard('passageiro', 'Preciso de carona', 'Procuro motoristas que passam pelo meu trajeto.', true)}
+      ${papelCard('motorista', 'Ofereço carona', 'Tenho carro ou moto e posso levar alguém.', false)}
+    </fieldset>
+    <div data-oferta hidden>
+      <div class="grade-campos">
+        <div class="campo"><label class="campo__rotulo" for="c-carro">Veículo da carona</label><select class="form-select entrada select" id="c-carro" data-carro></select></div>
+        <div class="campo"><label class="campo__rotulo" for="c-vagas">Vagas</label><input class="form-control entrada" id="c-vagas" type="number" min="1" max="6" value="3" inputmode="numeric"></div>
+      </div>
+      <button class="botao botao--texto" type="button" data-apagar-veiculo hidden>Apagar veículo, placa e rotas vinculadas</button>
+    </div>`)}
   <p class="campo__erro" role="alert" data-erro-rota hidden></p>
   <button class="btn btn-success botao botao--primario botao--bloco" type="button" data-salvar-rota>Salvar minha rota</button>
-  <div data-minhas></div>`;
+</div>`;
 
-const routeCard = (r) => `<li class="trajeto__cartao">
-  <p><span class="selo selo--horario">${r.papel === 'motorista' ? 'DOU CARONA' : 'PRECISO DE CARONA'}</span></p>
-  <p><strong>${esc(r.origem)} até ${esc(r.destino)}</strong><br><span class="texto-2">Saída ${esc(r.ida_hora)}${r.volta_hora ? `, volta ${esc(r.volta_hora)}` : ''} · ${r.dias.map((d) => DIAS[d]).join(', ')}${r.papel === 'motorista' ? ` · ${r.vagas} ${r.vagas === 1 ? 'vaga' : 'vagas'}` : ''}</span></p>
-  <div class="cartao-rota__acoes">${r.papel === 'passageiro' ? `<button class="btn btn-success botao botao--primario" type="button" data-ver-motoristas="${esc(r.id)}">Ver motoristas</button>` : ''}
-  <button class="botao botao--texto" type="button" data-apagar="${esc(r.id)}">Apagar</button></div></li>`;
+const routeCard = (r) => `<li class="trajeto__cartao rota-item">
+  <span class="selo selo--papel selo--papel-${r.papel}">${r.papel === 'motorista' ? 'Dou carona' : 'Preciso de carona'}</span>
+  <h3 class="rota-item__trajeto">${esc(r.origem)} <span class="rota-item__seta" aria-hidden="true">→</span> ${esc(r.destino)}</h3>
+  <p class="rota-item__quando">Saída ${esc(r.ida_hora)}${r.volta_hora ? ` · volta ${esc(r.volta_hora)}` : ''} · ${formatDays(r.dias)}</p>
+  <div class="rota-item__acoes">${r.papel === 'passageiro' ? `<button class="btn btn-success botao botao--primario" type="button" data-ver-motoristas="${esc(r.id)}">Ver motoristas</button>` : ''}
+    <button class="botao botao--texto" type="button" data-apagar="${esc(r.id)}">Apagar</button></div></li>`;
 
-                                                                                                              
-export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
+const vazio = '<div class="vazio"><p class="vazio__titulo">Você ainda não cadastrou nenhuma rota</p><p class="texto-2">Cadastre o caminho que faz todo dia para achar motoristas ou receber pedidos.</p><button class="btn btn-success botao botao--primario" type="button" data-ir-nova>Cadastrar minha rota</button></div>';
+
+export function createRotaDiaria({ box, listBox, onRoutes, onPickRoute, onSaved = () => {}, onNew = () => {} }) {
   box.innerHTML = formHtml();
   const busca = createBusca(box, { onCompare: () => $('#c-ida', box).focus() });
   const err = $('[data-erro-rota]', box);
@@ -71,11 +78,10 @@ export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
 
   async function reload() {
     routes = session.user ? await store.listDailyRoutes().catch(() => []) : [];
-    $('[data-minhas]', box).innerHTML = routes.length ? `<h3>Minhas rotas</h3><ul class="lista-cartoes">${routes.map(routeCard).join('')}</ul>` : '';
+    listBox.innerHTML = routes.length ? `<ul class="lista-cartoes">${routes.map(routeCard).join('')}</ul>` : vazio;
     onRoutes(routes);
   }
 
-                                                                                                                                     
   async function readPoints() {
     if (!busca.isFilled()) return null;
     try {
@@ -85,6 +91,13 @@ export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
     } catch { fail('Não foi possível buscar esse lugar agora. Tente de novo.'); return null; }
     if (!busca.hasBothPoints() || !busca.insideCity()) { fail('Origem e destino precisam ficar em Araçatuba.'); return null; }
     return { points: busca.points(), labels: busca.labels() };
+  }
+
+  async function removeRoute(id) {
+    const rota = routes.find((r) => r.id === id);
+    const aviso = rota?.papel === 'motorista' ? 'Os pedidos de carona feitos a esta rota também serão apagados.' : 'Os pedidos que você fez com esta rota também serão apagados.';
+    if (!await confirmar({ titulo: 'Apagar esta rota?', texto: `${aviso} Isso não pode ser desfeito.`, confirmar: 'Apagar rota', voltar: 'Manter', perigo: true })) return;
+    try { await store.deleteDailyRoute(id); toast('Rota apagada.'); await reload(); } catch (er) { toast(er.message || 'Não foi possível apagar.'); }
   }
 
   async function save() {
@@ -112,6 +125,7 @@ export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
       await store.saveDailyRoute({ origem: where.labels[0], destino: where.labels[1], from: where.points[0], to: where.points[1], ida_hora: ida, volta_hora: $('#c-volta', box).value || null, dias, oferece_carona: driving, ...extra });
       toast(driving ? 'Rota salva. Você já aparece para quem procura carona.' : 'Rota salva. Veja os motoristas abaixo.');
       await reload();
+      onSaved(driving);
       if (!driving) onPickRoute(routes.at(-1));
     } catch (e) { fail(e.message || 'Não foi possível salvar a rota.'); }
   }
@@ -120,6 +134,13 @@ export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
     $('[data-oferta]', box).hidden = $('[data-papel]:checked', box).value !== 'motorista';
     if (!$('[data-oferta]', box).hidden && await requireLogin('Entre para dar carona.')) await fillCars();
   }));
+  listBox.addEventListener('click', async (e) => {
+    if (e.target.closest('[data-ir-nova]')) { onNew(); return; }
+    const see = e.target.closest('[data-ver-motoristas]');
+    if (see) { onPickRoute(routes.find((r) => r.id === see.dataset.verMotoristas)); return; }
+    const del = e.target.closest('[data-apagar]');
+    if (del) await removeRoute(del.dataset.apagar);
+  });
   box.addEventListener('click', async (e) => {
     const remove = e.target.closest('[data-apagar-veiculo]');
     if (remove) {
@@ -135,10 +156,6 @@ export function createRotaDiaria({ box, onRoutes, onPickRoute }) {
       return;
     }
     if (e.target.closest('[data-salvar-rota]')) { save(); return; }
-    const see = e.target.closest('[data-ver-motoristas]');
-    if (see) { onPickRoute(routes.find((r) => r.id === see.dataset.verMotoristas)); return; }
-    const del = e.target.closest('[data-apagar]');
-    if (del) { try { await store.deleteDailyRoute(del.dataset.apagar); await reload(); } catch (er) { toast(er.message || 'Não foi possível apagar.'); } }
   });
 
   reload();
