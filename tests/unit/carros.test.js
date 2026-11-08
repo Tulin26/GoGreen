@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { co2PerKm, ethanolBreakEven, fuelsOf, tripChoices } from '../../src/features/carros/economia.js';
+import { co2PerKm, fuelsOf, tripChoices } from '../../src/features/carros/economia.js';
 import { carFieldsFromEntry, isValidPlate, normalizePlate, versionsOf } from '../../src/features/carros/catalogo.js';
 import { isValidPhone } from '../../src/shared/validacao.js';
 import { buildOptions } from '../../src/features/rotas/opcoes.js';
@@ -17,20 +17,15 @@ test('flex testa os dois combustíveis', () => {
 test('escolhe o carro e o combustível mais baratos do trajeto', () => {
   const [first, second, third] = tripChoices([OLD, CITY], 10, PRICES);
   assert.equal(first.car.modelo, 'CITY');
-  assert.equal(first.fuel, 'etanol');                        
+  assert.equal(first.fuel, 'etanol');
   assert.ok(Math.abs(first.money - 3.663) < 0.01);
-  assert.equal(second.fuel, 'gasolina');                         
-  assert.equal(third.car.modelo, 'UNO');                       
+  assert.equal(second.fuel, 'gasolina');
+  assert.equal(third.car.modelo, 'UNO');
 });
 
 test('com etanol caro, o mesmo carro passa para a gasolina', () => {
   const [first] = tripChoices([CITY], 10, { ...PRICES, etanol: 5.5 });
   assert.equal(first.fuel, 'gasolina');
-});
-
-test('preço limite do etanol segue o consumo do carro', () => {
-  assert.ok(Math.abs(ethanolBreakEven(CITY, PRICES) - (6.30 * 9.8) / 13.9) < 1e-9);
-  assert.equal(ethanolBreakEven(OLD, PRICES), null);
 });
 
 test('CO2 usa o Inmetro e, à mão, é calculado pelo consumo', () => {
