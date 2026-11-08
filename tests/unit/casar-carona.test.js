@@ -2,9 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { matchRide, toMinutes } from '../../src/features/rotas/casar-carona.js';
 
-                                                                                              
 const line = Array.from({ length: 11 }, (_, i) => [-21.2, -50.5 + i * 0.0045]);
-const north300 = 300 / 111320;                                 
+const north300 = 300 / 111320;
 const at = (i, dLat = 0) => [-21.2 + dLat, -50.5 + i * 0.0045];
 const ride = { geometry: line, hora: '07:00' };
 

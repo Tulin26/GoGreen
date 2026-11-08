@@ -35,7 +35,7 @@ test('sem pontos devolve estimativa marcada, sem embarque', () => {
 });
 
 test('ponto de embarque a mais de 800 m da origem é ignorado', () => {
-  const r = planBus(from, to, [stop(1, 2), stop(2, 9)], [straight(0)]);                    
+  const r = planBus(from, to, [stop(1, 2), stop(2, 9)], [straight(0)]);
   assert.equal(r.board, null);
 });
 
@@ -46,7 +46,7 @@ test('minutos seguem busMinutes e CO2 vem do ônibus', () => {
 });
 
 test('pontos fora do traçado ainda servem de embarque e desembarque se estão a até 800 m', () => {
-  const off = (id, i) => stop(id, i, 300 / 111320);                              
+  const off = (id, i) => stop(id, i, 300 / 111320);
   const r = planBus(from, to, [off(1, 0), off(2, 10)], [straight(0)]);
   assert.equal(r.board.id, 1);
   assert.equal(r.alight.id, 2);

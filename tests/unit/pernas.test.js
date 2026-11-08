@@ -28,7 +28,7 @@ test('carona: a pé até o motorista, de carro com ele, e a pé até o destino',
   assert.ok(r.legs[1].geometry.length >= 2);
   assert.match(r.steps[0], /Praça A/);
   assert.match(r.steps[1], /Carlos/);
-  assert.deepEqual(calls, ['foot', 'foot']);                                                                       
+  assert.deepEqual(calls, ['foot', 'foot']);
 });
 
 test('ônibus: a pé até o ponto, ônibus entre os pontos, a pé até o destino', async () => {
