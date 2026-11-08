@@ -9,20 +9,14 @@ import { buildLegs } from './pernas.js';
 
 const route = async (mode, from, to) => (await getRoutes(mode, from, to))[0];
 
-   
-                                                                                                                       
-                                                                                                                            
-                             
-   
 export function createExtrasPanel({ root, result, mapa, rotina, busca, getBase = () => null }) {
   const guia = createGuiaUi({ root, mapa });
   const perto = createCaronasPerto({ result, mapa });
-  let cache = null;                                                                                             
+  let cache = null;
   let extras = [];
   let trip = null;
   let abort = null;
 
-                                                                                                     
   async function show(ctx) {
     const [from, to] = busca.points();
     trip = rotina.trip(from, to);
@@ -60,7 +54,6 @@ export function createExtrasPanel({ root, result, mapa, rotina, busca, getBase =
     }
   }
 
-                                                                                                     
   async function iniciar(opt) {
     if (!opt || !trip) return;
     try {
@@ -73,7 +66,7 @@ export function createExtrasPanel({ root, result, mapa, rotina, busca, getBase =
   }
 
   root.addEventListener('click', async (e) => {
-                                                                                             
+
     const card = e.target.closest('.cartao-rota');
     if (card) {
       $$('.cartao-rota--ativa', result).forEach((c) => c.classList.remove('cartao-rota--ativa'));

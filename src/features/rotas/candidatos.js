@@ -6,37 +6,45 @@ import { closeButton, openDialog } from '../../shared/ui/dialogo.js';
 import { $ } from '../../shared/ui/dom.js';
 import { toast } from '../../shared/ui/toast.js';
 import { toMinutes } from './casar-carona.js';
-import { prefilter } from './desvio.js';
+import { MAX_DETOUR_KM, MAX_OPPOSITE_DETOUR_KM, PREFILTER_M, prefilter } from './desvio.js';
 
-const MAX_TIME_GAP_MIN = 30;                                                          
-const MAX_CHECKED = 10;                                                               
-const MAX_SHOWN = 5;                                                                
+const MAX_TIME_GAP_MIN = 30;
+const MAX_CHECKED = 15;
+const MAX_SHOWN = 5;
 
-   
-                                                                                                                        
-                                                                                                                       
-   
 export async function findCandidates(route) {
-  const drivers = (await store.matchDailyRides({ dias: route.dias }))
-    .filter((d) => Math.abs(toMinutes(d.hora) - toMinutes(route.ida_hora)) <= MAX_TIME_GAP_MIN)
-    .slice(0, MAX_CHECKED);
+  const noHorario = (await store.matchDailyRides({ dias: route.dias }))
+    .filter((d) => Math.abs(toMinutes(d.hora) - toMinutes(route.ida_hora)) <= MAX_TIME_GAP_MIN);
+  // Triagem barata antes de pedir rotas: pela reta de cada motorista, com folga para a curva das ruas. Só os melhores têm a rota calculada.
+  const drivers = noHorario
+    .map((d) => ({ d, pf: prefilter([d.from, d.to], route, PREFILTER_M * 2) }))
+    .filter(({ pf }) => pf.ok)
+    .sort((x, y) => Number(y.pf.sameDirection) - Number(x.pf.sameDirection) || x.pf.extraKm - y.pf.extraKm)
+    .slice(0, MAX_CHECKED)
+    .map(({ d }) => d);
   const scored = [];
   for (const d of drivers) {
     const [base] = await getRoutes('car', d.from, d.to);
-    const pf = base.estimated ? { ok: true, pickupOffsetM: 1e9, dropoffOffsetM: 1e9 } : prefilter(base.geometry, route);
-    if (pf.ok) scored.push({ driver: d, score: pf.pickupOffsetM + pf.dropoffOffsetM, geometry: base.estimated ? null : base.geometry });
+    const pf = prefilter(base.geometry, route);
+    if (pf.ok) scored.push({ driver: d, estimated: Boolean(base.estimated), sameDirection: pf.sameDirection, estExtraKm: pf.extraKm, geometry: base.geometry });
   }
-  scored.sort((a, b) => a.score - b.score);
-                                                                                                                                       
+  scored.sort((a, b) => Number(b.sameDirection) - Number(a.sameDirection) || a.estExtraKm - b.estExtraKm);
+
   const out = [];
-  for (const [i, { driver, geometry }] of scored.entries()) out.push({ driver, geometry, detour: i < MAX_SHOWN ? await detourFor({ from: driver.from, to: driver.to }, route) : null });
+  for (const [i, c] of scored.entries()) {
+    const detour = i < MAX_SHOWN ? await detourFor({ from: c.driver.from, to: c.driver.to }, route) : null;
+    // O desvio calculado pelas ruas manda: acima do limite, a carona dá trabalho demais para o motorista.
+    if (detour && detour.extraKm > (c.sameDirection ? MAX_DETOUR_KM : MAX_OPPOSITE_DETOUR_KM)) continue;
+    out.push({ ...c, detour });
+  }
   return out;
 }
 
-export const cardHtml = ({ driver: d, detour }, i, asked) => `<li class="trajeto__cartao">
-  <h3>${esc(d.motorista)} ${d.isExample ? '<span class="selo selo--horario">exemplo</span>' : ''}</h3>
-  <p>${esc(d.veiculo ?? 'Veículo informado pelo motorista')}<br>${esc(d.origem)} até ${esc(d.destino)}<br><span class="texto-2">Sai às ${esc(d.hora)} · ${d.vagas_livres} ${d.vagas_livres === 1 ? 'vaga livre' : 'vagas livres'}</span></p>
-  <p><strong>${detour ? `Desvia ${fmtKm(detour.extraKm)} (+${fmtMin(detour.extraMin)}) para te levar` : 'Desvio não calculado agora'}</strong></p>
+export const cardHtml = ({ driver: d, detour, sameDirection, estExtraKm }, i, asked, oculto = false) => `<li class="trajeto__cartao carona"${oculto ? ' hidden data-extra-carona' : ''}>
+  <div class="carona__topo"><h3 class="carona__nome">${esc(d.motorista)}${d.isExample ? ' <span class="selo selo--horario">exemplo</span>' : ''}</h3><span class="carona__hora" aria-label="Sai às ${esc(d.hora)}">${esc(d.hora)}</span></div>
+  <p class="carona__trajeto">${esc(d.origem)} <span class="carona__seta" aria-hidden="true">→</span> ${esc(d.destino)}</p>
+  <p class="carona__meta">${esc(d.veiculo ?? 'Veículo informado pelo motorista')} · ${d.vagas_livres} ${d.vagas_livres === 1 ? 'vaga livre' : 'vagas livres'}</p>
+  <p class="carona__desvio"><strong>${detour ? `Desvia ${fmtKm(detour.extraKm)} (+${fmtMin(detour.extraMin)})` : `Desvio aproximado de ${fmtKm(estExtraKm)}`}</strong> <span class="texto-2">· ${sameDirection ? 'mesmo sentido' : 'sentido contrário, desvio pequeno'}</span></p>
   <button class="btn btn-success botao botao--primario" type="button" data-pedir="${i}"${asked ? ' disabled' : ''}>${asked ? 'Pedido enviado' : 'Pedir carona'}</button></li>`;
 
 export function askDialog(driver, route) {
@@ -62,7 +70,6 @@ export function askDialog(driver, route) {
   });
 }
 
-                                                                                                                                  
 export function createCandidatos({ box, onRequested }) {
   let list = [];
   let current = null;

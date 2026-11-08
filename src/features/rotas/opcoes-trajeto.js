@@ -14,7 +14,6 @@ const MAX = { bus: 3, rental: 3, carpool: 5 };
 const WALK_M_PER_MIN = (FALLBACK.kmh.foot * 1000) / 60;
 const sameDay = (a, b) => a.some((d) => b.includes(d));
 
-                                                                                                                  
 function busPlans(trip, stops, candidates) {
   const seen = new Set();
   const plans = candidates.map((c) => planBus(trip.from, trip.to, stops, [c])).filter((p) => {
@@ -25,7 +24,6 @@ function busPlans(trip, stops, candidates) {
   return plans.length ? plans.slice(0, MAX.bus) : [planBus(trip.from, trip.to, stops, candidates)];
 }
 
-                                                                                                                              
 function rentalOptions(trip, stations) {
   const near = (point) => stations
     .map((s) => ({ s, d: haversine(point, s.coords) }))
@@ -44,7 +42,6 @@ function rentalOptions(trip, stations) {
   return pairs.sort((x, y) => x.minutes - y.minutes).slice(0, MAX.rental);
 }
 
-                                                                                                                    
 function carpoolOptions(trip, carRoute, rides, rideGeometries, landmarks, matchMinutes) {
   return rides
     .filter((r) => rideGeometries[r.id] && sameDay(r.dias, trip.dias))
@@ -63,11 +60,6 @@ function carpoolOptions(trip, carRoute, rides, rideGeometries, landmarks, matchM
     });
 }
 
-   
-                                                                                                                                      
-                                                                                                                              
-                                                                                                            
-   
 export function buildDailyOptions({ routes, busCandidates, stops, rides, rideGeometries, prefs, cars, prices, stations = EXAMPLE_BIKE_STATIONS, landmarks = [], trip, matchMinutes }) {
   if (haversine(trip.from, trip.to) < MIN_TRIP_M) return { options: [], best: null };
   const base = buildOptions(routes, prefs, { cars, prices });

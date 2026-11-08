@@ -11,7 +11,7 @@ const base = (extra = {}) => ({ routes: routes(), busCandidates: [line()], stops
 const modes = (r) => r.options.map((o) => o.mode);
 
 test('opções padrão: a pé, bicicleta, ônibus e carro de referência', () => {
-  assert.deepEqual(modes(buildDailyOptions(base())), ['foot', 'bike', 'bus', 'car']);
+  assert.deepEqual(modes(buildDailyOptions(base())), ['foot', 'bike', 'bus', 'moto', 'car']);
 });
 
 test('a pé de 10 km, 2 viagens por dia, evita 1964 g por dia', () => {
@@ -63,7 +63,7 @@ test('best aponta menor CO2 e mais rápida entre as opções reais', () => {
 test('cada opção traz horário de saída e de chegada', () => {
   const foot = buildDailyOptions(base()).options.find((o) => o.mode === 'foot');
   assert.equal(foot.leaveAt, '07:00');
-  assert.equal(foot.arriveAt, '07:30');                           
+  assert.equal(foot.arriveAt, '07:30');
 });
 
 test('carona: saída antecipada pela caminhada até o ponto e ponto de encontro nomeado', () => {

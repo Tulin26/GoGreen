@@ -21,6 +21,10 @@ export function renderRotas(root) {
   const result = $('[data-resultado]', root);
   const busca = createBusca(root, { onCompare: compare, onLocate: (fix) => mapa?.setUser(fix.point, fix.accuracy) });
   const layout = $('.tela--dividida', root);
+  const panel = $('[data-painel]', root);
+  // Depois de buscar, o painel mostra só o resultado, com "Voltar" no topo; Voltar reabre o formulário.
+  const setMode = (mode) => { panel.dataset.modo = mode; if (mode === 'resultado') { panel.dataset.busca = 'feita'; panel.scrollTop = 0; } };
+  setMode('form');
   let mapa;
   function setMobileView(view) {
     layout.dataset.mobileView = view;
@@ -47,14 +51,13 @@ export function renderRotas(root) {
       if (current) compute(current.routes);
     });
   });
-                                                                              
+
   const offUser = onChange((what) => {
     if (what !== 'user') return;
     paintPrefs(readRoutePrefs());
     if (current) compute(current.routes);
   });
 
-                                                                                               
   async function compute(routes, { scroll = false } = {}) {
     const [prices, cars] = await Promise.all([getFuelPrices(), session.user ? store.listCars().catch(() => []) : []]);
     if (!alive) return;
@@ -67,6 +70,7 @@ export function renderRotas(root) {
     const ctx = { ...ranked, prefs: p, best: bestMetrics(options) };
     const [from, to] = busca.labels();
     $('[data-titulo]', root).hidden = true;
+    setMode('resultado');
     result.innerHTML = resultadoHtml({ from, to, options, ranked, ctx, prices });
     if (scroll) {
       const head = $('.resultado-cabeca h2', result);
@@ -87,6 +91,7 @@ export function renderRotas(root) {
     abort = new AbortController();
     const { signal } = abort;
     busca.clearSuggestions();
+    setMode('resultado');
     result.innerHTML = CARREGANDO;
     try {
       const pending = await busca.resolve(signal);
@@ -98,6 +103,7 @@ export function renderRotas(root) {
       }
       if (pending?.choose) {
         result.innerHTML = '';
+        setMode('form');
         busca.offerChoice(pending.choose, pending.key);
         return;
       }
@@ -127,6 +133,7 @@ export function renderRotas(root) {
   }
 
   $('[data-comparar]', root).onclick = compare;
+  $('[data-voltar]', root).onclick = () => { abort?.abort(); setMode('form'); $('#r-de', root)?.focus(); };
 
   result.addEventListener('click', (e) => {
     const walk = e.target.closest('[data-caminho]');
@@ -139,7 +146,6 @@ export function renderRotas(root) {
     if (e.target.closest('[data-como]')) getFuelPrices().then(howWeCalculate);
   });
 
-                                                    
   if (session.lastCompare && busca.hasBothPoints()) compute(session.lastCompare.routes);
   else mapa.ensure();
 

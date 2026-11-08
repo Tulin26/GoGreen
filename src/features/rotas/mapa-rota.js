@@ -1,9 +1,5 @@
 const MODE_COLOR = { foot: '#00603C', bike: '#7A3E00', bus: '#0B4A9E', car: '#3C4448', moto: '#5D4B8A' };
 
-   
-                                                                                                                        
-                                                                                           
-   
 export function drawRoute(h, group, option) {
   group.clear();
   const legs = option.legs ?? [{ mode: option.mode, geometry: option.geometry }];

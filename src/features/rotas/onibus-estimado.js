@@ -12,16 +12,11 @@ function nearestIndex(point, line) {
 const stopsNear = (geometry, stops) => stops.filter((s) => distanceToPolyline(s.coords, geometry) <= BUS_ESTIMATE.stopBufferM);
 const alongOrder = (geometry, stops) => [...stops].sort((a, b) => nearestIndex(a.coords, geometry) - nearestIndex(b.coords, geometry));
 
-   
-                                                                                                                       
-                                                                                                                
-                                                                                       
-   
 export function planBus(from, to, stops, candidates) {
   const scored = candidates.map((c) => ({ c, passed: stopsNear(c.geometry, stops) }));
   const best = scored.reduce((a, b) => (b.passed.length > a.passed.length || (b.passed.length === a.passed.length && b.c.km < a.c.km) ? b : a));
   const { c: route } = best;
-                                                                                                                   
+
   const closest = (point) => stops.reduce((a, s) => (!a || haversine(point, s.coords) < haversine(point, a.coords) ? s : a), null);
   let board = closest(from);
   let alight = closest(to);

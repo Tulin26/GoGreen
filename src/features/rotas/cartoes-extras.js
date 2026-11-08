@@ -16,7 +16,6 @@ function detailHtml(o) {
   return `Caminhe ${Math.round(d.walkToM)} m até ${esc(d.from.nome)}, pedale até ${esc(d.to.nome)} e caminhe ${Math.round(d.walkFromM)} m até o destino.`;
 }
 
-                                                                                     
 export function extraCardHtml(o, i) {
   const look = MODES[LOOK[o.mode]];
   const tags = [o.estimated ? 'estimado' : '', o.isExample ? 'exemplo' : ''].filter(Boolean).map((t) => `<span class="selo selo--horario">${t}</span>`).join(' ');

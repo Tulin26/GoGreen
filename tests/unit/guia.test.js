@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createGuide } from '../../src/features/rotas/guia.js';
 
-const at = (i, dLat = 0) => [-21.2 + dLat, -50.5 + i * 0.0045];                         
+const at = (i, dLat = 0) => [-21.2 + dLat, -50.5 + i * 0.0045];
 const legs = [
   { mode: 'foot', geometry: [at(0), at(1)], step: 'Caminhe até a estação' },
   { mode: 'bike', geometry: [at(1), at(5)], step: 'Pedale até o destino' },
 ];
-const m = (dLat) => dLat / 111320;                                 
+const m = (dLat) => dLat / 111320;
 
 test('no começo, está no primeiro trecho e diz quanto falta', () => {
   const g = createGuide(legs);

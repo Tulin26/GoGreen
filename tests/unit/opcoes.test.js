@@ -12,7 +12,7 @@ const routes = {
 
 test('monta as quatro opções com ônibus sobre o caminho de carro', () => {
   const options = buildOptions(routes, {});
-  assert.deepEqual(options.map((o) => o.mode), ['foot', 'bike', 'bus', 'car']);
+  assert.deepEqual(options.map((o) => o.mode), ['foot', 'bike', 'bus', 'car', 'moto']);
   const bus = options.find((o) => o.mode === 'bus');
   assert.equal(bus.km, 1.2);
   assert.ok(Math.abs(bus.minutes - 23.6) < 1e-9);

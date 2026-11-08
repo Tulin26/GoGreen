@@ -7,13 +7,13 @@ import { inBounds } from '../../shared/mapa/geometria.js';
 import { describePositionError, getBestPosition } from '../../shared/mapa/posicao.js';
 import { $ } from '../../shared/ui/dom.js';
 import { icon } from '../../shared/ui/icones.js';
+import { clearHistory, loadHistory, rememberPlace } from './historico.js';
+import { fmtAccuracy, placeName } from './localizacao.js';
 import { findLocalPlaces } from './lugares.js';
 import { choiceHtml, startHtml } from './sugestoes.js';
 
-                                                                         
 const form = { from: { text: '', point: null }, to: { text: '', point: null } };
 
-                                                                                        
 export function createBusca(root, { onCompare, onLocate = () => {} }) {
   const inputs = { from: $('#r-de', root), to: $('#r-para', root) };
   const sugg = $('[data-sugestoes]', root);
@@ -31,6 +31,8 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     inputs[key].value = text;
   }
 
+  const startPanel = (key) => startHtml(key, loadHistory());
+
   async function resolveField(key, signal) {
     const f = form[key];
     const text = inputs[key].value.trim();
@@ -41,13 +43,15 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     const local = findLocalPlaces(text);
     if (local.length === 1) {
       setField(key, local[0].point, local[0].title);
+      rememberPlace(local[0]);
       return form[key];
     }
-                                                                                          
+
     const addr = searchLocal(text, await loadRuas());
     const exact = addr.find((a) => a.exact);
     if (exact && !local.length) {
       setField(key, exact.point, exact.title);
+      rememberPlace(exact);
       return form[key];
     }
     if (!navigator.onLine && !addr.length) throw new Error('sem-rede');
@@ -55,29 +59,29 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     if (!items.length) return { noResults: true, key };
     if (items.length === 1) {
       setField(key, items[0].point, items[0].title);
+      rememberPlace(items[0]);
       return form[key];
     }
     return { choose: items, key };
   }
 
-                                                                                                              
   function offerChoice(items, key, { fill = false } = {}) {
     sugg.innerHTML = choiceHtml(items, key, fill);
     sugg.onclick = async (e) => {
       const b = e.target.closest('[data-escolha]');
       if (!b) return;
       const it = items[Number(b.dataset.escolha)];
-                                                                                 
+
       let point = it.point;
       try { point ??= await it.resolve(); } catch { showError('Não foi possível abrir esse lugar agora. Escolha outro ou marque no mapa.'); return; }
       setField(key, point, it.title);
+      rememberPlace({ ...it, point });
       clearSuggestions();
       sugg.onclick = null;
       if (!fill) onCompare();
     };
   }
 
-                                                                                                                      
   let typingTimer = null;
   let typingCtl = null;
   function suggestWhileTyping(key) {
@@ -90,11 +94,11 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
       try {
         const seen = new Set();
         const [ruas, remote] = await Promise.all([loadRuas(), navigator.onLine ? suggestPlaces(q, { signal: typingCtl.signal }) : []]);
-                                                                                             
+
         const items = [...findLocalPlaces(q).slice(0, 2), ...searchLocal(q, ruas).slice(0, 3), ...remote]
           .filter((it) => !seen.has(`${it.title}|${it.subtitle}`) && seen.add(`${it.title}|${it.subtitle}`)).slice(0, 7);
         if (items.length && inputs[key].value.trim() === q) offerChoice(items, key, { fill: true });
-      } catch {                                                           }
+      } catch {}
     }, 400);
   }
 
@@ -105,19 +109,17 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     clearSuggestions();
   }
 
-  const fmtAccuracy = (m) => (m >= 1000 ? `${(m / 1000).toFixed(1).replace('.', ',')} km` : `${Math.round(m)} m`);
-
   async function useGps() {
-    showError('Procurando o melhor sinal do GPS… (pode levar até 12 segundos)');
+    showError('Localizando você… procurando o melhor sinal do GPS (até 12 segundos).');
     try {
       const fix = await getBestPosition();
       const p = fix.point;
-      onLocate(fix);                                                                        
+      onLocate(fix);
       if (!inBounds(p, CITY.bounds)) {
         showError(`Sua localização (±${fmtAccuracy(fix.accuracy)}) está fora de Araçatuba. Digite um endereço na cidade.`);
         return;
       }
-      setField('from', p, 'Minha localização');
+      setField('from', p, await placeName(p, fix.accuracy));
       clearSuggestions();
       if (fix.accuracy > 500) {
         showError(`<strong>Localização aproximada (±${fmtAccuracy(fix.accuracy)}).</strong> Computadores sem GPS estimam pelo Wi‑Fi ou pelo IP. Se o ponto no mapa não for o seu, use "Escolher no mapa" na lista da origem.`);
@@ -126,7 +128,7 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
       showError(`<strong>Não conseguimos sua localização.</strong> ${describePositionError(e)}`);
     }
   }
-                                                                                   
+
   root.querySelectorAll('[data-gps-botao]').forEach((b) => b.addEventListener('click', useGps));
 
   sugg.addEventListener('click', (e) => {
@@ -136,17 +138,34 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     if (place) {
       const p = PLACES[Number(place.dataset.lugar)];
       setField(place.dataset.campoAlvo, p.point, p.title);
+      rememberPlace(p);
       clearSuggestions();
       clearError();
       return;
     }
-    if (e.target.closest('[data-gps]')) useGps();
+    if (e.target.closest('[data-gps]')) { useGps(); return; }
+    const recente = e.target.closest('[data-recente]');
+    if (recente) {
+      const r = loadHistory()[Number(recente.dataset.recente)];
+      if (r) { setField(recente.dataset.campoAlvo, r.point, r.title); rememberPlace(r); }
+      clearSuggestions();
+      clearError();
+      return;
+    }
+    if (e.target.closest('[data-limpar-historico]')) { clearHistory(); clearSuggestions(); }
   });
 
-  inputs.from.addEventListener('input', () => suggestWhileTyping('from'));
-  inputs.to.addEventListener('input', () => suggestWhileTyping('to'));
-  inputs.from.addEventListener('focus', () => { if (!inputs.from.value) sugg.innerHTML = startHtml('from'); });
-  inputs.to.addEventListener('focus', () => { if (!inputs.to.value) sugg.innerHTML = startHtml('to'); });
+  // Campo vazio (nunca preenchido ou apagado): mostra o histórico e os lugares conhecidos. Com texto, as sugestões da busca.
+  for (const key of ['from', 'to']) {
+    inputs[key].addEventListener('input', () => {
+      if (inputs[key].value) { suggestWhileTyping(key); return; }
+      clearTimeout(typingTimer);
+      sugg.onclick = null;
+      sugg.innerHTML = startPanel(key);
+    });
+  }
+  inputs.from.addEventListener('focus', () => { if (!inputs.from.value) sugg.innerHTML = startPanel('from'); });
+  inputs.to.addEventListener('focus', () => { if (!inputs.to.value) sugg.innerHTML = startPanel('to'); });
   inputs.from.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); inputs.to.focus(); } });
   inputs.to.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); onCompare(); } });
   $('form.busca', root).addEventListener('submit', (e) => { e.preventDefault(); onCompare(); });
@@ -162,20 +181,20 @@ export function createBusca(root, { onCompare, onLocate = () => {} }) {
     clearError,
     clearSuggestions,
     offerChoice,
-                                                                        
+
     fillExample() {
       const [terminal, praca] = [PLACES[1], PLACES[2]];
       setField('from', terminal.point, terminal.title);
       setField('to', praca.point, praca.title);
     },
     usePick,
-                                                
+
     isFilled() {
       if (!inputs.from.value.trim()) { showError('Digite de onde você sai.'); inputs.from.focus(); return false; }
       if (!inputs.to.value.trim()) { showError('Digite para onde você vai.'); inputs.to.focus(); return false; }
       return true;
     },
-                                                                                       
+
     async resolve(signal) {
       for (const key of ['from', 'to']) {
         const r = await resolveField(key, signal);

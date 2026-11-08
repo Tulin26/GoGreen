@@ -1,14 +1,9 @@
 import { distanceToPolyline, haversine } from '../../shared/mapa/geometria.js';
 
 const ARRIVE_M = 30;
-const MAX_SLACK_M = 50;                                                        
+const MAX_SLACK_M = 50;
 const OFF_ROUTE_M = 60;
 
-   
-                                                                                                                   
-                                                                                                  
-                                                                                                          
-   
 export function createGuide(legs) {
   let i = 0;
   return {
