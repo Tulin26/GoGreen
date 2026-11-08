@@ -1,3 +1,4 @@
+import { deleteAccount } from './apagar-conta.js';
 import { CAR_FUELS } from '../../config/combustiveis.js';
 import { EXAMPLE_CAR } from '../../config/exemplos.js';
 import { isDemo, store } from '../../dados/index.js';
@@ -60,6 +61,9 @@ export function renderPerfil(root) {
         <div class="campo"><label class="campo__rotulo" for="p-usuario">Usuário</label><input class="form-control entrada" id="p-usuario" maxlength="30" autocapitalize="none" spellcheck="false" value="${esc(user.usuario ?? '')}" placeholder="Ex.: joao.silva"><p class="campo__ajuda">Para entrar sem digitar o e-mail. Letras minúsculas, números, ponto ou _.</p></div>
         <div class="campo"><label class="campo__rotulo" for="p-telefone">WhatsApp</label><input class="form-control entrada" id="p-telefone" type="tel" inputmode="tel" maxlength="20" value="${esc(user.telefone ?? '')}" placeholder="Ex.: 18 99999-0000"><p class="campo__ajuda">Necessário para caronas. Só aparece para quem combinar uma carona com você.</p></div>
         <div class="dialogo__acoes"><button class="btn btn-success botao botao--primario" type="submit">Salvar</button><button class="btn btn-outline-success botao botao--secundario" type="button" data-sair>Sair</button></div></form>
+      <details class="preferencias"><summary class="preferencias__summary"><strong>Privacidade</strong><span>O que guardamos e como apagar</span></summary>
+        <p class="texto-2 texto-peq">Guardamos seu apelido, e-mail, WhatsApp, veículos e placas, suas rotas diárias (origem, destino e horários), pedidos de carona e conversas. O WhatsApp e a placa só aparecem para a outra pessoa depois que o pedido é aceito. Seus dados não são vendidos nem usados para anúncios. Você pode apagar tudo quando quiser.</p>
+        <button class="btn btn-link botao botao--texto" type="button" data-apagar-conta>Apagar minha conta e todos os meus dados</button></details>
       ${isDemo ? '<button class="btn btn-link botao botao--texto botao--voltar" type="button" data-limpar>Apagar os dados de demonstração deste navegador</button>' : ''}`;
   }
 
@@ -70,6 +74,9 @@ export function renderPerfil(root) {
     const del = t.closest('[data-apagar-carro]');
     if (del) {
       try { if (await removeVehicle(del.dataset.apagarCarro)) { toast('Veículo, placa e rotas diárias vinculadas apagados.'); paint(); } } catch (err) { toast(err.message, { type: 'erro' }); }
+    }
+    if (t.closest('[data-apagar-conta]')) {
+      try { if (await deleteAccount()) { setUser(null); toast('Conta e dados apagados.'); } } catch (err) { toast(err.message, { type: 'erro' }); }
     }
     if (t.closest('[data-sair]')) { await store.signOut(); setUser(null); }
     if (t.closest('[data-limpar]')) { await store.reset(); setUser(null); toast('Dados de demonstração recomeçados.'); }
