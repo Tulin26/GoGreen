@@ -1,4 +1,4 @@
-                                                                          
+
 @import '@noorddev/vlak/css/tokens.css';
 @import '@noorddev/vlak/css/fonts.css';
 @import '@noorddev/vlak/css/type.css';
@@ -31,3 +31,4 @@
 @import './app.css';
 @import './experiencia-rotas.css';
 @import './clean.css';
+@import './componentes/caronas.css';

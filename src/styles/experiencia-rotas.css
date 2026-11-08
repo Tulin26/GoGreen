@@ -1,4 +1,4 @@
-                                                                                      
+
 :root {
   --bg: #f2f7f1;
   --text: #19271e;
@@ -305,18 +305,15 @@
   .rotas-intro .tela__titulo { font-size: clamp(2rem, 2.4vw, 2.4rem); }
 }
 
-                                                                        
 .entrada, .local, .foto, .foto-previa { border-radius: var(--radius-sm); }
 .entrada { border-color: var(--control-border); background: var(--bg); }
 .local, .foto-previa { border-color: var(--control-border); }
 .local__rodape { border-color: var(--divider); }
 .foto { border-color: var(--control-border); border-style: dashed; }
 
-                                                                                             
 .painel-nota { display: block; }
 .tabela-painel.rs-table { width: 100%; margin: 0; }
 
-                                                                          
 .cartao, .conta, .informando, .estado, .dialogo {
   border: 1px solid var(--divider);
   border-radius: var(--radius-sm);
@@ -341,7 +338,6 @@
 .form__rodape { border-top-width: 1px; }
 .estado__icone { border-radius: var(--radius-sm); }
 
-                                                                               
 .placa { --placa-verde: #28513f; border-radius: 0; }
 .placa::before { display: none; }
 .placa-adicional {

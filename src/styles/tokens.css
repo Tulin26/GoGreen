@@ -1,28 +1,22 @@
-                            
-                                                             
-                                                                                
-                                   
-                                                            
-                                                                                              
+
 
 :root {
-                                                                     
+
   --fonte: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   --peso-normal: 500;
   --peso-medio: 600;
   --peso-forte: 700;
 
-  --fs-mini: 0.8125rem;                                     
-  --fs-peq: 0.9375rem;             
-  --fs-corpo: 1.0625rem;                                                      
-  --fs-sub: 1.25rem;               
-  --fs-titulo: 1.625rem;           
-  --fs-grande: 2.25rem;            
-  --fs-placar: 3.5rem;                                  
+  --fs-mini: 0.8125rem;
+  --fs-peq: 0.9375rem;
+  --fs-corpo: 1.0625rem;
+  --fs-sub: 1.25rem;
+  --fs-titulo: 1.625rem;
+  --fs-grande: 2.25rem;
+  --fs-placar: 3.5rem;
   --lh-corpo: 1.42;
   --lh-titulo: 1.12;
 
-              
   --esp-1: 4px;
   --esp-2: 8px;
   --esp-3: 12px;
@@ -32,26 +26,21 @@
   --esp-7: 48px;
   --gutter: 16px;
 
-                                                                  
   --raio-placa: 0px;
   --raio-campo: 4px;
   --raio-selo: 4px;
   --raio-folha: 0px;
 
-                                                               
   --sombra-folha: 0 -8px 28px rgb(24 42 31 / 0.14);
   --sombra-toast: 0 8px 24px rgb(21 37 27 / 0.22);
 
-             
   --alvo-min: 44px;
   --alvo-confortavel: 52px;
 
-                                                                     
   --placa-amarela: #FFC81E;
   --sobre-placa-clara: #15191B;
   --sobre-placa-escura: #FFFFFF;
 
-                                                                         
   --asfalto: #23282B;
   --asfalto-texto: #FFFFFF;
   --asfalto-texto-2: #D9DDDA;
@@ -60,7 +49,6 @@
 
   --duracao: 160ms;
 
-                                                                            
   --bs-body-font-family: var(--fonte);
   --bs-primary: #13734C;
   --bs-primary-rgb: 19, 115, 76;
@@ -73,7 +61,6 @@
   --bs-border-radius-xl: 4px;
 }
 
-                                                               
 :root,
 [data-theme="light"] {
   color-scheme: light;
@@ -81,44 +68,39 @@
   --cor-superficie: #FFFFFF;
   --cor-superficie-2: #E9F0EA;
   --cor-texto: #17231C;
-  --cor-texto-2: #4B5C51;                                              
+  --cor-texto-2: #4B5C51;
   --cor-borda-forte: #34463A;
-  --cor-borda: #69796E;                                                  
-  --cor-divisor: #D6E0D8;                                              
+  --cor-borda: #69796E;
+  --cor-divisor: #D6E0D8;
   --cor-acao: #13734C;
   --cor-acao-forte: #0D5D3C;
   --cor-sobre-acao: #FFFFFF;
   --cor-link: #0D6843;
   --cor-foco: #17231C;
   --cor-foco-halo: #FFC81E;
-  --cor-dado: #4B5C51;                               
+  --cor-dado: #4B5C51;
 
   --placa-verde: #13734C;
   --placa-azul: #0B4A9E;
   --placa-vermelha: #C3161C;
 
-                                                            
-                                                                                                    
   --modo-carro: #59665E;
   --modo-onibus: #0B4A9E;
   --modo-bike: #B3261E;
   --modo-ape: #17231C;
   --sobre-modo: #FFFFFF;
 
-                                                                                 
   --sev-leve: #0B4A9E;
   --sev-atencao: #FFC81E;
   --sev-grave: #C3161C;
   --sev-grave-texto: #A31015;
   --sev-resolvido: #13734C;
 
-              
   --estado-erro: #A31015;
   --estado-ok: #13734C;
   --selo-vivo-fundo: #13734C;
   --selo-vivo-texto: #FFFFFF;
 
-                                                                       
   --mapa-fundo: #EAF0EA;
   --mapa-quadra: #DCE6DD;
   --mapa-rua: #FFFFFF;
@@ -135,7 +117,6 @@
   --bs-border-color: var(--cor-divisor);
 }
 
-                                                                                 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
@@ -250,7 +231,6 @@
   --bs-link-hover-color: #99E9C5;
 }
 
-                                                                           
 @media (min-width: 1200px) {
   html { font-size: 112.5%; }
 }

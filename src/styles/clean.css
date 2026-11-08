@@ -1,4 +1,4 @@
-                                                                                       
+
 :root {
   --peso-normal: 400;
   --peso-medio: 550;
@@ -109,7 +109,6 @@ body { font-weight: var(--peso-normal); }
 .texto-2, .texto-corrido { line-height: 1.5; }
 .pilha { gap: 16px; }
 
-                                                                                      
 .nav {
   gap: 4px;
   padding: 8px 12px max(8px, env(safe-area-inset-bottom, 0));
@@ -136,7 +135,6 @@ body { font-weight: var(--peso-normal); }
 .topo { min-height: 64px; padding-inline: clamp(16px, 3vw, 28px); }
 .logo { letter-spacing: -0.03em; }
 
-                                                                          
 .cartao,
 .trajeto__cartao,
 .cartao-rota,
@@ -159,7 +157,6 @@ body { font-weight: var(--peso-normal); }
 .dialogo__corpo { gap: 18px; padding: 20px; }
 .dialogo::backdrop { background: rgb(12 20 15 / 0.44); backdrop-filter: blur(3px); }
 
-                                                           
 .entrada {
   min-height: 50px;
   border: 1px solid var(--cor-borda);
@@ -199,7 +196,6 @@ body { font-weight: var(--peso-normal); }
 .opcao__caixa { border-radius: 5px; }
 .trajeto__dias { gap: 8px; }
 
-                                     
 .botao, .btn { border-radius: 12px; transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
 .botao--primario, .btn-success {
   color: var(--cor-sobre-acao);
@@ -229,7 +225,6 @@ body { font-weight: var(--peso-normal); }
   .app__interno { column-gap: 20px; }
 }
 
-                                                                          
 @container app (min-width: 1100px) {
   .tela--dividida > .painel-lateral {
     inset: 12px auto 12px 14px;
@@ -298,3 +293,7 @@ body { font-weight: var(--peso-normal); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+.sugestoes__titulo { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px 2px; font-size: 0.85rem; }
+.sugestoes .sugestoes__titulo button { width: auto; min-height: 0; padding: 2px 6px; font-size: 0.85rem; }
+.sugestoes__titulo strong { white-space: nowrap; }
