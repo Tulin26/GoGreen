@@ -1,4 +1,4 @@
-                                                                                   
+
 export const ROUTES = {
   rotas: { view: () => import('../features/rotas/rotas.view.js').then((m) => m.renderRotas), nav: 'rotas', title: 'Rotas' },
   caronas: { view: () => import('../features/caronas/caronas.view.js').then((m) => m.renderCaronas), nav: 'caronas', title: 'Caronas' },

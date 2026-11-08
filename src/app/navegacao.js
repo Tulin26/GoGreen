@@ -33,6 +33,6 @@ export async function route() {
   const view = await r.view();
   if (id !== navigationId) return;
   cleanup = view(body, { query }) ?? null;
-                                                                               
+
   $('.foco-titulo', body)?.focus({ preventScroll: true });
 }

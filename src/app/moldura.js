@@ -4,7 +4,6 @@ import { $ } from '../shared/ui/dom.js';
 import { icon } from '../shared/ui/icones.js';
 import { NAV } from './rotas-do-app.js';
 
-                                                                                    
 export function renderShell() {
   document.querySelector('#app').innerHTML = `<div class="app"><div class="app__interno">
   <header class="topo">

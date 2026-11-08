@@ -13,6 +13,6 @@ store.onAuthChange((user) => setUser(user));
 window.addEventListener('hashchange', route);
 
 paintChrome();
-                                                              
+
 route();
 store.getUser().then(setUser).catch(() => setUser(null));
