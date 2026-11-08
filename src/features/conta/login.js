@@ -5,11 +5,9 @@ import { prefs } from '../../shared/preferencias.js';
 import { $ } from '../../shared/ui/dom.js';
 import { icon } from '../../shared/ui/icones.js';
 import { readTransportes, transportesHtml } from '../../shared/ui/transportes.js';
-import { toast } from '../../shared/ui/toast.js';
 import { isValidUsername } from '../../shared/validacao.js';
 import { bindCarFields, carFieldsHtml } from '../carros/campos-carro.js';
 
-                                                                              
 export function requireLogin(reason = 'Entre para continuar.') {
   if (session.user) return Promise.resolve(session.user);
   return openAuth(reason);
@@ -63,7 +61,7 @@ export function openAuth(reason = '') {
       $('#a-email', d).inputMode = signup ? 'email' : 'text';
     };
     paint();
-                                                                      
+
     let carFields = null;
     const carBox = $('[data-carro-cadastro]', d);
     const hasCar = () => $('[data-transporte="carro"]', d).checked;
@@ -119,11 +117,6 @@ export function openAuth(reason = '') {
       try {
         const res = mode === 'cadastro' ? await store.signUp(payload) : await store.signIn(payload);
         if (mode === 'cadastro') prefs.clearTransportes();
-        if (res.needsConfirmation) {
-          toast('Conta criada. Confirme pelo link enviado ao seu e-mail e depois entre.');
-          d.close();
-          return;
-        }
         setUser(res.user);
         done = res.user;
         d.close();
