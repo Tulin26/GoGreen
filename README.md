@@ -129,4 +129,4 @@ Os detalhes estão em [docs/ARQUITETURA.md](docs/ARQUITETURA.md).
 ## Relatório de uso de IA
 
 Foi utilizado como ferramenta de trabalho: Claude Code.
-Fizemos uma base inteira do projeto para ter um norte de onde começar, e assim, fomos alterando os arquivos com nossos fundamentos adquiridos ao longo da carreira de estudante para atender as necessidades do nosso sistema.
+Fizemos uma base inicial do código do projeto, para ter um norte de onde começar. Fomos realizando alterações nos arquivos com nossos fundamentos adquiridos ao longo da carreira de estudante para atender as necessidades do nosso sistema e realizar as mudanças que surgiram com novas ideias.
