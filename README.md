@@ -125,3 +125,8 @@ Os detalhes estão em [docs/ARQUITETURA.md](docs/ARQUITETURA.md).
 - **Itinerário das linhas:** a fonte não publica as ruas, então o app não desenha o traçado real. A estimativa dos ônibus usa o caminho de carro do Terminal até o bairro que dá nome à linha (achado pelo Google, que pode errar o bairro) e não sabe por quais ruas a linha realmente passa. O tempo de ônibus é uma estimativa sobre o caminho de carro, e a previsão ao vivo usa a distância até você.
 - **Linha 118:** a página da fonte não trazia horários.
 - **Feriados e tarifa:** o quadro não trata feriados, e a tarifa de 2026 precisa ser confirmada com a TUA ou a prefeitura.
+
+## Relatório de uso de IA
+
+Foi utilizado como ferramenta de trabalho: Claude Code.
+Fizemos uma base inteira do projeto para ter um norte de onde começar, e assim, fomos alterando os arquivos com nossos fundamentos adquiridos ao longo da carreira de estudante para atender as necessidades do nosso sistema.
